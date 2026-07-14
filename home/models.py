@@ -337,22 +337,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Profile(models.Model):
 
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE
-    )
-
-    image = models.ImageField(
-        upload_to="profile/",
-        default="profile/default.png"
-    )
-
-
-    def __str__(self):
-        return self.user.username
-    
 
 class ContactMessage(models.Model):
 
@@ -394,65 +379,25 @@ class ContactMessage(models.Model):
         default=False
     )
 
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-
-    def __str__(self):
-        return self.subject
-    
-class ContactMessage(models.Model):
-
-    MESSAGE_TYPES = (
-        ("general", "سوال عمومی"),
-        ("order", "مشکل سفارش"),
-    )
-
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
-    )
-
-    message_type = models.CharField(
-        max_length=20,
-        choices=MESSAGE_TYPES,
-        default="general"
-    )
-
-    order_id = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True
-    )
-
-    subject = models.CharField(
-        max_length=200
-    )
-
-    message = models.TextField()
-
-    is_read = models.BooleanField(
-        default=False
-    )
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
     status = models.CharField(
-        max_length=20,
-        choices=(
+       max_length=20,
+       choices=(
           ("open", "باز"),
-         ("answered", "پاسخ داده شده"),
-         ("closed", "بسته شده"),
+          ("answered", "پاسخ داده شده"),
+          ("closed", "بسته شده"),
         ),
-        default="open"
+       default="open"
     )
+
 
     def __str__(self):
         return self.subject
+    
 
 
 class TicketReply(models.Model):
