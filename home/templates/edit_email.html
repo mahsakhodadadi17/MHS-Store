@@ -1,0 +1,61 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+
+<head>
+
+<title>
+تغییر ایمیل
+</title>
+
+<link rel="stylesheet" href="{% static 'css/edit_email.css' %}">
+
+</head>
+
+
+<body>
+
+
+<div class="box">
+
+
+<h2>
+تغییر ایمیل
+</h2>
+
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+
+<input 
+type="email"
+name="email"
+value="{{user.email}}"
+required
+>
+
+
+
+<button>
+
+ذخیره
+
+</button>
+
+
+</form>
+
+
+
+</div>
+
+
+</body>
+
+</html>

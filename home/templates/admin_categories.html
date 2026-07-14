@@ -1,0 +1,357 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block title %}مدیریت دسته‌بندی‌ها{% endblock %}
+
+{% block page_title %}
+مدیریت دسته‌بندی‌ها
+{% endblock %}
+
+{% block breadcrumb %}
+دسته‌بندی‌ها
+{% endblock %}
+
+{% block content %}
+
+            <div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h3 class="card-title mb-0">
+
+                <i class="fas fa-list text-primary"></i>
+
+                لیست دسته‌بندی‌ها
+
+            </h3>
+
+            <span class="badge badge-primary">
+                {{ categories.count }} دسته
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="thead-light">
+
+                    <tr>
+
+                        <th width="80">#</th>
+
+                        <th>نام دسته‌بندی</th>
+
+                        <th width="150">تعداد محصولات</th>
+
+                        <th width="180">تاریخ ایجاد</th>
+
+                        <th width="180" class="text-center">عملیات</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for category in categories %}
+
+                    <tr>
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+
+                            <strong>
+                                {{ category.title }}
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge badge-info">
+
+                                {{ category.post_set.count }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {% if category.created_at %}
+                            
+                            {% else %}
+                                ---
+                            {% endif %}
+
+                        </td>
+
+                        <td class="text-center">
+
+                            <button
+                                class="btn btn-warning btn-sm edit-btn"
+                                data-id="{{ category.id }}"
+                                data-title="{{ category.title }}"
+                            >
+
+                                <i class="fas fa-edit"></i>
+
+                            </button>
+
+                            <a href="{% url 'delete_category' category.id %}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('از حذف این دسته‌بندی مطمئن هستید؟')">
+
+                                <i class="fas fa-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center py-5">
+
+                            <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+
+                            <h5 class="text-muted">
+
+                                هنوز هیچ دسته‌بندی ثبت نشده است.
+
+                            </h5>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- =========================
+     Add Category Modal
+========================== -->
+
+<div class="modal fade" id="addCategoryModal">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form method="POST" action="{% url 'add_category' %}">
+
+                {% csrf_token %}
+
+                <div class="modal-header">
+
+                    <h4 class="modal-title">
+
+                        <i class="fas fa-plus-circle text-primary"></i>
+
+                        افزودن دسته‌بندی جدید
+
+                    </h4>
+
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal">
+
+                        <span>&times;</span>
+
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                        <label>
+
+                            نام دسته‌بندی
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="title"
+                            placeholder="مثلاً کفش مردانه"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+
+                        انصراف
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        <i class="fas fa-save"></i>
+
+                        ذخیره
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     Edit Category Modal
+========================== -->
+
+<div class="modal fade" id="editCategoryModal">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form method="POST" id="editCategoryForm">
+
+                {% csrf_token %}
+
+                <div class="modal-header">
+
+                    <h4 class="modal-title">
+
+                        <i class="fas fa-edit text-warning"></i>
+
+                        ویرایش دسته‌بندی
+
+                    </h4>
+
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal">
+
+                        <span>&times;</span>
+
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                        <label>
+
+                            نام دسته‌بندی
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="editTitle"
+                            name="title"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+
+                        انصراف
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-warning">
+
+                        <i class="fas fa-save"></i>
+
+                        ذخیره تغییرات
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const editButtons = document.querySelectorAll(".edit-btn");
+
+    const editForm = document.getElementById("editCategoryForm");
+
+    const editTitle = document.getElementById("editTitle");
+
+    editButtons.forEach(function(button){
+
+        button.addEventListener("click", function(){
+
+            const id = this.dataset.id;
+            const title = this.dataset.title;
+
+            editTitle.value = title;
+
+            editForm.action = "/admin-panel/categories/edit/" + id + "/";
+
+            $("#editCategoryModal").modal("show");
+
+        });
+
+    });
+
+});
+
+</script>
+
+
+{% endblock %}

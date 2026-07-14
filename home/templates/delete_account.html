@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+
+
+<head>
+
+<title>
+حذف حساب
+</title>
+
+
+<link rel="stylesheet" href="{% static 'css/delete_account.css' %}">
+
+</head>
+
+
+
+<body>
+
+
+<div class="box">
+
+
+<h2>
+حذف حساب کاربری
+</h2>
+
+
+<p>
+آیا مطمئن هستید؟ این عملیات قابل برگشت نیست.
+</p>
+
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+<button>
+بله، حذف کن
+</button>
+
+
+</form>
+
+
+
+
+<a href="{% url 'dashboard' %}">
+
+بازگشت
+
+</a>
+
+
+
+</div>
+
+
+</body>
+
+
+</html>

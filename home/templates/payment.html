@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>پرداخت</title>
+
+    <link rel="stylesheet" href="{% static 'css/payment.css' %}?v=22">
+</head>
+
+<body>
+
+    <div class="payment-box">
+
+        <h1 class="payment-title">
+            پرداخت سفارش #{{ order.id }}
+        </h1>
+
+        <p class="payment-price">
+            مبلغ:
+            <span>{{ order.total_price }}</span>
+            تومان
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <button type="submit" class="pay-btn">
+                پرداخت موفق
+            </button>
+        </form>
+
+    </div>
+
+</body>
+
+</html>

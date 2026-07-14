@@ -1,0 +1,295 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>جزئیات تیکت | MHS</title>
+
+
+<link rel="stylesheet" href="{% static 'css/ticket_detail.css' %}?v=99">
+
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+</head>
+
+
+<body>
+
+
+<div class="ticket-container">
+
+
+
+<div class="ticket-title">
+
+
+<h1>
+
+<i class="fas fa-headset"></i>
+
+{{ ticket.subject }}
+
+</h1>
+
+
+<p>
+
+نوع درخواست:
+
+<strong>
+
+{{ ticket.get_message_type_display }}
+
+</strong>
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="chat-box">
+
+
+
+<!-- پیام اصلی کاربر -->
+
+<div class="message user-message">
+
+
+<div class="message-header">
+
+<i class="fas fa-user"></i>
+
+شما
+
+</div>
+
+
+<p>
+
+{{ ticket.message }}
+
+</p>
+
+
+<span>
+
+{{ ticket.created_at|date:"Y/m/d H:i" }}
+
+</span>
+
+
+</div>
+
+
+
+
+
+<!-- پاسخ ها -->
+
+
+{% for reply in ticket.replies.all %}
+
+
+{% if reply.is_admin %}
+
+
+<div class="message admin-message">
+
+
+<div class="message-header">
+
+<i class="fas fa-user-shield"></i>
+
+پشتیبانی MHS
+
+</div>
+
+
+<p>
+
+{{ reply.message|linebreaks }}
+
+</p>
+
+
+<span>
+
+{{ reply.created_at|date:"Y/m/d H:i" }}
+
+</span>
+
+
+</div>
+
+
+
+{% else %}
+
+
+
+<div class="message user-message">
+
+
+<div class="message-header">
+
+<i class="fas fa-user"></i>
+
+شما
+
+</div>
+
+
+<p>
+
+{{ reply.message|linebreaks }}
+
+</p>
+
+
+<span>
+
+{{ reply.created_at|date:"Y/m/d H:i" }}
+
+</span>
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+{% empty %}
+
+
+<div class="no-reply">
+
+هنوز پاسخی ارسال نشده است.
+
+</div>
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+
+
+<!-- ارسال پاسخ کاربر -->
+
+<div class="reply-box">
+
+    <h3>
+        ارسال پاسخ
+    </h3>
+
+
+{% if ticket.status != "closed" %}
+
+
+<form method="POST">
+
+    {% csrf_token %}
+
+
+    <textarea
+
+        name="message"
+
+        placeholder="پیام خود را بنویسید..."
+
+        required></textarea>
+
+
+
+
+    <button type="submit">
+
+
+        <i class="fas fa-paper-plane"></i>
+
+
+        ارسال پیام
+
+
+
+    </button>
+
+
+
+</form>
+
+
+
+{% else %}
+
+
+<div class="closed-message">
+
+
+    <i class="fas fa-lock"></i>
+
+
+    این تیکت بسته شده است و امکان ارسال پیام جدید وجود ندارد.
+
+
+</div>
+
+
+{% endif %}
+
+
+
+    {% if ticket.status != "closed" %}
+
+    <form method="POST" action="{% url 'close_ticket' ticket.id %}">
+
+        {% csrf_token %}
+
+        <button 
+            class="close-btn"
+            type="submit">
+
+            <i class="fas fa-lock"></i>
+
+            بستن تیکت
+
+        </button>
+
+    </form>
+
+    {% endif %}
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+</body>
+
+</html>

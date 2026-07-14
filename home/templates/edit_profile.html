@@ -1,0 +1,134 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>ویرایش پروفایل</title>
+
+
+<link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
+
+
+</head>
+
+
+
+<body>
+
+
+
+<div class="edit-container">
+
+
+<h1>
+ویرایش پروفایل
+</h1>
+
+
+
+<div class="profile-image">
+
+
+{% if profile.image %}
+
+<img src="{{ profile.image.url }}">
+
+
+{% endif %}
+
+
+</div>
+
+
+
+
+<form method="POST" enctype="multipart/form-data">
+
+
+{% csrf_token %}
+
+
+
+
+<div class="form-group">
+
+<label>
+ایمیل
+</label>
+
+
+<input 
+type="email"
+name="email"
+value="{{ user.email }}">
+
+
+</div>
+
+
+
+
+<div class="form-group">
+
+
+<label>
+شماره تلفن
+</label>
+
+
+<input
+type="text"
+name="phone"
+value="{{ profile.phone }}">
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+عکس پروفایل
+</label>
+
+
+<input 
+type="file"
+name="image">
+
+
+</div>
+
+
+
+
+
+<button class="save-btn" type="submit">
+
+ذخیره تغییرات
+
+</button>
+
+
+
+</form>
+
+
+
+</div>
+
+
+
+</body>
+
+</html>

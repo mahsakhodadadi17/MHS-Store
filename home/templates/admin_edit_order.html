@@ -1,0 +1,99 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-7">
+
+<div class="card shadow">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+<i class="fas fa-edit mr-2"></i>
+
+ویرایش سفارش #{{ order.id }}
+
+</h3>
+
+</div>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="card-body">
+
+<div class="form-group">
+
+<label>وضعیت سفارش</label>
+
+<select class="form-control" name="status">
+
+{% for value,name in order.STATUS %}
+
+<option value="{{ value }}" {% if order.status == value %}selected{% endif %}>
+
+{{ name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>وضعیت پرداخت</label>
+
+<select class="form-control" name="payment_status">
+
+{% for value,name in order.PAYMENT_STATUS %}
+
+<option value="{{ value }}" {% if order.payment_status == value %}selected{% endif %}>
+
+{{ name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+</div>
+
+<div class="card-footer">
+
+<button class="btn btn-success">
+
+ذخیره تغییرات
+
+</button>
+
+<a href="{% url 'admin_orders' %}" class="btn btn-secondary">
+
+انصراف
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,256 @@
+{% extends "admin_base.html" %}
+
+{% block title %}مدیریت اعلان‌ها{% endblock %}
+
+{% block page_title %}
+مدیریت اعلان‌ها
+{% endblock %}
+
+{% block breadcrumb %}
+اعلان‌ها
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="row">
+
+<div class="col-lg-3 col-6">
+
+<div class="small-box bg-warning">
+
+<div class="inner">
+
+<h3>{{ notifications.count }}</h3>
+
+<p>کل اعلان‌ها</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-bell"></i>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-6">
+
+<div class="small-box bg-success">
+
+<div class="inner">
+
+<h3>{{ unread_count }}</h3>
+
+<p>اعلان‌های خوانده نشده</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-envelope-open"></i>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card shadow">
+
+<div class="card-header">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<h3 class="card-title">
+
+<i class="fas fa-bell text-warning"></i>
+
+لیست اعلان‌ها
+
+</h3>
+
+<input
+type="text"
+id="searchInput"
+class="form-control"
+placeholder="جستجوی اعلان..."
+style="width:260px;">
+
+</div>
+
+</div>
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-hover table-bordered text-center">
+
+<thead class="thead-dark">
+
+<tr>
+
+<th>#</th>
+
+<th>کاربر</th>
+
+<th>متن اعلان</th>
+
+<th>وضعیت</th>
+
+<th>تاریخ</th>
+
+<th>عملیات</th>
+
+</tr>
+
+</thead>
+
+<tbody id="notificationsTable">
+    {% for notification in notifications %}
+
+<tr>
+
+    <td>
+
+        {{ forloop.counter }}
+
+    </td>
+
+    <td>
+
+        <strong>
+
+            {{ notification.user.username }}
+
+        </strong>
+
+    </td>
+
+    <td class="text-right">
+
+        {{ notification.text }}
+
+    </td>
+
+    <td>
+
+        {% if notification.is_read %}
+
+            <span class="badge badge-success">
+
+                خوانده شده
+
+            </span>
+
+        {% else %}
+
+            <span class="badge badge-warning">
+
+                خوانده نشده
+
+            </span>
+
+        {% endif %}
+
+    </td>
+
+    <td>
+
+        {{ notification.created_at|date:"Y/m/d H:i" }}
+
+    </td>
+
+    <td>
+
+        {% if not notification.is_read %}
+
+        <a
+            href="{% url 'admin_read_notification' notification.id %}"
+            class="btn btn-success btn-sm">
+
+            <i class="fas fa-check"></i>
+
+        </a>
+
+        {% endif %}
+
+        <a
+            href="{% url 'admin_delete_notification' notification.id %}"
+            class="btn btn-danger btn-sm"
+            onclick="return confirm('این اعلان حذف شود؟');">
+
+            <i class="fas fa-trash"></i>
+
+        </a>
+
+    </td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+    <td colspan="6" class="text-center py-5">
+
+        <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
+
+        <br>
+
+        هیچ اعلانی وجود ندارد.
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // جستجو
+
+    const searchInput = document.getElementById("searchInput");
+
+    searchInput.addEventListener("keyup", function () {
+
+        let value = this.value.toLowerCase();
+
+        let rows = document.querySelectorAll("#notificationsTable tr");
+
+        rows.forEach(function(row){
+
+            row.style.display =
+                row.innerText.toLowerCase().includes(value)
+                ? ""
+                : "none";
+
+        });
+
+    });
+
+});
+
+</script>
+
+</div>
+
+{% endblock %}

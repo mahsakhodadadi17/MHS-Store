@@ -1,0 +1,557 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}پنل مدیریت{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'adminlte/plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'adminlte/css/adminlte.min.css' %}">
+    <style>
+
+html,
+body{
+    direction: rtl;
+    text-align:right;
+}
+
+/* Sidebar */
+
+.main-sidebar{
+    right:0;
+    left:auto;
+}
+
+.main-sidebar,
+.main-sidebar::before{
+    width:280px;
+}
+
+/* Content */
+
+.content-wrapper,
+.main-header,
+.main-footer{
+    margin-right:280px !important;
+    margin-left:0 !important;
+}
+
+/* Sidebar Links */
+
+.nav-sidebar>.nav-item>.nav-link{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:12px;
+    text-align:right;
+}
+
+.nav-sidebar .nav-icon{
+    margin-left:10px;
+    margin-right:0;
+}
+
+.nav-sidebar .nav-treeview{
+    padding-right:18px;
+}
+
+/* Brand */
+
+.brand-link{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:12px;
+}
+
+/* User */
+
+.user-panel{
+    direction:rtl;
+}
+
+.user-panel .info{
+    padding-right:10px;
+}
+
+/* Search */
+
+.form-control-sidebar{
+    text-align:right;
+}
+
+/* Push Menu */
+
+.sidebar-collapse .content-wrapper,
+.sidebar-collapse .main-header,
+.sidebar-collapse .main-footer{
+    margin-right:0 !important;
+}
+
+</style>
+    
+
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+
+<div class="wrapper">
+
+<!-- Navbar -->
+
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
+    <ul class="navbar-nav">
+
+        <li class="nav-item">
+
+            <a class="nav-link" data-widget="pushmenu" href="#">
+
+                <i class="fas fa-bars"></i>
+
+            </a>
+
+        </li>
+
+    </ul>
+
+    <ul class="navbar-nav ml-auto">
+
+        <li class="nav-item">
+
+            <a href="{% url 'logout' %}" class="nav-link">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                خروج
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- Main Sidebar -->
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+    <!-- Logo -->
+
+    <a href="{% url 'admin_dashboard' %}" class="brand-link">
+
+        <img src="{% static 'image/logo.png' %}"
+
+             class="brand-image img-circle elevation-3"
+
+             style="opacity:.9">
+
+        <span class="brand-text font-weight-light">
+
+            My Admin
+
+        </span>
+
+    </a>
+
+    <div class="sidebar">
+
+        <!-- User -->
+
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+
+            <div class="image">
+
+                <img src="{% static 'adminlte/img/user-160x160.jpg' %}"
+
+                     class="img-circle elevation-2">
+
+            </div>
+
+            <div class="info">
+
+                <a href="#" class="d-block">
+
+                    {{ request.user.username }}
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Search -->
+
+        <div class="form-inline">
+
+            <div class="input-group" data-widget="sidebar-search">
+
+                <input class="form-control form-control-sidebar"
+
+                       type="search"
+
+                       placeholder="جستجو">
+
+                <div class="input-group-append">
+
+                    <button class="btn btn-sidebar">
+
+                        <i class="fas fa-search"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Sidebar Menu -->
+
+        <nav class="mt-2">
+
+            <ul class="nav nav-pills nav-sidebar flex-column"
+
+                data-widget="treeview"
+
+                role="menu"
+
+                data-accordion="false">
+                <!-- داشبورد -->
+
+<li class="nav-item">
+    <a href="{% url 'admin_dashboard' %}" class="nav-link">
+        <i class="nav-icon fas fa-home"></i>
+        <p>داشبورد</p>
+    </a>
+</li>
+
+<li class="nav-header">مدیریت فروشگاه</li>
+
+<!-- محصولات -->
+
+<li class="nav-item">
+
+    <a href="#" class="nav-link">
+
+        <i class="nav-icon fas fa-box"></i>
+
+        <p>
+
+            محصولات
+
+            <i class="right fas fa-angle-left"></i>
+
+        </p>
+
+    </a>
+
+    <ul class="nav nav-treeview">
+
+        <li class="nav-item">
+
+            <a href="{% url 'admin_products' %}" class="nav-link">
+
+                <i class="far fa-circle nav-icon"></i>
+
+                <p>همه محصولات</p>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a href="{% url 'admin_add_product' %}" class="nav-link">
+
+                <i class="far fa-circle nav-icon"></i>
+
+                <p>افزودن محصول</p>
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</li>
+
+<!-- سفارش ها -->
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_orders' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-shopping-cart"></i>
+
+        <p>
+
+            سفارش ها
+
+            {% if orders_count > 0 %}
+
+                <span class="right badge badge-danger">
+                    {{ orders_count }}
+                </span>
+
+            {% endif %}
+
+        </p>
+
+    </a>
+
+</li>
+
+<!-- کاربران -->
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_users' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-users"></i>
+
+        <p>کاربران</p>
+
+    </a>
+
+</li>
+
+<!-- دسته بندی -->
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_categories' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-layer-group"></i>
+
+        <p>دسته بندی ها</p>
+
+    </a>
+
+</li>
+
+<!-- علاقه مندی -->
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_wishlist' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-heart"></i>
+
+        <p>علاقه مندی ها</p>
+
+    </a>
+
+</li>
+
+<!-- پیام ها -->
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_contacts' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-envelope"></i>
+
+        <p>
+
+            پیام ها
+
+            {% if contacts_count > 0 %}
+
+                <span class="right badge badge-danger">
+                    {{ contacts_count }}
+                </span>
+
+            {% endif %}
+
+        </p>
+
+    </a>
+
+</li>
+
+<!-- اعلان ها -->
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_notifications' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-bell"></i>
+
+        <p>
+            اعلان ها
+
+            {% if notifications_count %}
+
+            <span class="right badge badge-danger">
+                {{ notifications_count }}
+            </span>
+
+            {% endif %}
+
+        </p>
+
+    </a>
+
+</li>
+
+<!-- تنظیمات -->
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_settings' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-cog"></i>
+
+        <p>تنظیمات</p>
+
+    </a>
+
+</li>
+
+
+
+<li class="nav-header">حساب کاربری</li>
+
+<li class="nav-item">
+
+    <a href="{% url 'logout' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-sign-out-alt"></i>
+
+        <p>خروج</p>
+
+    </a>
+
+</li>
+            </ul>
+
+        </nav>
+
+    </div>
+
+</aside>
+
+<!-- Content Wrapper -->
+
+<div class="content-wrapper">
+
+    <!-- Header -->
+
+    <section class="content-header">
+
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+
+                <div class="col-sm-6">
+
+                    <h1>
+
+                        {% block page_title %}
+
+                        پنل مدیریت
+
+                        {% endblock %}
+
+                    </h1>
+
+                </div>
+
+                <div class="col-sm-6">
+
+                    <ol class="breadcrumb float-sm-right">
+
+                        <li class="breadcrumb-item">
+
+                            <a href="{% url 'admin_dashboard' %}">
+
+                                داشبورد
+
+                            </a>
+
+                        </li>
+
+                        <li class="breadcrumb-item active">
+
+                            {% block breadcrumb %}
+
+                            مدیریت
+
+                            {% endblock %}
+
+                        </li>
+
+                    </ol>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Main Content -->
+
+    <section class="content">
+
+        <div class="container-fluid">
+
+            {% block content %}
+
+            {% endblock %}
+
+        </div>
+
+    </section>
+
+</div>
+
+<!-- Footer -->
+
+<footer class="main-footer">
+
+    <strong>
+
+        Copyright © 2026
+
+        <a href="#">
+
+            MHS Store
+
+        </a>
+
+    </strong>
+
+    <div class="float-right d-none d-sm-inline-block">
+
+        <b>Version</b>
+
+        1.0
+
+    </div>
+
+</footer>
+
+</div>
+
+<script src="{% static 'adminlte/plugins/jquery/jquery.min.js' %}"></script>
+
+<script src="{% static 'adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<script src="{% static 'adminlte/js/adminlte.min.js' %}"></script>
+
+{% block extra_js %}
+
+{% endblock %}
+
+</body>
+
+</html>

@@ -1,0 +1,250 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>
+تکمیل سفارش | MHS
+</title>
+
+
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}?v=10">
+
+
+</head>
+
+
+
+<body>
+
+
+
+<div class="checkout-container">
+
+
+
+<h1>
+تکمیل سفارش
+</h1>
+
+
+
+
+<div class="checkout-box">
+
+
+
+
+
+<h2>
+🛒 محصولات سفارش
+</h2>
+
+
+
+
+{% for item in cart_items %}
+
+
+
+<div class="cart-item">
+
+
+
+<img src="{{item.product.image.url}}">
+
+
+
+<div class="product-info">
+
+
+<h3>
+{{item.product.title}}
+</h3>
+
+
+<p>
+تعداد:
+{{item.quantity}}
+</p>
+
+
+</div>
+
+
+
+<strong>
+
+{{item.product.price}}
+
+تومان
+
+</strong>
+
+
+
+</div>
+
+
+
+{% empty %}
+
+
+<p>
+سبد خرید خالی است
+</p>
+
+
+{% endfor %}
+
+
+
+
+
+
+
+<h2>
+📍 انتخاب آدرس ارسال
+</h2>
+
+
+
+
+<form method="POST">
+
+
+{% csrf_token %}
+
+
+
+
+{% for address in addresses %}
+
+
+
+<div class="address">
+
+
+
+<input 
+
+type="radio"
+
+name="address"
+
+value="{{address.id}}"
+
+required>
+
+
+
+<div>
+
+
+<h4>
+
+{{address.full_name}}
+
+</h4>
+
+
+<p>
+
+📞 {{address.phone}}
+
+</p>
+
+
+<p>
+
+{{address.city}}
+
+- 
+
+{{address.address}}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+{% empty %}
+
+
+<p>
+آدرسی ثبت نشده
+</p>
+
+
+{% endfor %}
+
+
+
+
+
+
+
+<div class="summary">
+
+
+
+<h3>
+
+مبلغ نهایی
+
+</h3>
+
+
+<strong>
+
+{{total}}
+
+تومان
+
+</strong>
+
+
+</div>
+
+
+
+
+
+<button type="submit">
+
+ثبت نهایی سفارش
+
+</button>
+
+
+
+</form>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</body>
+
+
+</html>

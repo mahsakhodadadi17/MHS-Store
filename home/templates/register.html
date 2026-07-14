@@ -1,0 +1,145 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ثبت نام</title>
+
+
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+
+
+</head>
+
+
+<body>
+
+
+
+<div class="register-container">
+
+
+    <div class="register-box">
+
+
+
+        <div class="logo">
+            MHS
+        </div>
+
+
+
+        <h1>
+            ایجاد حساب کاربری
+        </h1>
+
+
+
+        <p>
+            برای خرید بهتر ثبت نام کنید
+        </p>
+
+
+
+
+
+        <form method="POST" id="register-form">
+
+
+            {% csrf_token %}
+
+
+
+
+             <form method="POST">
+
+             {% csrf_token %}
+             {{ form.errors }}
+
+
+                <input 
+                type="text"
+                name="username"
+                placeholder="نام کاربری"
+                class="text-input"
+                required>
+
+
+
+                <input 
+                ype="password"
+                name="password1"
+                placeholder="رمز عبور"
+                class="text-input"
+                required>
+
+
+
+               <input 
+               type="password"
+               name="password2"
+               placeholder="تکرار رمز عبور"
+               class="text-input"
+               required>
+
+
+
+
+
+
+
+
+            <button type="submit">
+
+                ثبت نام
+
+            </button>
+
+
+
+
+
+        </form>
+
+
+
+
+
+        <div class="login-link">
+
+
+            حساب دارید؟
+
+            <a href="{% url 'login' %}">
+                ورود
+            </a>
+
+
+        </div>
+
+
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+<script src="{% static 'js/register.js' %}"></script>
+
+
+</body>
+
+
+</html>

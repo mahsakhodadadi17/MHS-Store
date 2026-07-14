@@ -1,0 +1,761 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>پنل کاربری | MHS</title>
+
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=5004">
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard-container">
+
+
+<button class="menu-btn">
+☰
+</button>
+
+
+
+<aside class="sidebar">
+
+
+<div class="logo">
+MHS
+</div>
+
+
+
+<div class="profile-mini">
+
+
+{% if user.profile.image %}
+
+<img src="{{ user.profile.image.url }}">
+
+
+{% else %}
+
+<img src="{% static 'images/default-user.png' %}">
+
+{% endif %}
+
+
+<h3>
+{{ user.username }}
+</h3>
+
+
+<span>
+{{ user.email }}
+</span>
+
+
+</div>
+
+
+
+<nav>
+
+
+<a class="active" data-tab="profile">
+پروفایل
+</a>
+
+
+<a data-tab="orders">
+سفارش های من
+</a>
+
+
+<a data-tab="wishlist">
+علاقه مندی ها
+</a>
+
+
+<a data-tab="addresses">
+آدرس های من
+</a>
+
+
+<a href="{% url 'my_tickets' %}">
+
+    <i class="fas fa-headset"></i>
+
+    تیکت‌های من
+
+
+    {% if unread_tickets %}
+
+    <span class="badge badge-danger">
+
+        {{ unread_tickets }}
+
+    </span>
+
+    {% endif %}
+
+</a>
+
+<a data-tab="settings">
+
+تنظیمات حساب
+
+
+{% if unread_notifications > 0 %}
+
+<span class="notif-count">
+
+{{ unread_notifications }}
+
+</span>
+
+{% endif %}
+
+
+</a>
+
+
+
+<form method="POST" action="{% url 'logout' %}">
+
+{% csrf_token %}
+
+<button type="submit">
+خروج از حساب
+</button>
+
+</form>
+
+
+</nav>
+
+
+</aside>
+
+
+
+
+
+<main class="content">
+
+
+
+
+
+<section id="profile" class="tab active">
+
+
+<h1>
+خوش آمدید {{ user.username }}
+</h1>
+
+
+
+<div class="profile-card">
+
+
+<img src="{% if user.profile.image %}{{user.profile.image.url}}{% else %}{% static 'images/default-user.png' %}{% endif %}">
+
+
+<div class="profile-info">
+
+
+<h2>
+{{user.username}}
+</h2>
+
+
+<p>
+ایمیل:
+{{user.email}}
+</p>
+
+
+<p>
+تلفن:
+{{user.profile.phone}}
+</p>
+
+
+<a href="{% url 'edit_profile' %}">
+
+<button>
+ویرایش پروفایل
+</button>
+
+</a>
+
+
+</div>
+
+
+
+
+
+<div class="profile-extra">
+
+
+<div>
+
+<span>
+عضویت
+</span>
+
+<h3>
+{{user.date_joined|date:"Y"}}
+</h3>
+
+</div>
+
+
+
+<div>
+
+<span>
+سفارش‌ها
+</span>
+
+<h3>
+{{orders.count}}
+</h3>
+
+</div>
+
+
+
+<div>
+
+<span>
+وضعیت
+</span>
+
+<h3>
+فعال
+</h3>
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+<section class="stats">
+
+
+<div class="stat-card">
+
+<h2>
+{{orders.count}}
+</h2>
+
+<p>
+کل سفارش ها
+</p>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<h2>{{ completed_orders }}</h2>
+<p>تکمیل شده</p>
+
+</div>
+
+
+
+
+<div class="stat-card">
+
+<h2>{{ pending_orders }}</h2>
+<p>در انتظار</p>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<h2>
+{{wishlist.count}}
+</h2>
+
+<p>
+علاقه مندی
+</p>
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<section id="orders" class="tab">
+
+<h2>
+سفارش های من
+</h2>
+
+
+{% for order in orders %}
+
+
+<div class="order-card">
+
+
+<div class="order-header">
+
+<h3>
+سفارش #{{order.id}}
+</h3>
+
+
+<span class="status {{order.status}}">
+{{order.get_status_display}}
+</span>
+
+
+</div>
+
+
+
+<p>
+تاریخ:
+{{order.created_at|date:"Y/m/d H:i"}}
+</p>
+
+
+
+{% for item in order.items.all %}
+
+
+<div class="order-product">
+
+
+<img src="{{item.product.image.url}}">
+
+
+<div>
+
+<h4>
+{{item.product.title}}
+</h4>
+
+
+<p>
+تعداد:
+{{item.quantity}}
+</p>
+
+
+<p>
+قیمت:
+{{item.price}}
+تومان
+</p>
+
+
+</div>
+
+
+</div>
+
+
+{% endfor %}
+
+
+
+<div class="order-footer">
+
+
+<strong>
+{{order.total_price}}
+تومان
+</strong>
+
+
+<a href="{% url 'order_detail' order.id %}">
+
+<button>
+پیگیری سفارش
+</button>
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+
+{% empty %}
+
+<p>
+هنوز سفارشی ندارید
+</p>
+
+
+{% endfor %}
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+<section id="wishlist" class="tab">
+
+
+<h2>
+علاقه‌مندی‌ها
+</h2>
+
+
+
+<div class="products">
+
+
+{% for item in wishlist %}
+
+
+
+<div class="wishlist-card">
+
+
+<img src="{{item.product.image.url}}">
+
+
+
+<div>
+
+
+<h3>
+{{item.product.title}}
+</h3>
+
+
+
+<p>
+
+{{item.product.price}}
+
+تومان
+
+</p>
+
+
+
+<form method="POST" action="{% url 'add_to_cart' item.product.id %}">
+    {% csrf_token %}
+    <button type="submit" class="add-cart-btn">
+        افزودن به سبد خرید
+    </button>
+</form>
+
+
+
+<button class="remove-btn" data-id="{{ item.id }}">
+    حذف
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+{% empty %}
+
+
+<p>
+هنوز محصولی اضافه نکرده‌اید
+</p>
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<section id="addresses" class="tab">
+
+
+<h2>
+آدرس‌های من
+</h2>
+
+
+
+<a href="{% url 'add_address' %}">
+
+<button>
+
+ثبت آدرس جدید
+
+</button>
+
+</a>
+
+
+
+{% for address in addresses %}
+
+
+<div class="address-card">
+
+
+<p>
+{{address.address}}
+</p>
+
+
+<a href="{% url 'edit_address' address.id %}">
+    <button type="button">ویرایش</button>
+</a>
+
+
+<a href="{% url 'delete_address' address.id %}">
+    <button type="button">حذف</button>
+</a>
+
+
+</div>
+
+
+
+{% empty %}
+
+
+<p>
+آدرسی وجود ندارد
+</p>
+
+
+{% endfor %}
+
+
+
+</section>
+
+
+
+
+
+
+<section id="settings" class="tab">
+
+
+<h2>
+تنظیمات حساب
+</h2>
+
+
+
+<a href="{% url 'change_password' %}">
+    <button>
+        تغییر رمز عبور
+    </button>
+</a>
+
+<a href="{% url 'edit_email' %}">
+
+ <button>
+
+ تغییر ایمیل
+
+ </button>
+
+</a>
+<a href="{% url 'delete_account' %}">
+
+  <button class="danger-btn">
+
+   حذف حساب کاربری
+
+  </button>
+
+</a>
+
+<h3 style="margin-top:40px;">
+اعلان‌ها
+</h3>
+
+
+
+<div class="notifications-list">
+
+
+{% for n in notifications %}
+
+
+<a href="{% url 'read_notification' n.id %}" class="notif-link">
+
+
+<div class="notif-card {% if not n.is_read %}new{% endif %}">
+
+
+<div class="notif-icon">
+
+🔔
+
+</div>
+
+
+
+<div class="notif-content">
+
+
+<p>
+
+{{ n.text }}
+
+</p>
+
+
+
+<span>
+
+{{ n.created_at|date:"Y/m/d H:i" }}
+
+</span>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</a>
+
+
+
+{% empty %}
+
+
+<p class="empty-notif">
+
+هیچ اعلانی ندارید
+
+</p>
+
+
+
+{% endfor %}
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+</main>
+
+
+</div>
+
+
+
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+
+</body>
+
+</html>
+<script>
+// حذف از علاقه‌مندی
+document.querySelectorAll(".remove-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+
+        let id = this.getAttribute("data-id");
+
+        fetch(`/wishlist/remove/${id}/`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.deleted) {
+                this.closest(".wishlist-card").remove();
+            }
+        });
+
+    });
+});
+
+
+// افزودن به سبد خرید
+document.querySelectorAll(".add-cart-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+
+        let id = this.getAttribute("data-id");
+
+        fetch(`/cart/add/${id}/`)
+        .then(res => res.json())
+        .then(data => {
+            alert("به سبد اضافه شد 🛒");
+        });
+
+    });
+});
+</script>

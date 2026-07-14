@@ -1,0 +1,237 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>جزئیات سفارش</title>
+
+<link rel="stylesheet" href="{% static 'css/order_detail.css' %}?v=99">
+
+</head>
+
+
+<body>
+
+
+<div class="order-detail">
+
+
+<h1>
+جزئیات سفارش #{{order.id}}
+</h1>
+
+
+
+<div class="info">
+
+
+<p>
+📅 تاریخ سفارش:
+{{ order.created_at|date:"Y/m/d - H:i" }}
+</p>
+
+
+<p>
+وضعیت:
+{{order.get_status_display}}
+</p>
+
+
+<p>
+مبلغ:
+{{order.total_price}}
+تومان
+</p>
+
+
+<div class="address-box">
+
+<h2>
+آدرس ارسال
+</h2>
+
+
+<p>
+👤 نام گیرنده:
+{{ order.address.full_name }}
+</p>
+
+
+<p>
+📞 شماره تماس:
+{{ order.address.phone }}
+</p>
+
+
+<p>
+🏙 شهر:
+{{ order.address.city }}
+</p>
+
+
+<p>
+📍 آدرس کامل:
+{{ order.address.address }}
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- لغو سفارش -->
+
+{% if order.status == "pending" %}
+
+<a href="{% url 'cancel_order' order.id %}">
+
+<button class="cancel-btn">
+لغو سفارش
+</button>
+
+</a>
+
+{% endif %}
+
+
+
+
+
+<!-- وضعیت مرحله‌ای سفارش -->
+
+<div class="order-status">
+
+
+<div class="step active">
+
+<span>✓</span>
+<p>ثبت سفارش</p>
+
+</div>
+
+
+
+<div class="line 
+{% if order.status == 'paid' or order.status == 'sent' or order.status == 'done' %}active-line{% endif %}">
+</div>
+
+
+
+<div class="step 
+{% if order.status == 'paid' or order.status == 'sent' or order.status == 'done' %}active{% endif %}">
+
+<span>✓</span>
+<p>پرداخت</p>
+
+</div>
+
+
+
+<div class="line 
+{% if order.status == 'sent' or order.status == 'done' %}active-line{% endif %}">
+</div>
+
+
+
+<div class="step 
+{% if order.status == 'sent' or order.status == 'done' %}active{% endif %}">
+
+<span>✓</span>
+<p>ارسال</p>
+
+</div>
+
+
+
+<div class="line 
+{% if order.status == 'done' %}active-line{% endif %}">
+</div>
+
+
+
+<div class="step 
+{% if order.status == 'done' %}active{% endif %}">
+
+<span>✓</span>
+<p>تحویل</p>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<h2>
+محصولات
+</h2>
+
+
+
+{% for item in order.items.all %}
+
+
+<div class="product">
+
+
+<img src="{{item.product.image.url}}">
+
+
+<div>
+
+<h3>
+{{item.product.title}}
+</h3>
+
+
+<p>
+تعداد:
+{{item.quantity}}
+</p>
+
+
+<p>
+قیمت:
+{{item.product.price}}
+تومان
+</p>
+
+
+</div>
+
+
+</div>
+
+
+{% empty %}
+
+<p>
+محصولی وجود ندارد
+</p>
+
+
+{% endfor %}
+
+
+
+
+
+</div>
+
+
+</body>
+
+</html>

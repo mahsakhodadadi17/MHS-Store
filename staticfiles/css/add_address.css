@@ -1,0 +1,136 @@
+body{
+
+    background:#0b0b0b;
+    color:white;
+    font-family:Arial, sans-serif;
+
+}
+
+
+
+.address-container{
+
+    width:90%;
+    max-width:600px;
+
+    margin:60px auto;
+
+    background:#111;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    border:1px solid rgba(212,175,55,.3);
+
+    box-shadow:0 20px 40px rgba(0,0,0,.5);
+
+}
+
+
+
+.address-container h1{
+
+    text-align:center;
+
+    color:#d4af37;
+
+    margin-bottom:30px;
+
+}
+
+
+
+.form-group{
+
+    margin-bottom:20px;
+
+}
+
+
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#d4af37;
+
+}
+
+
+
+.form-group input,
+.form-group textarea{
+
+
+    width:100%;
+
+    padding:14px;
+
+    background:#181818;
+
+    border:1px solid #333;
+
+    border-radius:10px;
+
+    color:white;
+
+    outline:none;
+
+}
+
+
+
+.form-group textarea{
+
+    height:120px;
+
+    resize:none;
+
+}
+
+
+
+.form-group input:focus,
+.form-group textarea:focus{
+
+    border-color:#d4af37;
+
+}
+
+
+
+.save-address{
+
+
+    width:100%;
+
+    padding:15px;
+
+    background:#d4af37;
+
+    color:black;
+
+    border:none;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    transition:.3s;
+
+}
+
+
+
+.save-address:hover{
+
+    background:white;
+
+    transform:translateY(-3px);
+
+}

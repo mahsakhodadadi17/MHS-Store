@@ -1,0 +1,436 @@
+{% extends "admin_base.html" %}
+{% load humanize %}
+
+{% block title %}مدیریت پیام‌ها{% endblock %}
+
+{% block page_title %}
+مدیریت پیام‌ها
+{% endblock %}
+
+{% block breadcrumb %}
+پیام‌ها
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="row">
+
+<div class="col-lg-3 col-6">
+
+<div class="small-box bg-primary">
+
+<div class="inner">
+
+<h3>{{ contacts.count }}</h3>
+
+<p>کل پیام‌ها</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-envelope"></i>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-6">
+
+<div class="small-box bg-success">
+
+<div class="inner">
+
+<h3>{{ today_messages }}</h3>
+
+<p>پیام‌های امروز</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-calendar-day"></i>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card shadow">
+
+<div class="card-header">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<h3 class="card-title">
+
+<i class="fas fa-envelope text-primary"></i>
+
+لیست پیام‌ها
+
+</h3>
+
+<input
+type="text"
+id="searchInput"
+class="form-control"
+placeholder="جستجو..."
+style="width:250px;">
+
+<div class="mt-3">
+
+
+<button class="btn btn-primary filter-btn" data-filter="all">
+
+همه
+
+</button>
+
+
+<button class="btn btn-warning filter-btn" data-filter="open">
+
+در انتظار پاسخ
+
+</button>
+
+
+<button class="btn btn-success filter-btn" data-filter="answered">
+
+پاسخ داده شده
+
+</button>
+
+
+<button class="btn btn-dark filter-btn" data-filter="closed">
+
+بسته شده
+
+</button>
+
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-hover table-bordered text-center">
+
+<thead class="thead-dark">
+<tr>
+
+<th>#</th>
+
+<th>کاربر</th>
+
+<th>موضوع</th>
+
+<th>نوع درخواست</th>
+
+<th>تاریخ</th>
+<th>وضعیت</th>
+<th>عملیات</th>
+
+</tr>
+</thead>
+
+<tbody id="contactsTable">
+    {% for contact in contacts %}
+
+<tr data-status="{{ contact.status }}">
+
+    <td>
+
+        {{ forloop.counter }}
+
+    </td>
+
+<td>
+    <strong>{{ contact.user.get_full_name|default:contact.user.username }}</strong>
+</td>
+
+<td>
+    {{ contact.subject }}
+</td>
+
+<td>
+    {{ contact.get_message_type_display }}
+</td>
+
+<td>
+    {{ contact.created_at|date:"Y/m/d H:i" }}
+</td>
+
+<td>
+
+{% if contact.status == "open" %}
+
+<span class="badge badge-warning">
+در انتظار پاسخ
+</span>
+
+
+{% elif contact.status == "answered" %}
+
+<span class="badge badge-success">
+پاسخ داده شده
+</span>
+
+
+{% elif contact.status == "closed" %}
+
+<span class="badge badge-dark">
+بسته شده
+</span>
+
+
+{% endif %}
+
+</td>
+
+<td>
+
+    {% if not contact.is_read %}
+
+    <a
+        href="{% url 'admin_read_contact' contact.id %}"
+        class="btn btn-success btn-sm"
+        title="علامت به عنوان خوانده شده">
+
+        <i class="fas fa-check"></i>
+
+    </a>
+
+    {% endif %}
+
+
+    <a
+        href="{% url 'admin_contact_detail' contact.id %}"
+        class="btn btn-info btn-sm"
+        title="مشاهده پیام">
+
+        <i class="fas fa-eye"></i>
+
+    </a>
+
+
+    <a
+        href="{% url 'admin_delete_contact' contact.id %}"
+        class="btn btn-danger btn-sm"
+        onclick="return confirm('آیا از حذف این پیام مطمئن هستید؟');"
+        title="حذف">
+
+        <i class="fas fa-trash"></i>
+
+    </a>
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+    <td colspan="7" class="text-center py-5">
+
+        <i class="fas fa-envelope-open-text fa-3x text-muted mb-3"></i>
+
+        <br>
+
+        هیچ پیامی وجود ندارد.
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Modal مشاهده پیام -->
+
+<div class="modal fade" id="messageModal">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    مشاهده پیام
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal">
+
+                    <span>&times;</span>
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+
+                    <strong>نام:</strong>
+
+                    <span id="modalName"></span>
+
+                </p>
+
+                <p>
+
+                    <strong>ایمیل:</strong>
+
+                    <span id="modalEmail"></span>
+
+                </p>
+
+                <p>
+
+                  <strong>شماره سفارش:</strong>
+
+                 <span id="modalOrder"></span>
+
+                </p>
+
+                <hr>
+
+                <p id="modalMessage" style="white-space:pre-line;"></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ======================
+    // جستجو
+    // ======================
+
+    const searchInput = document.getElementById("searchInput");
+
+    searchInput.addEventListener("keyup", function () {
+
+        let value = this.value.toLowerCase();
+
+        let rows = document.querySelectorAll("#contactsTable tr");
+
+        rows.forEach(function (row) {
+
+            row.style.display =
+                row.innerText.toLowerCase().includes(value)
+                ? ""
+                : "none";
+
+        });
+
+    });
+
+
+    // ======================
+    // مشاهده پیام
+    // ======================
+
+    const buttons = document.querySelectorAll(".viewMessage");
+
+    buttons.forEach(function(btn){
+
+        btn.addEventListener("click", function(){
+
+            document.getElementById("modalName").innerText =
+                this.dataset.name;
+
+            document.getElementById("modalEmail").innerText =
+                this.dataset.email;
+
+            document.getElementById("modalOrder").innerText =
+                this.dataset.order || "-";
+
+            document.getElementById("modalMessage").innerText =
+                this.dataset.message;
+
+            $("#messageModal").modal("show");
+
+        });
+
+    });
+
+    const filterButtons = document.querySelectorAll(".filter-btn");
+
+
+filterButtons.forEach(function(btn){
+
+    btn.addEventListener("click", function(){
+
+
+        let filter = this.dataset.filter;
+
+
+        let rows = document.querySelectorAll("#contactsTable tr");
+
+
+        rows.forEach(function(row){
+
+
+            let status = row.dataset.status;
+
+
+            if(filter === "all" || status === filter){
+
+                row.style.display = "";
+
+            }else{
+
+                row.style.display = "none";
+
+            }
+
+
+        });
+
+
+    });
+
+
+});
+
+});
+
+</script>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/edit_address.css' %}">
+
+<div class="edit-wrapper">
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <h2>ویرایش آدرس</h2>
+
+        <input type="text" name="full_name" value="{{ address.full_name }}">
+        <input type="text" name="phone" value="{{ address.phone }}">
+        <input type="text" name="city" value="{{ address.city }}">
+
+        <textarea name="address">{{ address.address }}</textarea>
+
+        <button type="submit">ذخیره</button>
+
+    </form>
+
+</div>

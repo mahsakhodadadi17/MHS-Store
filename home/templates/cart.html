@@ -1,0 +1,136 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shopping Cart</title>
+
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+
+    <!-- CSRF for JS -->
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+
+<body>
+
+<section class="lux-cart-wrapper">
+
+    <div class="lux-cart-container">
+
+        <!-- TITLE -->
+        <div class="lux-cart-title">
+            <h1>سبد خرید</h1>
+            <span></span>
+        </div>
+
+        <div class="lux-cart-content">
+
+            <!-- PRODUCTS -->
+            <div class="lux-products">
+
+                {% for item in cart_items %}
+
+                <div class="lux-product-card"
+                     data-price="{{ item.product.price }}">
+
+                    <img src="{{ item.product.image.url }}"
+                         class="lux-product-image"
+                         alt="{{ item.product.title }}">
+
+                    <div class="lux-product-info">
+
+                        <h3>
+                            {{ item.product.title }}
+                        </h3>
+
+                        <p class="lux-product-price">
+                            ${{ item.product.price }}
+                        </p>
+
+                        <div class="lux-quantity-box">
+
+                            <button class="lux-minus"
+                                    data-id="{{ item.id }}">
+                                -
+                            </button>
+
+                            <span class="lux-quantity">
+                                {{ item.quantity }}
+                            </span>
+
+                            <button class="lux-plus"
+                                    data-id="{{ item.id }}">
+                                +
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <button class="lux-remove"
+                            data-id="{{ item.id }}">
+
+                        Remove
+
+                    </button>
+
+                </div>
+
+                {% empty %}
+
+                <div class="lux-empty">
+                    سبد خرید شما خالی است
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="lux-summary">
+
+                <h2>
+                    خلاصه سفارش
+                </h2>
+
+                <div class="lux-total-row">
+
+                    <span>
+                        مبلغ کل
+                    </span>
+
+                    <strong id="lux-total-price">
+                        ${{ total }}
+                    </strong>
+
+                </div>
+
+                <a href="{% url 'checkout' %}"
+                   class="lux-checkout-btn">
+
+                    ثبت نهایی سفارش
+
+                </a>
+
+                <a href="{% url 'products' %}"
+                   class="lux-shopping-btn">
+
+                    ادامه خرید
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script src="{% static 'js/cart.js' %}?v=99"></script>
+</body>
+</html>

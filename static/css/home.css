@@ -1,0 +1,779 @@
+:root {
+  --bg: #fbfaf8;
+  --card: #ffffff;
+  --text: #1e1e1e;
+  --muted: #7a7a7a;
+  --gold: #c9a76a;
+  --border: #ece6dd;
+  --shadow: rgba(0, 0, 0, 0.06);
+}
+
+/* ===== GLOBAL ===== */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* لینک‌ها */
+a {
+  text-decoration: none;
+  color: #000;
+  transition: 0.25s ease;
+}
+
+a:hover {
+  color: var(--gold);
+}
+
+
+
+/* ===== RESET فاصله‌های پیش‌فرض ===== */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== HEADER ===== */
+.site-header {
+  background: #fff;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* مهم‌ترین بخش */
+#header {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* سکشن اول چسبیده به هدر */
+#intro {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* navbar فقط کنترل ساده */
+.navbar {
+  margin: 0;
+  padding: 10px 0;
+}
+
+/* لینک‌ها */
+.navbar-nav .nav-link {
+  color: #1e1e1e;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #c9a76a;
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 22px;
+}
+
+/* ===== PRODUCT GRID (خیلی مهم برای نظم) ===== */
+.product-content .row {
+  row-gap: 28px;
+}
+
+.product-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.35s ease;
+  box-shadow: 0 5px 15px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  border-color: rgba(201, 167, 106, 0.4);
+}
+
+/* ===== IMAGE (خیلی مهم برای تمیزی عکس‌ها) ===== */
+.card-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;   /* همه عکس‌ها مربع و منظم */
+  overflow: hidden;
+  background: #f4f1ec;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     /* مهم: کراپ تمیز و حرفه‌ای */
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.06);
+}
+
+/* ===== PRODUCT DETAILS ===== */
+.card-detail {
+  padding: 14px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 500;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-price {
+  color: #c48f34;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ===== BUTTONS ===== */
+.btn,
+.btn-red {
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.btn:hover {
+  background: #e3c58a;
+  transform: translateY(-2px);
+}
+
+/* ===== MODAL ===== */
+.modal-content {
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+/* ===== INPUT ===== */
+input,
+.search-input {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  width: 100%;
+  background: #fff;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 167, 106, 0.15);
+}
+
+/* ===== DROPDOWN ===== */
+.dropdown-menu {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.dropdown-item:hover {
+  background: rgba(201, 167, 106, 0.08);
+  color: var(--gold);
+}
+
+
+/* ===== SOCIAL ICONS ===== */
+.social-icons a {
+  color: var(--text);
+  margin-right: 10px;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.social-icons a:hover {
+  color: var(--gold);
+  transform: translateY(-3px);
+}
+
+/* ===== GRID CLEAN SPACING (خیلی مهم برای مرتب شدن کل سایت) ===== */
+.row > div {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.social-icons a i {
+  color: #c9a76a;   /* طلایی */
+  transition: 0.3s ease;
+}
+
+/* اگر خواستی hover هم قشنگ‌تر بشه */
+.social-icons a:hover i {
+  color: #e0c58f;   /* طلایی روشن‌تر */
+  transform: scale(1.1);
+}
+
+.section-title {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+/* خط طلایی */
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 60%;
+  height: 2px;
+  background: #c9a76a; /* طلایی */
+  border-radius: 2px;
+}
+
+
+/* ===== GLOBAL RESET ===== */
+body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+}
+
+/* ===== HEADER (FLAT + CLEAN) ===== */
+.site-header {
+  background: #fff;
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  position: relative;
+  z-index: 1000;
+}
+
+/* navbar spacing */
+.navbar {
+  padding: 12px 0;
+}
+
+/* links */
+.navbar-nav .nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e1e1e;
+  transition: 0.2s;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #c9a76a;
+}
+
+/* icons */
+.user-items a svg {
+  fill: #000000;
+  transition: 0.2s;
+}
+
+.user-items a:hover svg {
+  fill: #c9a76a;
+}
+
+/* ===== HERO (REMOVE GAP COMPLETELY) ===== */
+#intro {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* اگر اسلایدر فاصله دارد */
+.swiper {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* اگر container فاصله می‌سازد */
+#intro .container-lg {
+  padding-top: 0 !important;
+}
+.user-items a svg {
+  color: #000 !important;   /* حالت عادی مشکی */
+  transition: 0.25s ease;
+}
+
+/* مهم‌ترین بخش */
+.user-items a:hover svg {
+  color: #c9a76a !important; /* طلایی */
+}
+.user-items .shopping-cart {
+  color: #000;
+  fill: currentColor;
+}
+
+.user-items .shopping-cart:hover {
+  color: #c9a76a;
+}
+
+/* همه آیکون‌های هدر + دکمه‌ها */
+.user-items a svg,
+button svg,
+.cart-button svg,
+.cart-concern svg {
+  fill: #000 !important;
+  color: #000 !important;
+  transition: 0.25s ease;
+}
+
+/* hover طلایی برای همه حالت‌ها */
+.user-items a:hover svg,
+button:hover svg,
+.cart-button:hover svg,
+.cart-concern:hover svg {
+  fill: #c9a76a !important;
+  color: #c9a76a !important;
+}
+.user-items svg {
+  fill: currentColor !important;
+  color: #000;
+  transition: 0.25s ease;
+}
+
+/* hover طلایی */
+.user-items a:hover {
+  color: #c9a76a;
+}
+.user-items a:hover svg {
+  color: #c9a76a !important;
+  fill: #c9a76a !important;
+}
+
+.user-items svg {
+  color: #000;
+}
+
+/* مهم‌ترین خط دنیا 😄 */
+.user-items svg use {
+  fill: currentColor !important;
+}
+
+/* hover طلایی */
+.user-items a:hover {
+  color: #c9a76a;
+}
+
+.navbar-nav .nav-link {
+  font-size: 17px !important;   /* قبلاً 14 بوده */
+  font-weight: 600;
+  padding: 10px 16px;
+  letter-spacing: 0.3px;
+}
+
+/* فاصله بین آیتم‌ها */
+.navbar-nav {
+  gap: 8px;
+}
+
+/* حالت hover شیک‌تر */
+.navbar-nav .nav-link:hover {
+  color: #c9a76a;
+}
+
+.navbar-nav .nav-link {
+  position: relative;
+  color: #1e1e1e;
+  font-size: 16px;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+
+.navbar-nav .nav-link:not(.no-underline):hover {
+  color: #c9a76a;
+}
+
+
+
+/* آیتم‌های بدون خط فقط رنگ می‌گیرن */
+.navbar-nav .nav-link.no-underline:hover {
+  color: #c9a76a;
+}
+
+
+
+.search-item {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 99999;
+}
+.search-box {
+    position: relative;
+    z-index: 2000;
+}
+.search-item {
+    cursor: pointer;
+}
+
+.product-card{
+    border-radius:20px;
+    border:1px solid #eee5d8;
+    background:#fff;
+    transition:.35s;
+}
+
+.product-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+.card-price{
+    color:#c9a76a;
+    font-size:15px;
+    font-weight:700;
+}
+
+/* ===== LUXURY HERO SLIDER ===== */
+
+#intro .swiper-slide .card{
+    height: 520px;
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+}
+
+
+#intro .swiper-slide img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+
+/* اسلایدهای دوتایی */
+#intro .swiper-slide .row .card{
+    height:250px;
+}
+
+
+/* فاصله بین دو کارت کوچک */
+#intro .swiper-slide .row{
+    height:520px;
+}
+
+
+/* حالت لوکس روی عکس */
+#intro .card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        to top,
+        rgba(0,0,0,.45),
+        transparent
+    );
+}
+
+
+/* متن روی عکس */
+#intro .cart-concern{
+    position:relative;
+    z-index:2;
+}
+
+
+#intro .card-title{
+    color:white;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+
+/* دکمه */
+#intro .text-hover{
+    border-bottom:2px solid #c9a76a;
+    color:white;
+    transition:.3s;
+}
+
+
+#intro .text-hover:hover{
+    color:#c9a76a;
+}
+
+
+/* موبایل */
+@media(max-width:768px){
+
+#intro .swiper-slide .card{
+    height:350px;
+}
+
+#intro .swiper-slide .row{
+    height:auto;
+}
+
+#intro .swiper-slide .row .card{
+    height:220px;
+}
+
+}
+/* متن روی عکس */
+#intro .card{
+    position:relative;
+    overflow:hidden;
+}
+
+
+#intro .cart-concern{
+    position:absolute;
+    bottom:40px;
+    left:40px;
+    z-index:5;
+    margin:0 !important;
+    padding:0 !important;
+}
+
+
+/* تاریک کردن پایین عکس برای خوانایی */
+#intro .card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        to top,
+        rgba(0,0,0,.55),
+        transparent 60%
+    );
+}
+
+
+/* عنوان */
+#intro .card-title{
+    color:white;
+    font-size:32px;
+    margin-bottom:15px;
+}
+
+
+/* دکمه */
+#intro .text-hover{
+    color:rgb(0, 0, 0);
+    border-bottom:2px solid #c9a76a;
+    padding-bottom:5px;
+}
+
+
+/* hover */
+#intro .card:hover img{
+    transform:scale(1.05);
+}
+
+
+#intro img{
+    transition:.5s ease;
+}
+/* ===== FIX SWIPER IMAGES ===== */
+
+#intro .swiper-slide .card{
+    height: 520px;
+    position: relative;
+    overflow: hidden;
+}
+
+
+#intro .swiper-slide .card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+}
+
+
+/* اسلایدهایی که دو کارت دارن */
+#intro .swiper-slide .row{
+    height:520px;
+}
+
+
+#intro .swiper-slide .row .card{
+    height:250px;
+}
+
+
+/* جلوگیری از کش آمدن عکس */
+.jarallax-img{
+    min-height:100%;
+}
+
+
+/* اگر بعضی عکس ها هنوز بریده بودن */
+#intro .swiper-slide:nth-child(1) img,
+#intro .swiper-slide:nth-child(3) img{
+    object-position:center center;
+}
+
+/* تنظیم جداگانه عکس‌های اسلایدر */
+
+#intro img[src*="card-image5.jpeg"]{
+    object-position:center center;
+}
+
+
+#intro img[src*="card-image6.jpg"]{
+    object-position:center center;
+}
+
+
+#intro img[src*="card-image2.jpg"]{
+    object-position:center top;
+}
+#intro img[src*="card-image5.jpeg"],
+#intro img[src*="card-image6.jpg"]{
+    object-fit:contain;
+    background:#f5f1e8;
+}
+
+#intro .card{
+    position:relative;
+    overflow:hidden;
+}
+
+
+#intro .card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+
+#intro .cart-concern{
+    position:absolute;
+    left:40px;
+    bottom:40px;
+    z-index:5;
+
+    margin:0 !important;
+    padding:0 !important;
+}
+
+
+#intro .card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        transparent,
+        rgba(0,0,0,.55)
+    );
+}
+
+
+#intro .cart-concern .card-title,
+#intro .cart-concern a{
+    position:relative;
+    z-index:10;
+    color:white;
+}
+#intro .swiper-slide .card{
+    height:520px;
+    overflow:hidden;
+    position:relative;
+}
+
+
+#intro video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+
+.navbar-nav .nav-link {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #c9a76a;
+}
+
+/* فقط فلش Bootstrap پیشفرض */
+.dropdown-toggle::after {
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* dropdown باید بالا باشه */
+.dropdown-menu {
+    z-index: 9999;
+}
+
+.dropdown-menu {
+    display: none;
+}
+
+.dropdown-menu.show {
+    display: block !important;
+}
+
+.nav-item:not(.dropdown) .nav-link::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:4px;
+    width:0;
+    height:2px;
+    background:#c9a76a;
+    transform:translateX(-50%);
+    transition:.3s;
+}
+
+.nav-item:not(.dropdown) .nav-link:hover::after{
+    width:60%;
+}
+.dropdown-toggle::after{
+    display:inline-block !important;
+}
+
+.dropdown:hover .dropdown-menu{
+    display:block;
+}
+.site-header{
+    position: relative;
+}
+
+.site-header::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 17px;   /* هرچه بیشتر باشد، خط بالاتر می‌رود */
+    height: 2px;
+    background: #c9a76a;
+}
+.luxury-footer{
+    border-top: 4px solid #C9A76A;
+    box-shadow: 0 -2px 10px rgba(252, 240, 111, 0.923);
+    margin-top: 50px;
+}
+.cart-concern{
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transform: translateX(35%);
+}

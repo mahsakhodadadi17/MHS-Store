@@ -1,0 +1,823 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+ <link rel="stylesheet" href="{% static 'css/tracking.css' %}?v=108">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+ <title>Track Your Order | MHS Luxury Store</title>
+
+
+
+
+ <link rel="stylesheet"
+ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+<section class="hero">
+
+    <div class="container">
+
+        <h1>
+            پیگیری سفارش
+        </h1>
+
+        <p>
+            سفارشات خود را به‌سادگی پیگیری کنید
+        </p>
+
+    </div>
+
+</section>
+
+
+
+
+
+<section class="tracking-section">
+
+<div class="container">
+
+<div class="tracking-card">
+
+
+<h2>
+پیگیری سفارش
+</h2>
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+<div class="form-group">
+
+<input
+type="text"
+name="orderNumber"
+placeholder="شماره سفارش"
+required>
+
+</div>
+
+
+
+<div class="form-group">
+
+<input
+type="text"
+name="customerInfo"
+placeholder="ایمیل"
+required>
+
+</div>
+
+
+
+<button class="track-btn">
+
+پیگیری سفارش
+
+</button>
+
+
+</form>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+
+{% if order %}
+
+
+<section class="status-section">
+
+<div class="container">
+
+
+<div class="status-card">
+
+
+<h2 class="status-header">
+
+جزئیات سفارش
+
+</h2>
+
+
+
+<div class="status-grid">
+
+
+
+<div class="status-item">
+
+<span>
+شماره سفارش
+</span>
+
+<strong>
+
+#{{ order.id }}
+
+</strong>
+
+</div>
+
+
+
+
+
+<div class="status-item">
+
+<span>
+تاریخ سفارش
+</span>
+
+<strong>
+
+{{ order.created_at }}
+
+</strong>
+
+</div>
+
+
+
+
+
+<div class="status-item">
+
+<span>
+مبلغ
+</span>
+
+<strong>
+
+{{ order.total_price }}
+تومان
+
+</strong>
+
+</div>
+
+
+
+
+
+<div class="status-item">
+
+<span>
+وضعیت
+</span>
+
+<strong class="gold-text">
+
+{{ order.get_status_display }}
+
+</strong>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+{% if order.status == "pending" or order.status == "paid" %}
+    
+    {% if order.can_cancel %}
+
+
+<div class="cancel-wrapper">
+
+
+<form method="POST" action="{% url 'cancel_order' order.id %}">
+
+{% csrf_token %}
+
+
+<button type="submit" class="cancel-btn">
+
+ <i class="fas fa-times"></i>
+
+ لغو سفارش
+
+</button>
+
+
+</form>
+
+
+</div>
+
+
+    {% endif %}
+
+{% endif %}
+
+
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+<section class="timeline-section">
+
+
+<div class="container">
+
+
+<h2 class="section-title">
+
+وضعیت سفارش
+
+</h2>
+
+
+
+
+<div class="timeline">
+
+
+
+<div class="step {% if order %}completed{% endif %}">
+
+
+<div class="icon">
+
+<i class="fas fa-check"></i>
+
+</div>
+
+
+<h4>
+
+ثبت سفارش
+
+</h4>
+
+
+</div>
+
+
+
+
+
+
+<div class="line 
+{% if order.status == 'paid' or order.status == 'sent' or order.status == 'done' %}
+active
+{% endif %}">
+
+</div>
+
+
+
+
+
+
+
+<div class="step
+
+{% if order.status == 'paid' or order.status == 'sent' or order.status == 'done' %}
+
+completed
+
+{% endif %}">
+
+
+<div class="icon">
+
+<i class="fas fa-credit-card"></i>
+
+</div>
+
+
+<h4>
+
+پرداخت
+
+</h4>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="line
+
+{% if order.status == 'sent' or order.status == 'done' %}
+
+active
+
+{% endif %}">
+
+</div>
+
+
+
+
+
+
+
+<div class="step
+
+{% if order.status == 'sent' or order.status == 'done' %}
+
+completed
+
+{% endif %}">
+
+
+<div class="icon">
+
+<i class="fas fa-truck"></i>
+
+</div>
+
+
+<h4>
+
+ارسال شده
+
+</h4>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="line
+
+{% if order.status == 'done' %}
+
+active
+
+{% endif %}">
+
+</div>
+
+
+
+
+
+
+
+
+<div class="step
+
+{% if order.status == 'done' %}
+
+completed
+
+{% endif %}">
+
+
+<div class="icon">
+
+<i class="fas fa-house"></i>
+
+</div>
+
+
+<h4>
+
+تحویل داده شده
+
+</h4>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<section class="support-section">
+
+
+<div class="container">
+
+
+<div class="support-card">
+
+
+<h2>
+
+پشتیبانی مشتریان
+
+</h2>
+
+
+
+<p>
+
+برای سفارش خود نیاز به راهنمایی دارید؟ تیم MHS آماده پاسخگویی است
+
+</p>
+
+
+
+
+<div class="support-info">
+
+
+
+<p>
+
+<i class="fas fa-phone"></i>
+
+<span dir="ltr">
+
++98 913 390 3078
+
+</span>
+
+</p>
+
+
+
+
+
+<p>
+
+<i class="fas fa-envelope"></i>
+
+<span dir="ltr">
+
+mahsakhodadadi17@gmail.com
+
+</span>
+
+</p>
+
+
+
+
+<div class="contact-form-box">
+
+    <h3>
+        <i class="fas fa-headset"></i>
+        ارسال پیام به پشتیبانی
+    </h3>
+    {% if messages %}
+
+{% for message in messages %}
+
+<div class="alert alert-success text-center">
+    {{ message }}
+</div>
+
+{% endfor %}
+
+{% endif %}
+<form method="POST" action="{% url 'send_message' %}">
+
+{% csrf_token %} 
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                نوع درخواست
+            </label>
+
+
+            <select 
+                name="message_type"
+                class="form-control"
+                id="messageType">
+
+
+                <option value="general">
+                    سوال عمومی
+                </option>
+
+
+                <option value="order">
+                    مشکل سفارش
+                </option>
+
+
+            </select>
+
+        </div>
+
+
+
+
+        <div class="form-group" id="orderBox" style="display:none;">
+
+
+            <label>
+                شماره سفارش
+            </label>
+
+
+            <input 
+                type="text"
+                name="order_id"
+                class="form-control"
+                placeholder="مثلاً 1254">
+
+
+        </div>
+
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                موضوع پیام
+            </label>
+
+
+            <input 
+                type="text"
+                name="subject"
+                class="form-control"
+                placeholder="موضوع پیام را وارد کنید"
+                required>
+
+        </div>
+
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                پیام شما
+            </label>
+
+
+            <textarea
+                name="message"
+                class="form-control"
+                rows="5"
+                placeholder="متن پیام خود را بنویسید..."
+                required></textarea>
+
+
+        </div>
+
+
+
+
+
+        <button 
+            type="submit"
+            class="send-btn">
+
+            <i class="fas fa-paper-plane"></i>
+
+            ارسال پیام
+
+        </button>
+
+
+
+    </form>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<section class="faq-section">
+
+
+<div class="container">
+
+
+<h2 class="section-title">
+
+پرسش‌های متداول
+
+</h2>
+
+
+
+
+
+<div class="faq-item">
+
+
+<button class="faq-question">
+
+چگونه می‌توانم سفارش خود را پیگیری کنم؟
+
+</button>
+
+
+
+<div class="faq-answer">
+
+شماره سفارش و ایمیل خود را وارد کنید تا وضعیت سفارش نمایش داده شود.
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="faq-item">
+
+
+<button class="faq-question">
+
+اگر سفارش من با تأخیر مواجه شود چه باید کرد؟
+
+</button>
+
+
+
+<div class="faq-answer">
+
+با پشتیبانی تماس بگیرید تا وضعیت بررسی شود.
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="faq-item">
+
+
+<button class="faq-question">
+
+چگونه می‌توانم با پشتیبانی تماس بگیرم؟
+
+</button>
+
+
+
+<div class="faq-answer">
+
+از طریق تلفن یا ایمیل با ما در ارتباط باشید.
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<footer>
+
+
+<div class="copyright">
+
+© 2026 MHS Store | تمامی حقوق محفوظ است
+
+</div>
+
+
+</footer>
+
+
+
+
+
+<script src="{% static 'js/tracking.js' %}"></script>
+
+<script>
+
+const type = document.getElementById("messageType");
+const orderBox = document.getElementById("orderBox");
+
+
+type.addEventListener("change", function(){
+
+    if(this.value === "order"){
+
+        orderBox.style.display="block";
+
+    }else{
+
+        orderBox.style.display="none";
+
+    }
+
+});
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="card card-primary">
+
+<div class="card-header">
+<h3 class="card-title">
+ویرایش محصول
+</h3>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="card-body">
+
+<div class="form-group">
+<label>نام محصول</label>
+<input
+type="text"
+name="title"
+class="form-control"
+value="{{ product.title }}">
+</div>
+
+<div class="form-group">
+<label>قیمت</label>
+<input
+type="number"
+name="price"
+class="form-control"
+value="{{ product.price }}">
+</div>
+
+<div class="form-group">
+<label>تخفیف (%)</label>
+<input
+type="number"
+name="discount"
+class="form-control"
+value="{{ product.discount }}">
+</div>
+
+<div class="form-group">
+<label>توضیحات</label>
+
+<textarea
+name="content"
+class="form-control"
+rows="6">{{ product.content }}</textarea>
+
+</div>
+
+<div class="form-group">
+
+<label>عکس جدید</label>
+
+<input
+type="file"
+name="image"
+class="form-control">
+
+</div>
+
+</div>
+
+<div class="card-footer">
+
+<button class="btn btn-success">
+ذخیره تغییرات
+</button>
+
+<a href="{% url 'admin_products' %}" class="btn btn-secondary">
+بازگشت
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

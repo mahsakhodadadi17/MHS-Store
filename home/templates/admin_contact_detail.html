@@ -1,0 +1,166 @@
+{% extends "admin_base.html" %}
+
+{% block title %}جزئیات پیام{% endblock %}
+
+{% block page_title %}
+جزئیات پیام
+{% endblock %}
+
+{% block breadcrumb %}
+جزئیات پیام
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="card shadow">
+
+<div class="card-header">
+
+<h3 class="card-title">
+<i class="fas fa-envelope text-primary"></i>
+جزئیات پیام
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<tr>
+<th width="200">کاربر</th>
+<td>{{ contact.user.get_full_name|default:contact.user.username }}</td>
+</tr>
+
+<tr>
+<th>ایمیل</th>
+<td>{{ contact.user.email }}</td>
+</tr>
+
+<tr>
+<th>موضوع</th>
+<td>{{ contact.subject }}</td>
+</tr>
+
+<tr>
+<th>نوع درخواست</th>
+<td>{{ contact.get_message_type_display }}</td>
+</tr>
+
+<tr>
+<th>شماره سفارش</th>
+<td>
+{% if contact.order_id %}
+#{{ contact.order_id }}
+{% else %}
+-
+{% endif %}
+</td>
+</tr>
+
+<tr>
+<th>تاریخ ارسال</th>
+<td>{{ contact.created_at }}</td>
+</tr>
+
+<tr>
+<th>متن پیام</th>
+<td style="white-space:pre-line;">
+{{ contact.message }}
+</td>
+</tr>
+<hr>
+
+<h4>پاسخ‌های این تیکت</h4>
+
+{% for reply in contact.replies.all %}
+
+<div class="card mb-3">
+
+    <div class="card-body">
+
+        <strong>
+
+        {% if reply.is_admin %}
+            ادمین
+        {% else %}
+            {{ reply.user.username }}
+        {% endif %}
+
+        </strong>
+
+        <small class="text-muted float-right">
+
+            {{ reply.created_at|date:"Y/m/d H:i" }}
+
+        </small>
+
+        <hr>
+
+        {{ reply.message|linebreaks }}
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<p class="text-muted">
+هنوز پاسخی ثبت نشده است.
+</p>
+
+{% endfor %}
+
+<hr>
+
+<h4>ارسال پاسخ</h4>
+
+<form method="POST" action="{% url 'admin_reply_contact' contact.id %}">
+
+    {% csrf_token %}
+
+    <div class="form-group">
+
+        <textarea
+            name="message"
+            class="form-control"
+            rows="6"
+            placeholder="پاسخ خود را بنویسید..."
+            required></textarea>
+
+    </div>
+
+    <button class="btn btn-success">
+
+        <i class="fas fa-paper-plane"></i>
+
+        ارسال پاسخ
+
+    </button>
+
+</form>
+</table>
+
+<a href="{% url 'admin_contacts' %}" class="btn btn-secondary">
+<i class="fas fa-arrow-right"></i>
+بازگشت
+</a>
+
+<a href="{% url 'admin_delete_contact' contact.id %}"
+class="btn btn-danger"
+onclick="return confirm('آیا از حذف این پیام مطمئن هستید؟');">
+
+<i class="fas fa-trash"></i>
+حذف پیام
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,198 @@
+{% load humanize %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/product_detail.css' %}?v=99">
+
+<div class="product-detail">
+
+    <h1 style="
+    color:#000;
+    font-weight:700;
+    font-size:32px;
+    border-bottom:2px solid #D4AF37;
+    display:inline-block;
+    padding-bottom:8px;
+    ">
+
+        {{ product.title }}
+
+    </h1>
+
+
+
+
+    <div style="
+    margin-top:20px;
+    text-align:center;
+    ">
+
+
+        <img 
+        src="{{ product.image.url }}" 
+        alt="{{ product.title }}"
+        style="
+        width:320px;
+        border-radius:15px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.2);
+        border:3px solid #D4AF37;
+        ">
+
+
+    </div>
+
+
+
+
+
+
+    <div style="
+    margin-top:25px;
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    ">
+
+
+
+
+        <p style="
+        color:#333;
+        font-size:16px;
+        line-height:1.8;
+        ">
+
+            {{ product.content }}
+
+        </p>
+
+
+
+
+
+        <p style="
+        margin-top:15px;
+        font-size:18px;
+        font-weight:600;
+        color:#000;
+        ">
+
+
+            قیمت:
+
+            <span style="color:#D4AF37;">
+
+            {{ product.price|intcomma }}
+
+            </span>
+
+
+            تومان
+
+
+        </p>
+
+
+
+
+
+
+
+
+        <!-- Add To Cart -->
+
+    <div class="cart-btn-wrapper">
+       <button 
+         type="button"
+         class="add-to-cart"
+          data-id="{{ product.id }}"
+         style="
+         background:#D4AF37;
+         color:#000;
+         border:none;
+         padding:15px 40px;
+         border-radius:30px;
+         font-size:16px;
+         font-weight:bold;
+         cursor:pointer;
+         "
+         >
+         🛒 افزودن به سبد خرید
+        </button>
+   </div>
+
+
+
+
+
+
+
+
+
+        <!-- Add To Wishlist -->
+
+
+        <button class="wishlist-btn" data-id="{{ product.id }}">
+            <span class="heart">🤍</span>
+            <span class="text">افزودن به علاقه‌مندی</span>
+        </button>
+
+
+        
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+</div>
+<script src="{% static 'js/cart.js' %}?v=99"></script>
+<script>
+document.querySelectorAll(".wishlist-btn").forEach(btn => {
+
+    btn.addEventListener("click", function () {
+
+        let id = this.getAttribute("data-id");
+
+        fetch(`/wishlist/toggle/${id}/`, {
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+
+        .then(res => res.json())
+        .then(data => {
+
+            let heart = this.querySelector(".heart");
+            let text = this.querySelector(".text");
+
+            if (data.liked) {
+                heart.innerHTML = "❤️";
+                text.innerHTML = "حذف از علاقه‌مندی";
+                this.style.background = "#D4AF37";
+                this.style.color = "#000";
+            } 
+            else {
+                heart.innerHTML = "🤍";
+                text.innerHTML = "افزودن به علاقه‌مندی";
+                this.style.background = "#000";
+                this.style.color = "#D4AF37";
+            }
+
+        });
+
+    });
+
+});
+</script>
+

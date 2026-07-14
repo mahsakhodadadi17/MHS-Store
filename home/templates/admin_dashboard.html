@@ -1,0 +1,1209 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Dashboard</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/jqvmap/jqvmap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'adminlte/css/adminlte.min.css' %}">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/daterangepicker/daterangepicker.css' %}">
+  <!-- summernote -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/summernote/summernote-bs4.min.css' %}">
+
+  <!-- summernote -->
+<link rel="stylesheet" href="{% static 'adminlte/plugins/summernote/summernote-bs4.min.css' %}">
+
+<style>
+
+body{
+    background:#f4f6f9;
+}
+
+.card{
+    border:none;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.card-header{
+    border-bottom:1px solid #eee;
+}
+
+.table-responsive{
+    padding:0 25px 20px;
+}
+
+.table{
+    margin-bottom:0;
+}
+
+.table thead th{
+    background:#111827;
+    color:#fff;
+    border:none;
+    padding:16px;
+    text-align:center;
+    font-size:14px;
+}
+
+.table tbody td{
+    padding:18px 15px;
+    text-align:center;
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:.3s;
+}
+
+.table tbody tr:hover{
+    background:#f8f9fc;
+}
+
+.badge{
+    padding:8px 15px;
+    border-radius:30px;
+    font-size:12px;
+}
+
+.btn-orders{
+
+    background:#111827;
+    color:#fff !important;
+
+    padding:10px 22px;
+
+    border-radius:12px;
+
+    font-size:14px;
+    font-weight:600;
+
+    transition:.3s;
+
+    border:none;
+
+    text-decoration:none;
+
+}
+
+.btn-orders:hover{
+
+    background:#2563eb;
+
+    color:#fff !important;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 25px rgba(37,99,235,.25);
+
+}
+
+.mx-custom{
+    margin-left:25px;
+    margin-right:25px;
+}
+
+</style>
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="{% static 'adminlte/img/AdminLTELogo.png' %}" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{% url 'home' %}" class="nav-link">مشاهده فروشگاه</a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      <li class="nav-item">
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+          <i class="fas fa-search"></i>
+        </a>
+        <div class="navbar-search-block">
+          <form class="form-inline">
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                  <i class="fas fa-search"></i>
+                </button>
+                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </li>
+
+
+
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index3.html" class="brand-link">
+      <img src="{% static 'image/logo.png' %}"alt="Logo" class="brand-image img-circle elevation-3" style="opacity:.9">
+      <span class="brand-text font-weight-light">My Admin</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{% static 'image/admin-avatar.png' %}"
+            class="img-circle elevation-2"
+            alt="Admin">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">{{ request.user.username }}</a>
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+    <li class="nav-item">
+        <a href="{% url 'admin_dashboard' %}" class="nav-link active">
+            <i class="nav-icon fas fa-home"></i>
+            <p>داشبورد</p>
+        </a>
+    </li>
+
+    <li class="nav-header">مدیریت فروشگاه</li>
+
+    <li class="nav-item">
+        <a href="/admin-panel/products/" class="nav-link">
+            <i class="nav-icon fas fa-box"></i>
+            <p>
+                محصولات
+            </p>
+        </a>
+
+        <ul class="nav nav-treeview">
+
+            <li class="nav-item">
+                <a href="{% url 'admin_products' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>همه محصولات</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'admin_add_product' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>افزودن محصولات</p>
+                </a>
+            </li>
+
+        </ul>
+    </li>
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_orders' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-shopping-cart"></i>
+
+        <p>
+
+            سفارش ها
+
+            {% if orders_count > 0 %}
+
+                <span class="right badge badge-danger">
+                    {{ orders_count }}
+                </span>
+
+            {% endif %}
+
+        </p>
+
+    </a>
+
+</li>
+
+    <li class="nav-item">
+        <a href="{% url 'admin_users' %}" class="nav-link">
+            <i class="nav-icon fas fa-users"></i>
+            <p>کاربران</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'admin_categories' %}" class="nav-link">
+            <i class="nav-icon fas fa-list"></i>
+            <p>دسته بندی ها</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{% url 'admin_wishlist' %}" class="nav-link">
+            <i class="nav-icon fas fa-heart"></i>
+            <p>علاقه مندی ها</p>
+        </a>
+    </li>
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_contacts' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-envelope"></i>
+
+        <p>
+
+            پیام ها
+
+            {% if contacts_count > 0 %}
+
+                <span class="right badge badge-danger">
+                    {{ contacts_count }}
+                </span>
+
+            {% endif %}
+
+        </p>
+
+    </a>
+
+</li>
+
+<li class="nav-item">
+
+    <a href="{% url 'admin_notifications' %}" class="nav-link">
+
+        <i class="nav-icon fas fa-bell"></i>
+
+        <p>
+            اعلان ها
+
+            {% if notifications_count %}
+
+            <span class="right badge badge-danger">
+                {{ notifications_count }}
+            </span>
+
+            {% endif %}
+
+        </p>
+
+    </a>
+
+</li>
+
+    <li class="nav-item">
+        <a href="{% url 'admin_settings' %}" class="nav-link">
+            <i class="nav-icon fas fa-cog"></i>
+            <p>تنظیمات</p>
+        </a>
+    </li>
+
+    
+
+    <li class="nav-item">
+        <a href="{% url 'logout' %}" class="nav-link">
+            <i class="nav-icon fas fa-sign-out-alt"></i>
+            <p>خروج</p>
+        </a>
+    </li>
+
+  </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">داشبورد</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">خانه</a></li>
+              <li class="breadcrumb-item active">داشبورد</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ orders_count }}</h3>
+
+                <p>سفارش ها</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="{% url 'admin_orders' %}" class="small-box-footer">اطلاهات بیشتر<i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ products_count }}</h3>
+
+                <p>محصولات</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="/admin-panel/products/" class="small-box-footer">اطلاعات بیشتر <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{ users_count }}</h3>
+
+                <p>کاربران</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-person-add"></i>
+              </div>
+              <a href="{% url 'admin_users' %}" class="small-box-footer">اطلاعات بیشتر<i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{ total_revenue }}</h3>
+
+                <p> مجموع فروش (تومان)</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <a href="{% url 'admin_orders' %}" class="small-box-footer">
+               مشاهده سفارش‌ها
+                <i class="fas fa-arrow-circle-right"></i>
+             </a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <!-- Left col -->
+          <section class="col-lg-7 connectedSortable">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-chart-line mr-1"></i>
+                  نمودار فروش
+                </h3>
+                <div class="card-tools">
+                  <span class="badge badge-success">
+                   {{ total_revenue }} تومان
+                  </span>
+                </div>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+
+                <div style="height:400px">
+
+                 <canvas id="salesChart"></canvas>
+
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-chart-pie mr-1"></i>
+            وضعیت سفارش‌ها
+        </h3>
+    </div>
+
+    <div class="card-body">
+
+        <div style="height:350px;">
+            <canvas id="orderStatusChart"></canvas>
+        </div>
+
+    </div>
+</div>
+            <!-- /.card -->
+
+              <div class="card">
+
+                <div class="card-header">
+
+                 <h3 class="card-title">
+                   <i class="fas fa-envelope mr-2"></i>
+                   پیام‌های اخیر مشتریان
+                  </h3>
+
+                </div>
+
+                <div class="card-body p-0">
+
+                  <ul class="list-group list-group-flush">
+
+                    {% for message in recent_messages %}
+
+                      <li class="list-group-item">
+ 
+                       <h6 class="mb-1">
+                         {{ message.user.username }}
+                       </h6>
+
+                       <small class="text-muted">
+                         {{ message.subject }}
+                        </small>
+
+                        <p class="mb-0 mt-2">
+                         {{ message.message|truncatechars:80 }}
+                        </p>
+
+                      </li>
+
+                     {% empty %}
+
+                      <li class="list-group-item text-center">
+   
+                       هیچ پیامی وجود ندارد.
+
+                      </li>
+  
+                    {% endfor %}
+ 
+                  </ul>
+
+                </div>
+
+              <div class="card-footer text-center">
+
+                <a href="{% url 'admin_contacts' %}"class="btn btn-primary">
+
+                 مشاهده همه پیام‌ها
+
+                </a>
+
+              </div>
+
+            </div>
+
+            <!-- TO DO List -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-tasks mr-1"></i>
+                  کارهای مدیر
+                </h3>
+
+                <div class="card-tools">
+                  <ul class="pagination pagination-sm">
+                    <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>
+                    <li class="page-item"><a href="#" class="page-link">1</a></li>
+                    <li class="page-item"><a href="#" class="page-link">2</a></li>
+                    <li class="page-item"><a href="#" class="page-link">3</a></li>
+                    <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
+                  </ul>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <ul class="todo-list" data-widget="todo-list">
+                  <li>
+                    <!-- drag handle -->
+                    <span class="handle">
+                      <i class="fas fa-ellipsis-v"></i>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </span>
+                    <!-- checkbox -->
+                    <div  class="icheck-primary d-inline ml-2">
+                      <input type="checkbox" value="" name="todo1" id="todoCheck1">
+                      <label for="todoCheck1"></label>
+                    </div>
+                    <!-- todo text -->
+                    <span class="text">بررسی سفارش‌های جدید</span>
+                    <!-- Emphasis label -->
+                    <small class="badge badge-danger"><i class="far fa-clock"></i> امروز</small>
+                    <!-- General tools such as edit or delete-->
+                    <div class="tools">
+                      <i class="fas fa-edit"></i>
+                      <i class="fas fa-trash-o"></i>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="handle">
+                      <i class="fas fa-ellipsis-v"></i>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </span>
+                    <div  class="icheck-primary d-inline ml-2">
+                      <input type="checkbox" value="" name="todo2" id="todoCheck2" checked>
+                      <label for="todoCheck2"></label>
+                    </div>
+                    <span class="text">ارسال سفارش‌های پرداخت شد</span>
+                    <small class="badge badge-info"><i class="far fa-clock"></i> امروز</small>
+                    <div class="tools">
+                      <i class="fas fa-edit"></i>
+                      <i class="fas fa-trash-o"></i>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="handle">
+                      <i class="fas fa-ellipsis-v"></i>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </span>
+                    <div  class="icheck-primary d-inline ml-2">
+                      <input type="checkbox" value="" name="todo3" id="todoCheck3">
+                      <label for="todoCheck3"></label>
+                    </div>
+                    <span class="text">پاسخ به پیام‌های تماس با ما</span>
+                    <small class="badge badge-warning"><i class="far fa-clock"></i> امروز</small>
+                    <div class="tools">
+                      <i class="fas fa-edit"></i>
+                      <i class="fas fa-trash-o"></i>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="handle">
+                      <i class="fas fa-ellipsis-v"></i>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </span>
+                    <div  class="icheck-primary d-inline ml-2">
+                      <input type="checkbox" value="" name="todo4" id="todoCheck4">
+                      <label for="todoCheck4"></label>
+                    </div>
+                    <span class="text">بررسی موجودی محصولات</span>
+                    <small class="badge badge-success"><i class="far fa-clock"></i> این هفته</small>
+                    <div class="tools">
+                      <i class="fas fa-edit"></i>
+                      <i class="fas fa-trash-o"></i>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="handle">
+                      <i class="fas fa-ellipsis-v"></i>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </span>
+                    <div  class="icheck-primary d-inline ml-2">
+                      <input type="checkbox" value="" name="todo5" id="todoCheck5">
+                      <label for="todoCheck5"></label>
+                    </div>
+                    <span class="text">افزودن محصولات جدید</span>
+                    <small class="badge badge-primary"><i class="far fa-clock"></i>این هفته</small>
+                    <div class="tools">
+                      <i class="fas fa-edit"></i>
+                      <i class="fas fa-trash-o"></i>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="handle">
+                      <i class="fas fa-ellipsis-v"></i>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </span>
+                    <div  class="icheck-primary d-inline ml-2">
+                      <input type="checkbox" value="" name="todo6" id="todoCheck6">
+                      <label for="todoCheck6"></label>
+                    </div>
+                    <span class="text">بررسی گزارش فروش</span>
+                    <small class="badge badge-secondary"><i class="far fa-clock"></i>پایان ماه</small>
+                    <div class="tools">
+                      <i class="fas fa-edit"></i>
+                      <i class="fas fa-trash-o"></i>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                <button type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i>افزودن کار جدید</button>
+              </div>
+            </div>
+            <!-- /.card -->
+          </section>
+          <!-- /.Left col -->
+          <!-- right col (We are only adding the ID to make the widgets sortable)-->
+          <section class="col-lg-5 connectedSortable">
+
+            <!-- Map card -->
+            <div class="card">
+
+              <div class="card-header border-0">
+
+                 <h3 class="card-title">
+                  <i class="fas fa-shopping-cart mr-2"></i>
+                  وضعیت سفارش ها
+                 </h3>
+
+              </div>
+
+              <div class="card-body">
+
+                <div class="progress-group">
+                  سفارش های در انتظار
+                  <span class="float-right">
+                    <b>{{ pending_orders }}</b>
+                  </span>
+
+                  <div class="progress progress-sm">
+                   <div class="progress-bar bg-warning" style="width:100%;"></div>
+                  </div>
+                </div>
+
+                <br>
+
+                <div class="progress-group">
+                  سفارش های پرداخت شده
+                 <span class="float-right">
+                   <b>{{ paid_orders }}</b>
+                  </span>
+
+                  <div class="progress progress-sm">
+                    <div class="progress-bar bg-success" style="width:100%;"></div>
+                  </div>
+               </div>
+
+                <br>
+
+               <div class="progress-group">
+                  سفارش های ارسال شده
+                  <span class="float-right">
+                    <b>{{ sent_orders }}</b>
+                  </span>
+
+                 <div class="progress progress-sm">
+                   <div class="progress-bar bg-info" style="width:100%;"></div>
+                 </div>
+               </div>
+
+               <br>
+
+               <div class="progress-group">
+                  سفارش های تحویل داده شده
+                  <span class="float-right">
+                   <b>{{ done_orders }}</b>
+                  </span>
+
+                  <div class="progress progress-sm">
+                   <div class="progress-bar bg-dark" style="width:100%;"></div>
+                 </div>
+               </div>
+
+              </div>
+
+            </div>
+            <!-- /.card -->
+
+      
+            <!-- /.card-footer -->
+          
+            <!-- /.card -->
+
+            <!-- Calendar -->
+            <div class="card bg-gradient-success">
+              <div class="card-header border-0">
+
+                <h3 class="card-title">
+                  <i class="far fa-calendar-alt"></i>
+                  تقویم مدیریتی
+                </h3>
+                <!-- tools card -->
+                <div class="card-tools">
+                  <!-- button with a dropdown -->
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">
+                      <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                      <a href="#" class="dropdown-item">افزودن رویداد</a>
+                      <a href="#" class="dropdown-item">حذف همه رویدادها</a>
+                      <div class="dropdown-divider"></div>
+                      <a href="#" class="dropdown-item">مشاهده تقویم</a>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-success btn-sm" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!-- /. tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body pt-0">
+                <!--The calendar -->
+                <div id="calendar" style="width: 100%"></div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </section>
+          <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+      <div class="card shadow-sm mx-3 my-4">
+
+    <div class="card-header bg-white border-0 py-3">
+
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h3 class="card-title m-0">
+
+                <i class="fas fa-shopping-bag text-primary mr-2"></i>
+
+                آخرین سفارش‌ها
+
+            </h3>
+
+            <a href="{% url 'admin_orders' %}" class="btn btn-orders">
+
+             <i class="fas fa-list mr-1"></i>
+
+             مشاهده همه
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body px-4 pb-4">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle text-center">
+
+                <thead class="thead-dark">
+
+                    <tr>
+
+                        <th style="width:70px;">#</th>
+
+                        <th>مشتری</th>
+
+                        <th>تعداد محصول</th>
+
+                        <th>مبلغ</th>
+
+                        <th>پرداخت</th>
+
+                        <th>وضعیت سفارش</th>
+
+                        <th>تاریخ</th>
+
+                        <th style="width:130px;">عملیات</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for order in latest_orders %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>#{{ order.id }}</strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <i class="fas fa-user-circle text-secondary mr-1"></i>
+
+                            {{ order.user.username }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ order.items.count }}
+
+                        </td>
+
+
+                        <td class="font-weight-bold text-success">
+
+                            {{ order.total_price }}
+
+                            تومان
+
+                        </td>
+
+
+                        <td>
+
+                            {% if order.payment_status == "paid" %}
+
+                                <span class="badge badge-success px-3 py-2">
+
+                                    پرداخت شده
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-danger px-3 py-2">
+
+                                    پرداخت نشده
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if order.status == "pending" %}
+
+                                <span class="badge badge-warning px-3 py-2">
+
+                                    در انتظار
+
+                                </span>
+
+                            {% elif order.status == "paid" %}
+
+                                <span class="badge badge-primary px-3 py-2">
+
+                                    آماده ارسال
+
+                                </span>
+
+                            {% elif order.status == "sent" %}
+
+                                <span class="badge badge-info px-3 py-2">
+
+                                    ارسال شده
+
+                                </span>
+
+                            {% elif order.status == "done" %}
+
+                                <span class="badge badge-success px-3 py-2">
+
+                                    تحویل شده
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-dark px-3 py-2">
+
+                                    لغو شده
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ order.created_at|date:"Y/m/d" }}
+
+                        </td>
+
+
+                        <td>
+
+                            <a href="{% url 'admin_order_detail' order.id %}"
+
+                               class="btn btn-outline-primary btn-sm"
+
+                               title="مشاهده">
+
+                                <i class="fas fa-eye"></i>
+
+                            </a>
+
+                            <a href="{% url 'admin_edit_order' order.id %}"
+
+                               class="btn btn-outline-warning btn-sm"
+
+                               title="ویرایش">
+
+                                <i class="fas fa-edit"></i>
+
+                            </a>
+
+                            <a href="{% url 'admin_delete_order' order.id %}" 
+
+                               class="btn btn-outline-danger btn-sm"
+
+                               title="حذف"
+                               onclick="return confirm('آیا از حذف این سفارش مطمئن هستید؟');">
+
+                                <i class="fas fa-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="8" class="py-5 text-muted">
+
+                            <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+
+                            <br>
+
+                            سفارشی یافت نشد.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+    
+
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="{% static 'adminlte/plugins/jquery/jquery.min.js' %}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{% static 'adminlte/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- ChartJS -->
+<script src="{% static 'adminlte/plugins/chart.js/Chart.min.js' %}"></script>
+<!-- Sparkline -->
+<script src="{% static 'adminlte/plugins/sparklines/sparkline.js' %}"></script>
+<!-- JQVMap -->
+<script src="{% static 'adminlte/plugins/jqvmap/jquery.vmap.min.js' %}"></script>
+<script src="{% static 'adminlte/plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
+<!-- jQuery Knob Chart -->
+<script src="{% static 'adminlte/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
+<!-- daterangepicker -->
+<script src="{% static 'adminlte/plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'adminlte/plugins/daterangepicker/daterangepicker.js' %}"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<!-- Summernote -->
+<script src="{% static 'adminlte/plugins/summernote/summernote-bs4.min.js' %}"></script>
+<!-- overlayScrollbars -->
+<script src="{% static 'adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'adminlte/js/adminlte.js' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="{% static 'adminlte/js/demo.js' %}"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+
+<script>
+const ctx = document.getElementById("salesChart");
+
+new Chart(ctx, {
+    type: "line",
+
+    data: {
+        labels: {{ sales_labels|safe }},
+
+        datasets: [{
+            label: "فروش ۳۰ روز اخیر",
+
+            data: {{ sales_data|safe }},
+
+            borderColor: "#28a745",
+            backgroundColor: "rgba(40,167,69,.15)",
+
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 7,
+
+            fill: true,
+            tension: 0.4
+        }]
+    },
+
+    options: {
+
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+
+    }
+});
+</script>
+<script>
+
+const orderCtx = document.getElementById("orderStatusChart");
+
+new Chart(orderCtx, {
+
+    type: "doughnut",
+
+    data: {
+
+        labels: [
+
+            "در انتظار",
+            "پرداخت شده",
+            "ارسال شده",
+            "تحویل داده شده"
+
+        ],
+
+        datasets: [{
+
+            data: [
+
+                {{ pending_orders }},
+                {{ paid_orders }},
+                {{ sent_orders }},
+                {{ done_orders }}
+
+            ],
+
+            backgroundColor: [
+
+                "#ffc107",
+                "#17a2b8",
+                "#007bff",
+                "#28a745"
+
+            ],
+
+            borderWidth: 2
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+
+                position: "bottom"
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+</body>
+</html>

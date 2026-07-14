@@ -1,0 +1,551 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>
+        محصولات | MHS
+    </title>
+
+
+    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=99">
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+<section class="hero-header">
+
+
+    <div class="container">
+
+
+
+        <h1>
+
+            مجموعه لوکس کفش و عطر
+
+        </h1>
+
+
+
+
+        <p>
+
+            مجموعه‌ای منتخب از محصولات خاص و لوکس
+
+        </p>
+
+
+
+    </div>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+<section class="controls-section">
+
+
+    <div class="container controls-wrapper">
+
+
+
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+
+            <i class="fas fa-search"></i>
+
+
+
+            <input
+
+                type="text"
+
+                id="searchInput"
+
+                placeholder="جستجوی محصول...">
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <!-- CATEGORY -->
+
+
+        <div class="category-filters">
+
+
+
+
+
+            <button
+
+                class="filter-btn active"
+
+                data-category="all">
+
+
+                همه محصولات
+
+
+            </button>
+
+
+
+
+
+
+
+            <button
+
+                class="filter-btn"
+
+                data-category="کفش">
+
+
+                کفش
+
+
+            </button>
+
+
+
+
+
+
+
+            <button
+
+                class="filter-btn"
+
+                data-category="عطر و ادکلن">
+
+
+                عطر و ادکلن
+
+
+            </button>
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <!-- SORT -->
+
+
+        <div class="sort-box">
+
+
+
+            <select id="sortSelect">
+
+
+
+                <option value="default">
+
+                    مرتب سازی محصولات
+
+                </option>
+
+
+
+
+
+                <option value="low-high">
+
+                    قیمت از کم به زیاد
+
+                </option>
+
+
+
+
+
+                <option value="high-low">
+
+                    قیمت از زیاد به کم
+
+                </option>
+
+
+
+
+
+                <option value="newest">
+
+                    جدیدترین محصولات
+
+                </option>
+
+
+
+            </select>
+
+
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<section class="products-section">
+
+
+    <div class="container">
+
+
+
+
+
+        <div class="products-grid"
+             id="productsGrid">
+
+
+
+
+
+
+
+            {% for product in products %}
+
+
+
+
+
+            <div class="product-card"
+
+
+
+                data-name="{{ product.title|lower }}"
+
+
+
+                data-price="{{ product.price }}"
+
+
+
+                data-category="{{ product.category.title }}"
+
+
+
+                data-date="{{ product.date|date:'U' }}">
+
+
+
+
+
+
+
+
+
+
+                <div class="product-image-wrapper">
+
+
+
+                    <img
+
+                    src="{{ product.image.url }}"
+
+                    alt="{{ product.title }}"
+
+                    class="product-image">
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+                <div class="product-content">
+
+
+
+
+
+
+                    <h3>
+
+                        {{ product.title }}
+
+                    </h3>
+
+
+
+
+
+
+                    <p class="category">
+
+
+                        {{ product.category.title }}
+
+
+                    </p>
+
+
+
+
+
+
+
+                    <p class="product-price">
+
+
+                        {{ product.price }}
+
+                        تومان
+
+
+                    </p>
+
+
+
+
+
+
+
+                    <p class="product-description">
+
+
+                        {{ product.content|truncatechars:90 }}
+
+
+                    </p>
+
+
+
+
+
+
+
+                    {% if product.mojodi %}
+
+
+
+
+                    <span class="stock-badge in-stock">
+
+
+                        موجود
+
+
+                    </span>
+
+
+
+
+                    {% else %}
+
+
+
+
+                    <span class="stock-badge out-stock">
+
+
+                        ناموجود
+
+
+                    </span>
+
+
+
+
+                    {% endif %}
+
+
+
+
+
+
+
+
+
+                    <form method="POST"
+
+                    action="{% url 'add_to_cart' product.id %}">
+
+
+
+                        {% csrf_token %}
+
+
+
+
+
+
+                        <button
+
+                        type="submit"
+
+                        class="cart-btn"
+
+                        {% if not product.mojodi %}
+
+                        disabled
+
+                        {% endif %}>
+
+
+
+                            افزودن به سبد خرید
+
+
+
+                        </button>
+
+
+
+
+
+                    </form>
+
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+            {% empty %}
+
+
+
+
+
+            <h2>
+
+                محصولی وجود ندارد
+
+            </h2>
+
+
+
+
+
+
+            {% endfor %}
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+<script src="{% static 'js/products.js' %}?v=999"></script>
+
+
+
+
+</body>
+
+
+</html>

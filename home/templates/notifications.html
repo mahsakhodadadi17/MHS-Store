@@ -1,0 +1,64 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+
+<div class="notif-wrapper">
+
+    <div class="notif-card">
+
+        <h2>اعلان‌های شما 🔔</h2>
+
+        <div id="notif-box"></div>
+
+    </div>
+
+</div>
+
+<script>
+function loadNotifications() {
+
+    fetch("/api/notifications/")
+    .then(res => res.json())
+    .then(data => {
+
+        let box = document.getElementById("notif-box");
+
+        box.innerHTML = "";
+
+        if (!data.notifications || data.notifications.length === 0) {
+            box.innerHTML = "<p>هیچ اعلانی ندارید</p>";
+            return;
+        }
+
+        data.notifications.forEach(n => {
+
+            box.innerHTML += `
+                <div style="
+                    background:#fff;
+                    padding:12px;
+                    margin:8px 0;
+                    border-right:4px solid #D4AF37;
+                    border-radius:10px;
+                    box-shadow:0 3px 10px rgba(0,0,0,0.05);
+                ">
+                    ${n.text}
+                    <br>
+                    <small style="color:#777;">${n.time}</small>
+                </div>
+            `;
+        });
+
+    })
+    .catch(err => {
+        console.log("Error loading notifications:", err);
+    });
+
+}
+
+// اولین بار
+loadNotifications();
+
+// هر 5 ثانیه آپدیت
+setInterval(loadNotifications, 5000);
+
+</script>

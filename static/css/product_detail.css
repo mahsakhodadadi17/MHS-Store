@@ -1,0 +1,50 @@
+.wishlist-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    background:#000;
+    color:#D4AF37;
+    border:2px solid #D4AF37;
+
+    padding:14px 25px;
+    border-radius:30px;
+
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.wishlist-btn:hover{
+    background:#D4AF37;
+    color:#000;
+}
+
+.wishlist-btn .heart{
+    font-size:18px;
+}
+
+.cart-btn-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.add-to-cart{
+    background: #D4AF37;
+    color: #000;
+    border: none;
+    padding: 15px 50px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-to-cart:hover{
+    transform: scale(1.05);
+}

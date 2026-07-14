@@ -1,0 +1,476 @@
+<h1>جزئیات کاربر</h1>{% extends "admin_base.html" %}
+{% load static %}
+
+
+{% block title %}
+جزئیات کاربر
+{% endblock %}
+
+
+
+{% block page_title %}
+جزئیات کاربر
+{% endblock %}
+
+
+
+{% block breadcrumb %}
+جزئیات کاربر
+{% endblock %}
+
+
+
+{% block content %}
+<style>
+
+.list-group-item b {
+    display: inline-block;
+    min-width: 100px;
+}
+
+.list-group-item .float-right {
+    direction: rtl;
+}
+
+</style>
+
+
+<div class="container-fluid">
+
+
+    <div class="row">
+
+
+
+        <!-- اطلاعات اصلی -->
+
+        <div class="col-md-4">
+
+
+            <div class="card card-primary card-outline shadow">
+
+
+                <div class="card-body box-profile">
+
+
+                    <div class="text-center">
+
+
+                        <img 
+                           class="profile-user-img img-fluid img-circle"
+                           src="{{ user_obj.profile.image.url }}"
+                           alt="User profile picture">
+
+
+                    </div>
+
+
+
+                    <h3 class="profile-username text-center">
+
+                        {{ user_obj.username }}
+
+                    </h3>
+
+
+
+                    <p class="text-muted text-center">
+
+                        {% if user_obj.is_superuser %}
+
+                            مدیر اصلی
+
+                        {% elif user_obj.is_staff %}
+
+                            مدیر
+
+                        {% else %}
+
+                            کاربر عادی
+
+                        {% endif %}
+
+
+                    </p>
+
+
+
+
+                    <ul class="list-group list-group-unbordered mb-3">
+
+
+                        <li >
+
+                            <b>نام کاربری: </b>
+
+
+                            <span >  
+
+                                {{ user_obj.username }}
+
+                            </span>
+
+                        </li>
+
+
+
+                        <li >
+
+                            <b>ایمیل</b>
+
+                            <span >
+
+                                {{ user_obj.email|default:"---" }}
+
+                            </span>
+
+                        </li>
+
+
+
+                        <li >
+
+                            <b>وضعیت</b>
+
+                            <span >
+
+
+                                {% if user_obj.is_active %}
+
+                                <span class="badge badge-success">
+
+                                    فعال
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge badge-danger">
+
+                                    غیرفعال
+
+                                </span>
+
+                                {% endif %}
+
+
+                            </span>
+
+                        </li>
+
+
+                    </ul>
+
+
+
+                    <a href="{% url 'admin_edit_user' user_obj.id %}"
+                       class="btn btn-warning btn-block">
+
+
+                        <i class="fas fa-edit"></i>
+
+                        ویرایش کاربر
+
+
+                    </a>
+
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+        <!-- اطلاعات فعالیت -->
+
+        <div class="col-md-8">
+
+
+
+            <div class="card shadow">
+
+
+                <div class="card-header">
+
+
+                    <h3 class="card-title">
+
+
+                        <i class="fas fa-info-circle text-primary"></i>
+
+
+                        اطلاعات حساب
+
+
+
+                    </h3>
+
+
+                </div>
+
+
+
+
+                <div class="card-body">
+
+
+
+                    <table class="table table-bordered">
+
+
+                        <tr>
+
+                            <th width="30%">
+                                شناسه کاربر
+                            </th>
+
+                            <td>
+                                {{ user_obj.id }}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <th>
+                                تاریخ عضویت
+                            </th>
+
+                            <td>
+                                {{ user_obj.date_joined|date:"Y/m/d H:i" }}
+                            </td>
+
+                        </tr>
+
+
+
+
+                        <tr>
+
+                            <th>
+                                آخرین ورود
+                            </th>
+
+                            <td>
+
+                                {% if user_obj.last_login %}
+
+                                    {{ user_obj.last_login|date:"Y/m/d H:i" }}
+
+                                {% else %}
+
+                                    هنوز وارد نشده
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+
+
+                        <tr>
+
+                            <th>
+                                دسترسی مدیریت
+                            </th>
+
+
+                            <td>
+
+
+                                {% if user_obj.is_staff %}
+
+                                    <span class="badge badge-primary">
+
+                                        دارد
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge badge-secondary">
+
+                                        ندارد
+
+                                    </span>
+
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                        </tr>
+
+
+
+
+                    </table>
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <!-- سفارشات کاربر -->
+
+
+            <div class="card shadow">
+
+
+                <div class="card-header">
+
+
+                    <h3 class="card-title">
+
+
+                        <i class="fas fa-shopping-cart text-success"></i>
+
+
+                        سفارش‌های کاربر
+
+
+
+                    </h3>
+
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    {% if orders %}
+
+
+                    <table class="table table-striped">
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    شماره سفارش
+                                </th>
+
+                                <th>
+                                    مبلغ
+                                </th>
+
+                                <th>
+                                    وضعیت
+                                </th>
+
+                                <th>
+                                    تاریخ
+                                </th>
+
+
+                            </tr>
+
+                        </thead>
+
+
+
+                        <tbody>
+
+
+                        {% for order in orders %}
+
+
+                            <tr>
+
+                                <td>
+                                    #{{ order.id }}
+                                </td>
+
+
+                                <td>
+                                    {{ order.total_price }} تومان
+                                </td>
+
+
+                                <td>
+
+
+                                    {{ order.status }}
+
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ order.created_at|date:"Y/m/d" }}
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                    {% else %}
+
+
+                    <p class="text-center text-muted">
+
+                        هنوز سفارشی ثبت نشده است
+
+                    </p>
+
+
+                    {% endif %}
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+{% endblock %}

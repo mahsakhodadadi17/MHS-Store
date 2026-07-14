@@ -1,0 +1,274 @@
+{% extends "admin_base.html" %}
+
+{% block title %}تنظیمات{% endblock %}
+
+{% block page_title %}
+تنظیمات فروشگاه
+{% endblock %}
+
+{% block breadcrumb %}
+تنظیمات
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="row">
+
+<div class="col-lg-3 col-6">
+
+<div class="small-box bg-primary">
+
+<div class="inner">
+
+<h3><i class="fas fa-cog"></i></h3>
+
+<p>تنظیمات عمومی</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-tools"></i>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-6">
+
+<div class="small-box bg-success">
+
+<div class="inner">
+
+<h3><i class="fas fa-store"></i></h3>
+
+<p>فروشگاه</p>
+
+</div>
+
+<div class="icon">
+
+<i class="fas fa-shopping-bag"></i>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card shadow">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+<i class="fas fa-cogs text-primary"></i>
+
+تنظیمات سایت
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="row">
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>نام فروشگاه</label>
+
+<input
+type="text"
+name="site_name"
+class="form-control"
+value="{{ site_name }}">
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>ایمیل مدیریت</label>
+
+<input
+type="email"
+name="admin_email"
+class="form-control"
+value="{{ admin_email }}">
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>شماره تماس</label>
+
+<input
+type="text"
+name="phone"
+class="form-control"
+value="{{ phone }}">
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="form-group">
+
+<label>آدرس فروشگاه</label>
+
+<input
+type="text"
+name="address"
+class="form-control"
+value="{{ address }}">
+
+</div>
+
+</div>
+<div class="col-md-6">
+
+    <div class="form-group">
+
+        <label>لینک اینستاگرام</label>
+
+        <input
+            type="url"
+            name="instagram"
+            class="form-control"
+            value="{{ instagram }}">
+
+    </div>
+
+</div>
+
+<div class="col-md-6">
+
+    <div class="form-group">
+
+        <label>لینک تلگرام</label>
+
+        <input
+            type="url"
+            name="telegram"
+            class="form-control"
+            value="{{ telegram }}">
+
+    </div>
+
+</div>
+
+<div class="col-md-12">
+
+    <div class="form-group">
+
+        <label>درباره فروشگاه</label>
+
+        <textarea
+            name="about"
+            class="form-control"
+            rows="5">{{ about }}</textarea>
+
+    </div>
+
+</div>
+
+<div class="col-md-6">
+
+    <div class="custom-control custom-switch mt-3">
+
+        <input
+            type="checkbox"
+            class="custom-control-input"
+            id="maintenanceMode"
+            name="maintenance"
+            {% if maintenance %}checked{% endif %}>
+
+        <label
+            class="custom-control-label"
+            for="maintenanceMode">
+
+            فعال بودن حالت تعمیرات
+
+        </label>
+
+    </div>
+
+</div>
+
+<div class="col-md-6">
+
+    <div class="custom-control custom-switch mt-3">
+
+        <input
+            type="checkbox"
+            class="custom-control-input"
+            id="registrationStatus"
+            name="registration"
+            {% if registration %}checked{% endif %}>
+
+        <label
+            class="custom-control-label"
+            for="registrationStatus">
+
+            فعال بودن ثبت‌نام کاربران
+
+        </label>
+
+    </div>
+
+</div>
+</div>
+
+</div>
+
+<div class="card-footer text-left">
+
+    <button type="submit" class="btn btn-primary">
+
+        <i class="fas fa-save"></i>
+
+        ذخیره تنظیمات
+
+    </button>
+
+    <button type="reset" class="btn btn-secondary">
+
+        <i class="fas fa-undo"></i>
+
+        بازنشانی
+
+    </button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

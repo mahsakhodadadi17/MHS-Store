@@ -1,0 +1,232 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Special Offers</title>
+
+    <link rel="stylesheet" href="{% static 'css/offers.css' %}">
+
+</head>
+
+
+<body>
+
+
+<section class="mhs-offers-page">
+
+
+    <!-- Hero -->
+
+    <header class="mhs-offers-hero">
+
+
+        <div class="mhs-hero-content">
+
+
+            <h1>
+                تخفیف‌های ویژه
+            </h1>
+
+
+            <p>
+                تجربه خرید لوکس با بهترین تخفیف‌های ویژه
+            </p>
+
+
+            <span>
+                مجموعه پیشنهادهای ویژه
+            </span>
+
+
+        </div>
+
+
+    </header>
+
+
+
+
+    <!-- Products -->
+
+
+    <section class="mhs-products-section">
+
+
+        <div class="mhs-section-title">
+
+            <h2>
+                تخفیفات ویژه
+            </h2>
+
+            <p>
+                محصولات منتخب با قیمت‌های استثنایی
+            </p>
+
+        </div>
+
+
+
+
+        <div class="mhs-products-grid">
+
+
+            {% for product in discounted_products %}
+
+
+
+            <article class="mhs-product-card">
+
+
+                <div class="mhs-product-image">
+
+
+                    <img src="{{ product.image.url }}"
+                         alt="{{ product.title }}">
+
+
+
+                    <div class="mhs-discount-badge">
+
+                        {{ product.discount }}%
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+                <div class="mhs-product-info">
+
+
+                    <h3>
+
+                        {{ product.title }}
+
+                    </h3>
+
+
+
+                    <div class="mhs-price-box">
+
+
+                        <del>
+
+                            {{ product.old_price }} تومان
+
+                        </del>
+
+
+
+                        <strong>
+
+                            {{ product.new_price }} تومان
+
+                        </strong>
+
+
+                    </div>
+
+
+
+
+                    <a href="{% url 'product_detail' product.slug %}"
+                       class="mhs-buy-btn">
+
+
+                        مشاهده محصول
+
+
+                    </a>
+
+
+
+                </div>
+
+
+
+            </article>
+
+
+
+            {% empty %}
+
+
+            <p class="mhs-empty">
+
+                محصول تخفیف‌داری وجود ندارد
+
+            </p>
+
+
+            {% endfor %}
+
+
+
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+    <!-- Limited Offers -->
+
+
+    <section class="mhs-limited">
+
+
+        <div>
+
+
+            <h2>
+                پیشنهادهای محدود
+            </h2>
+
+
+            <p>
+                فرصت محدود برای خرید محصولات خاص برند
+            </p>
+
+
+            <button>
+
+                مشاهده پیشنهادها
+
+            </button>
+
+
+        </div>
+
+
+
+    </section>
+
+
+
+
+</section>
+
+
+
+
+
+<script src="{% static 'js/offers.js' %}"></script>
+
+
+</body>
+
+</html>

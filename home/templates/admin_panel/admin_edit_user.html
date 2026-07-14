@@ -1,0 +1,255 @@
+{% extends "admin_base.html" %}
+
+
+{% block title %}
+ویرایش کاربر
+{% endblock %}
+
+
+
+{% block page_title %}
+ویرایش کاربر
+{% endblock %}
+
+
+
+{% block breadcrumb %}
+ویرایش کاربر
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container-fluid">
+
+
+    <div class="card shadow">
+
+
+        <div class="card-header">
+
+            <h3 class="card-title">
+
+                <i class="fas fa-user-edit text-warning"></i>
+
+                ویرایش اطلاعات کاربر
+
+            </h3>
+
+        </div>
+
+
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="card-body">
+
+
+                <div class="row">
+
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label>نام کاربری</label>
+
+                            <input 
+                                type="text"
+                                name="username"
+                                class="form-control"
+                                value="{{ user_obj.username }}"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label>ایمیل</label>
+
+                            <input 
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                value="{{ user_obj.email }}">
+
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label>رمز عبور جدید</label>
+
+                            <input 
+                                type="password"
+                                name="password"
+                                class="form-control"
+                                placeholder="در صورت تغییر وارد کنید">
+
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label>نقش کاربر</label>
+
+
+                            <select 
+                                name="role"
+                                class="form-control">
+
+
+
+                                <option value="user"
+                                {% if not user_obj.is_staff and not user_obj.is_superuser %}
+                                selected
+                                {% endif %}>
+                                    کاربر عادی
+                                </option>
+
+
+
+                                <option value="staff"
+                                {% if user_obj.is_staff and not user_obj.is_superuser %}
+                                selected
+                                {% endif %}>
+                                    مدیر
+                                </option>
+
+
+
+
+                                <option value="superuser"
+                                {% if user_obj.is_superuser %}
+                                selected
+                                {% endif %}>
+                                    ادمین اصلی
+                                </option>
+
+
+
+                            </select>
+
+
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+
+
+                        <div class="custom-control custom-switch mt-3">
+
+
+                            <input
+                                type="checkbox"
+                                class="custom-control-input"
+                                id="activeStatus"
+                                name="active"
+                                {% if user_obj.is_active %}
+                                checked
+                                {% endif %}>
+
+
+                            <label
+                                class="custom-control-label"
+                                for="activeStatus">
+
+                                فعال بودن حساب
+
+                            </label>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <div class="card-footer">
+
+
+                <button 
+                    type="submit"
+                    class="btn btn-warning">
+
+
+                    <i class="fas fa-save"></i>
+
+                    ذخیره تغییرات
+
+
+                </button>
+
+
+
+
+                <a 
+                    href="{% url 'admin_users' %}"
+                    class="btn btn-secondary">
+
+
+                    <i class="fas fa-arrow-right"></i>
+
+                    بازگشت
+
+
+                </a>
+
+
+            </div>
+
+
+
+
+        </form>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+{% endblock %}
