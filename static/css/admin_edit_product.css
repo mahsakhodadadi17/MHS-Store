@@ -1,0 +1,174 @@
+/* MHS Admin Edit Product */
+
+.edit-product-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    direction: rtl;
+}
+
+.edit-product-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 30px;
+    border-right: 5px solid #D4AF37;
+    padding-right: 15px;
+}
+
+
+.product-form-group {
+    margin-bottom: 22px;
+}
+
+
+.product-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+}
+
+
+.product-form-group input,
+.product-form-group textarea,
+.product-form-group select {
+
+    width: 100%;
+    padding: 14px 16px;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: .3s;
+}
+
+
+.product-form-group input:focus,
+.product-form-group textarea:focus,
+.product-form-group select:focus {
+
+    border-color: #D4AF37;
+
+    box-shadow: 0 0 0 3px rgba(212,175,55,.15);
+}
+
+
+
+.product-image-box {
+
+    margin-top: 15px;
+    padding: 20px;
+
+    background: #f8f8f8;
+
+    border-radius: 15px;
+
+    text-align: center;
+}
+
+
+.product-image-box img {
+
+    width: 150px;
+    height: 150px;
+
+    object-fit: cover;
+
+    border-radius: 15px;
+
+    border: 2px solid #D4AF37;
+
+}
+
+
+
+.edit-product-btn {
+
+    background: #000;
+
+    color: white;
+
+    border: none;
+
+    padding: 14px 35px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    transition: .3s;
+
+}
+
+
+
+.edit-product-btn:hover {
+
+    background: #D4AF37;
+
+    color: #000;
+
+}
+
+
+
+.back-btn {
+
+    display: inline-block;
+
+    margin-right: 15px;
+
+    padding: 14px 25px;
+
+    border-radius: 12px;
+
+    background: #eee;
+
+    color: #333;
+
+    text-decoration: none;
+
+    transition: .3s;
+
+}
+
+
+
+.back-btn:hover {
+
+    background:#ddd;
+
+}
+
+
+
+/* Mobile */
+
+@media(max-width:768px){
+
+    .edit-product-container{
+
+        margin:20px;
+
+        padding:20px;
+
+    }
+
+
+    .edit-product-title{
+
+        font-size:22px;
+
+    }
+
+}

@@ -639,43 +639,8 @@ def notifications_api(request):
 
     return JsonResponse({"notifications": data})
 
-@login_required
-def order_detail(request, id):
-
-    order = get_object_or_404(
-        Order,
-        id=id,
-        user=request.user
-    )
-
-    return render(
-        request,
-        "order_detail.html",
-        {
-            "order": order
-        }
-    )
-
-@login_required
-def cancel_order(request, id):
-
-    order = get_object_or_404(
-        Order,
-        id=id,
-        user=request.user
-    )
 
 
-    if order.status == "pending":
-
-        order.status = "cancelled"
-        order.save()
-
-
-    return redirect(
-        "order_detail",
-        id=order.id
-    )
 
 @login_required
 def read_notification(request, id):
@@ -722,31 +687,6 @@ def cancel_order(request, id):
 
     return redirect("dashboard")
 
-def payment(request, id):
-
-    order = Order.objects.get(id=id)
-
-
-    if request.method == "POST":
-
-        order.status = "paid"
-
-        order.save()
-
-
-        return redirect(
-            "order_detail",
-            order.id
-        )
-
-
-    return render(
-        request,
-        "payment.html",
-        {
-            "order":order
-        }
-    )
 
 
 
@@ -838,9 +778,6 @@ def change_order_status(request, id, status):
 from django.shortcuts import get_object_or_404, render
 
 
-def order_detail(request, id):
-    order = get_object_or_404(Order, id=id)
-    return render(request, "order_detail.html", {"order": order})
 
 
 
@@ -1084,32 +1021,7 @@ def admin_delete_product(request, id):
 
     return redirect("admin_products")
 
-@staff_member_required
-def admin_edit_product(request, id):
 
-    product = get_object_or_404(Post, id=id)
-
-    if request.method == "POST":
-
-        product.title = request.POST.get("title")
-        product.price = request.POST.get("price")
-        product.discount = request.POST.get("discount")
-        product.content = request.POST.get("content")
-
-        if request.FILES.get("image"):
-            product.image = request.FILES["image"]
-
-        product.save()
-
-        return redirect("admin_products")
-
-    return render(
-        request,
-        "admin/edit_product.html",
-        {
-            "product": product
-        }
-    )
 
 @staff_member_required
 def admin_delete_product(request, id):
@@ -1122,11 +1034,6 @@ def admin_delete_product(request, id):
 
     return redirect("admin_products")
 
-
-@staff_member_required
-def admin_users(request):
-    users = User.objects.all().order_by("-id")
-    return render(request, "admin_users.html", {"users": users})
 
 
 @staff_member_required
