@@ -198,3 +198,9 @@ class OrderItemAdmin(admin.ModelAdmin):
         "price",
 
     )
+
+from .models import ProductImage, ProductColor, ProductSize
+
+admin.site.register(ProductImage)
+admin.site.register(ProductColor)
+admin.site.register(ProductSize)
