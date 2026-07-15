@@ -21,10 +21,10 @@
  <link rel="stylesheet" href="{% static 'css/perfume.css' %}?v=101">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,900;1,900&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"
-    rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,900;1,900&family=Source+Sans+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
@@ -611,103 +611,11 @@
           {% endfor %}
 
   </section>
+  {% include "includes/footer.html" %}
 
-<footer class="luxury-footer">
 
-    <div class="footer-container">
 
-        <!-- Brand Section -->
-        <div class="footer-section brand-section">
-            <img src="{% static 'image/logofooter.png' %}" alt="Logo" class="footer-logo">
 
-            <p class="footer-description">
-               مقصدی لوکس برای کفش، عطر و اکسسوری‌های خاص.  
-               جایی که ظرافت، کیفیت و سبک ماندگار در کنار هم معنا پیدا می‌کنند
-            </p>
-
-            <div class="social-icons">
-                <a href="https://instagram.com/only_mhs"><i class="fab fa-instagram"></i></a>
-                <a href="https://t.me/MaHs_17"><i class="fab fa-telegram-plane"></i></a>
-                <a href="https://wa.me/989133903078"><i class="fab fa-whatsapp"></i></a>
-            </div>
-        </div>
-
-        <!-- Customer Services -->
-        <div class="footer-section">
-            <h3>خدمات مشتریان</h3>
-            <ul>
-                <li><a href="/tracking/">پیگیری سفارش</a></li>
-                <li><a href="{% url 'privacy' %}">حریم خصوصی </a></li>
-                <li><a href="{% url 'terms' %}">قوانین و مقررات</a></li>
-                <li><a href="{% url 'shipping' %}">روش های ارسال</a></li>
-            </ul>
-        </div>
-
-        <!-- Company Information -->
-        <div class="footer-section">
-            <h3>اطلاعات فروشگاه</h3>
-            <ul>
-                <li><a href="{% url 'about' %}">درباره ما</a></li>
-            </ul>
-        </div>
-
-        <!-- Contact Information -->
-        <div class="footer-section">
-            <h3>اطلاعات تماس</h3>
-
-            <div class="contact-item">
-                <i class="fas fa-phone-alt"></i>
-                <span>+98 913 390 3078</span>
-            </div>
-
-            <div class="contact-item">
-                <i class="fas fa-envelope"></i>
-                <span>mahsakhodadadi17@gmail.com</span>
-            </div>
-
-            <div class="contact-item">
-                <i class="fas fa-map-marker-alt"></i>
-                <span>کرمان-رفسنجان:خیابان ابوذر</span>
-            </div>
-
-            <div class="contact-item">
-                <i class="fas fa-clock"></i>
-                <span>ساعت کاری: شنبه تا پنجشنبه 09:00 - 22:00</span>
-            </div>
-        </div>
-
-        <!-- Newsletter -->
-        <div class="footer-section">
-            <h3>خبرنامه</h3>
-
-            <p class="newsletter-text">
-                با عضویت در خبرنامه، اولین نفر باشید که از پیشنهادهای ویژه و جدیدترین کالکشن‌های لوکس ما باخبر می‌شوید
-            </p>
-
-            <form class="newsletter-form">
-                <input
-                    type="email"
-                    placeholder="ایمیل خود را وارد کنید"
-                    required
-                >
-                <button type="submit">عضو شوید</button>
-            </form>
-        </div>
-
-    </div>
-
-    <!-- Bottom Footer -->
-    <div class="footer-bottom">
-        <p>
-            <span id="currentYear"></span>
-            ©.تمامی حقوق محفوظ است
-        </p>
-    </div>
-
-</footer>
-
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <script src="{% static 'js/footer.js' %}"></script>
   <script src="{% static 'js/jquery-1.11.0.min.js' %}"></script>
