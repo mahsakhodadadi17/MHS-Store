@@ -446,3 +446,31 @@ class AdminNotification(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
+    image = models.ImageField(upload_to='products/gallery/')
+
+
+class ProductColor(models.Model):
+    product = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='colors'
+    )
+    name = models.CharField(max_length=50)
+    color_code = models.CharField(max_length=10)
+
+class ProductSize(models.Model):
+    product = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='sizes'
+    )
+    size = models.CharField(max_length=20)
+    stock = models.PositiveIntegerField(default=0)

@@ -57,6 +57,8 @@ def home(request):
     return render(request, 'index.html', {
         'featured_posts': featured_posts,
         'latest_posts': latest_posts,
+        'logo': 'image/main-logo.png',
+        "logo_width": 170,
     })
 
 from django.shortcuts import render, get_object_or_404
@@ -72,6 +74,8 @@ def perfume(request):
     return render(request, 'perfume.html', {
          'featured_perfumes': featured_perfumes,
          'latest_perfumes': latest_perfumes,
+         'logo': 'image/perfume-logo.png',
+         "logo_width": 200,
     })
 
 def about(request):
