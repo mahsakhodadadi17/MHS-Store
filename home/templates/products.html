@@ -16,7 +16,7 @@
     </title>
 
 
-    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=99">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=102">
 
 
     <link rel="stylesheet"
@@ -276,21 +276,16 @@
 
 
 
-            <div class="product-card"
+            <a href="{% url 'product_detail' product.slug %}" class="product-link">
 
 
+                <div class="product-card"
 
                 data-name="{{ product.title|lower }}"
 
-
-
                 data-price="{{ product.price }}"
 
-
-
                 data-category="{{ product.category.title }}"
-
-
 
                 data-date="{{ product.date|date:'U' }}">
 
@@ -487,6 +482,7 @@
 
 
             </div>
+        </a>
 
 
 

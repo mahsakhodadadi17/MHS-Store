@@ -609,22 +609,35 @@ def add_to_cart(request, id):
 
     product = get_object_or_404(Post, id=id)
 
-    cart, _ = Cart.objects.get_or_create(user=request.user)
+    cart, _ = Cart.objects.get_or_create(
+        user=request.user
+    )
 
     item, created = CartItem.objects.get_or_create(
         cart=cart,
         product=product,
-        defaults={"quantity": 1}
+        defaults={
+            "quantity": 1
+        }
     )
 
     if not created:
         item.quantity += 1
         item.save()
 
-    return JsonResponse({
-        "added": True,
-        "quantity": item.quantity
-    })
+
+    # اگر درخواست AJAX بود
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+
+        return JsonResponse({
+            "added": True,
+            "quantity": item.quantity
+        })
+
+
+    # اگر فرم معمولی بود
+    return redirect("cart")
+
 
 @login_required
 def delete_address(request, id):
