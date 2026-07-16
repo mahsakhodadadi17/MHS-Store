@@ -73,6 +73,7 @@
         d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396l1.414-1.414l-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8s3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6s-6-2.691-6-6s2.691-6 6-6z" />
     </symbol>
   </svg>
+  
   <!-- Loader 4 -->
 
   <div class="preloader" style="position: fixed;top:0;left:0;width: 100%;height: 100%;background-color: #fff;display: flex;align-items: center;justify-content: center;z-index: 9999;">
@@ -106,20 +107,34 @@
   </div>
 
   <div class="search-box bg-dark position-relative">
-    <div class="search-wrap">
-      <div class="close-button">
-        <svg class="close" style="fill: white;">
-          <use xlink:href="#close"></use>
-        </svg>
-      </div>
-      <form id="search-form" action="{% url 'products' %}" method="GET">
-          <input type="text" name="q" class="search-input" placeholder="...جستجو">
-        <svg class="search">
-          <use xlink:href="#search"></use>
-        </svg>
-      </form>
+
+  <div class="search-wrap">
+
+    <div class="close-button">
+      <svg class="close" style="fill:white; width:30px; height:30px;">
+        <use xlink:href="#close"></use>
+      </svg>
     </div>
+
+    <form id="search-form" action="{% url 'products' %}" method="GET">
+
+      <input 
+        type="text" 
+        name="q" 
+        class="search-input" 
+        placeholder="...جستجو"
+      >
+
+      <svg class="search">
+        <use xlink:href="#search"></use>
+      </svg>
+
+    </form>
+
   </div>
+
+</div>
+
 
   <!-- quick view -->
 
