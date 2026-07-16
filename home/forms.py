@@ -82,3 +82,44 @@ class ProductForm(forms.ModelForm):
             "email",
             "date",
         ]
+
+
+from django.forms import inlineformset_factory
+from .models import Post, ProductColor, ProductSize, PerfumeDetail
+
+
+ColorFormSet = inlineformset_factory(
+    Post,
+    ProductColor,
+    fields=[
+        "name",
+        "color_code"
+    ],
+    extra=3,
+    can_delete=True
+)
+
+
+SizeFormSet = inlineformset_factory(
+    Post,
+    ProductSize,
+    fields=[
+        "size",
+        "stock"
+    ],
+    extra=3,
+    can_delete=True
+)
+
+
+PerfumeFormSet = inlineformset_factory(
+    Post,
+    PerfumeDetail,
+    fields=[
+        "volume",
+        "longevity",
+        "season"
+    ],
+    extra=1,
+    can_delete=True
+)

@@ -1,42 +1,45 @@
 {% load humanize %}
 
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/product_detail.css' %}?v=99">
+<link rel="stylesheet" href="{% static 'css/product_detail.css' %}?v=105">
 
 <div class="product-detail">
 
-    <h1 style="
-    color:#000;
-    font-weight:700;
-    font-size:32px;
-    border-bottom:2px solid #D4AF37;
-    display:inline-block;
-    padding-bottom:8px;
-    ">
+<div class="product-container">
 
-        {{ product.title }}
+    <!-- سمت چپ : گالری تصاویر -->
 
-    </h1>
+    <div class="gallery">
 
+        <div class="main-image">
 
+            <img
+                id="mainProductImage"
+                src="{{ product.image.url }}"
+                alt="{{ product.title }}"
+            >
 
+        </div>
 
-    <div style="
-    margin-top:20px;
-    text-align:center;
-    ">
+        <div class="gallery-images">
 
+            <img
+                class="thumb active"
+                src="{{ product.image.url }}"
+                onclick="changeImage(this)"
+            >
 
-        <img 
-        src="{{ product.image.url }}" 
-        alt="{{ product.title }}"
-        style="
-        width:320px;
-        border-radius:15px;
-        box-shadow:0 10px 30px rgba(0,0,0,0.2);
-        border:3px solid #D4AF37;
-        ">
+            {% for image in images %}
 
+                <img
+                    class="thumb"
+                    src="{{ image.image.url }}"
+                    onclick="changeImage(this)"
+                >
+
+            {% endfor %}
+
+        </div>
 
     </div>
 
@@ -44,155 +47,455 @@
 
 
 
+    <!-- سمت راست : اطلاعات -->
 
-    <div style="
-    margin-top:25px;
-    background:#fff;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.08);
-    ">
+    <div class="product-info">
 
+        <h1>
 
+            {{ product.title }}
 
+        </h1>
 
-        <p style="
-        color:#333;
-        font-size:16px;
-        line-height:1.8;
-        ">
-
-            {{ product.content }}
-
-        </p>
-
-
-
-
-
-        <p style="
-        margin-top:15px;
-        font-size:18px;
-        font-weight:600;
-        color:#000;
-        ">
-
-
-            قیمت:
-
-            <span style="color:#D4AF37;">
+        <div class="price">
 
             {{ product.price|intcomma }}
 
-            </span>
-
-
             تومان
 
+        </div>
 
-        </p>
+        <div class="description">
 
+            {{ product.content }}
 
+        </div>
+        {% if product.category.title == "عطر و ادکلن" %}
 
+<div class="perfume-specs">
 
-
-
-
-
-        <!-- Add To Cart -->
-
-    <div class="cart-btn-wrapper">
-       <button 
-         type="button"
-         class="add-to-cart"
-          data-id="{{ product.id }}"
-         style="
-         background:#D4AF37;
-         color:#000;
-         border:none;
-         padding:15px 40px;
-         border-radius:30px;
-         font-size:16px;
-         font-weight:bold;
-         cursor:pointer;
-         "
-         >
-         🛒 افزودن به سبد خرید
-        </button>
-   </div>
-
-
-
-
-
-
-
-
-
-        <!-- Add To Wishlist -->
-
-
-        <button class="wishlist-btn" data-id="{{ product.id }}">
-            <span class="heart">🤍</span>
-            <span class="text">افزودن به علاقه‌مندی</span>
-        </button>
-
-
-        
-
-
-
-
-
-
-
-
-
-
+    <div class="spec-card">
+        <div class="spec-icon">🧴</div>
+        <div>
+            <span>حجم</span>
+            <strong>{{ perfume_detail.volume }}</strong>
+        </div>
     </div>
 
+    <div class="spec-card">
+        <div class="spec-icon">⏳</div>
+        <div>
+            <span>ماندگاری</span>
+            <strong>{{ perfume_detail.longevity }}</strong>
+        </div>
+    </div>
 
+    <div class="spec-card">
+        <div class="spec-icon">🍂</div>
+        <div>
+            <span>فصل مناسب</span>
+            <strong>{{ perfume_detail.season }}</strong>
+        </div>
+    </div>
+
+</div>
+
+{% else %}
+
+        <!-- رنگ‌ها -->
+
+<div class="option-title">
+
+    رنگ
+
+</div>
+
+<div class="color-options">
+
+    {% for color in colors %}
+
+        <label class="color-item">
+
+            <input
+                type="radio"
+                name="color"
+                value="{{ color.id }}"
+                {% if forloop.first %}checked{% endif %}
+            >
+
+            <span
+                class="color-circle"
+                style="background:{{ color.color_code }};"
+                title="{{ color.name }}"
+            ></span>
+
+            <small>{{ color.name }}</small>
+
+        </label>
+
+    {% empty %}
+
+        <p>رنگی ثبت نشده است.</p>
+
+    {% endfor %}
+
+</div>
+
+
+
+
+<!-- سایز -->
+
+<div class="option-title">
+
+    سایز
+
+</div>
+
+<div class="size-options">
+
+    {% for size in sizes %}
+
+        {% if size.stock > 0 %}
+
+            <label class="size-item">
+
+                <input
+                    type="radio"
+                    name="size"
+                    value="{{ size.id }}"
+                    {% if forloop.first %}checked{% endif %}
+                >
+
+                <span>
+
+                    {{ size.size }}
+
+                </span>
+
+            </label>
+
+        {% else %}
+
+            <span class="size-disabled">
+
+                {{ size.size }}
+
+            </span>
+
+        {% endif %}
+
+    {% empty %}
+
+        <p>سایزی ثبت نشده است.</p>
+
+    {% endfor %}
 
 
 </div>
-<script src="{% static 'js/cart.js' %}?v=99"></script>
+{% endif %}
+
+
+
+<!-- موجودی -->
+
+<div class="stock-status">
+
+    {% if product.mojodi %}
+
+        <span class="in-stock">
+
+            ✔ موجود در انبار
+
+        </span>
+
+    {% else %}
+
+        <span class="out-stock">
+
+            ✖ ناموجود
+
+        </span>
+
+    {% endif %}
+
+</div>
+
+<!-- تعداد محصول -->
+
+<div class="option-title">
+
+    تعداد
+
+</div>
+
+<div class="quantity-box">
+
+    <button type="button" onclick="decreaseQty()">
+
+        -
+
+    </button>
+
+    <input
+        type="number"
+        id="qty"
+        value="1"
+        min="1"
+        max="20"
+    >
+
+    <button type="button" onclick="increaseQty()">
+
+        +
+
+    </button>
+
+</div>
+
+
+<!-- دکمه افزودن به سبد خرید -->
+
+<div class="cart-btn-wrapper">
+
+    <button
+        type="button"
+        class="add-to-cart"
+        data-id="{{ product.id }}"
+    >
+
+        🛒 افزودن به سبد خرید
+
+    </button>
+
+</div>
+
+
+
+
+
+<!-- علاقه مندی -->
+
+<div style="margin-top:20px;">
+
+<button
+    class="wishlist-btn"
+    data-id="{{ product.id }}"
+>
+    <span class="heart">🤍</span>
+    <span class="text">افزودن به علاقه‌مندی</span>
+</button>
+
+</div>
+
+
+
+
+
+<!-- اطلاعات کوتاه -->
+
+<div class="product-meta">
+
+    <p>
+
+        <strong>دسته بندی :</strong>
+
+        {{ product.category }}
+
+    </p>
+
+    <p>
+
+        <strong>کد محصول :</strong>
+
+        #{{ product.id }}
+
+    </p>
+
+</div>
+
+</div> <!-- پایان product-info -->
+
+</div> <!-- پایان product-container -->
+
+<!-- محصولات مشابه -->
+
+<section class="related-products">
+
+    <h2>
+
+        محصولات مشابه
+
+    </h2>
+
+    <div class="related-grid">
+
+        {% for item in related_products %}
+
+        <div class="related-card">
+
+            <a href="{% url 'product_detail' item.slug %}">
+
+                <img
+                    src="{{ item.image.url }}"
+                    alt="{{ item.title }}"
+                >
+
+            </a>
+
+            <h4>
+
+                {{ item.title }}
+
+            </h4>
+
+            <p>
+
+                {{ item.price|intcomma }}
+
+                تومان
+
+            </p>
+
+            <a
+                href="{% url 'product_detail' item.slug %}"
+                class="view-product-btn"
+            >
+
+                مشاهده محصول
+
+            </a>
+
+        </div>
+
+        {% empty %}
+
+        <p>
+
+            محصول مشابهی وجود ندارد.
+
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+
+
 <script>
-document.querySelectorAll(".wishlist-btn").forEach(btn => {
 
-    btn.addEventListener("click", function () {
+function increaseQty(){
 
-        let id = this.getAttribute("data-id");
+    let qty=document.getElementById("qty");
 
-        fetch(`/wishlist/toggle/${id}/`, {
-            method: "GET",
-            headers: {
-                "X-Requested-With": "XMLHttpRequest"
+    qty.value=parseInt(qty.value)+1;
+
+}
+
+function decreaseQty(){
+
+    let qty=document.getElementById("qty");
+
+    if(parseInt(qty.value)>1){
+
+        qty.value=parseInt(qty.value)-1;
+
+    }
+
+}
+
+</script>
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
-        })
+        }
+    }
+    return cookieValue;
+}
 
-        .then(res => res.json())
-        .then(data => {
+document.addEventListener("DOMContentLoaded", function () {
 
-            let heart = this.querySelector(".heart");
-            let text = this.querySelector(".text");
+    const cartBtn = document.querySelector(".add-to-cart");
 
-            if (data.liked) {
-                heart.innerHTML = "❤️";
-                text.innerHTML = "حذف از علاقه‌مندی";
-                this.style.background = "#D4AF37";
-                this.style.color = "#000";
-            } 
-            else {
-                heart.innerHTML = "🤍";
-                text.innerHTML = "افزودن به علاقه‌مندی";
-                this.style.background = "#000";
-                this.style.color = "#D4AF37";
-            }
+    if(cartBtn){
+
+        cartBtn.addEventListener("click", function(){
+
+            fetch(`/add-to-cart/${this.dataset.id}/`,{
+                method:"POST",
+                headers:{
+                    "X-CSRFToken":getCookie("csrftoken"),
+                    "X-Requested-With":"XMLHttpRequest"
+                }
+            })
+
+            .then(res=>res.json())
+
+            .then(data=>{
+                if(data.added){
+                    alert("✅ محصول به سبد خرید اضافه شد");
+                }
+            });
 
         });
+
+    }
+
+});
+</script>
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+document.querySelector(".wishlist-btn").addEventListener("click", function () {
+
+    const btn = this;
+
+    fetch(`/wishlist/toggle/${btn.dataset.id}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "X-Requested-With": "XMLHttpRequest",
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        const heart = btn.querySelector(".heart");
+        const text = btn.querySelector(".text");
+
+        if (data.liked) {
+            heart.textContent = "❤️";
+            text.textContent = "در علاقه‌مندی‌ها";
+        } else {
+            heart.textContent = "🤍";
+            text.textContent = "افزودن به علاقه‌مندی";
+        }
 
     });
 
 });
 </script>
-

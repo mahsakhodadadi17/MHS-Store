@@ -9,43 +9,118 @@
 <div class="card-header">
 
 <h3>
-
-<i class="fas fa-plus-circle mr-2"></i>
-
-افزودن محصول جدید
-
+    <i class="fas fa-plus-circle mr-2"></i>
+    افزودن محصول جدید
 </h3>
 
 </div>
 
+
 <div class="card-body">
+
 
 <form method="POST" enctype="multipart/form-data">
 
 {% csrf_token %}
 
+
+<h4 class="mb-3">
+اطلاعات اصلی محصول
+</h4>
+
 {{ form.as_p }}
+
+
+
+<hr>
+
+
+<h4 class="mb-3">
+<i class="fas fa-palette"></i>
+رنگ‌ها
+</h4>
+
+
+{{ colors.management_form }}
+
+{% for color_form in colors %}
+
+    {{ color_form.as_p }}
+
+{% endfor %}
+
+
+
+<hr>
+
+
+
+<h4 class="mb-3">
+<i class="fas fa-ruler"></i>
+سایزها
+</h4>
+
+
+{{ sizes.management_form }}
+
+{% for size_form in sizes %}
+
+    {{ size_form.as_p }}
+
+{% endfor %}
+
+
+
+
+<hr>
+
+
+
+<h4 class="mb-3">
+<i class="fas fa-spray-can"></i>
+جزئیات عطر
+</h4>
+
+
+{{ perfume.management_form }}
+
+{% for perfume_form in perfume %}
+
+    {{ perfume_form.as_p }}
+
+{% endfor %}
+
+
+
+
+<hr>
+
 
 <button class="btn btn-success">
 
-ثبت محصول
+    <i class="fas fa-save"></i>
+    ثبت محصول
 
 </button>
+
 
 <a href="{% url 'admin_products' %}"
 
 class="btn btn-secondary">
 
-بازگشت
+    بازگشت
 
 </a>
 
+
 </form>
 
-</div>
 
 </div>
 
 </div>
+
+</div>
+
 
 {% endblock %}

@@ -24,7 +24,12 @@ from django.db.models.functions import TruncDate
 import json
 from django.views.decorators.http import require_POST
 from .models import Contact
-from .forms import ProductForm
+from .forms import (
+    ProductForm,
+    ColorFormSet,
+    SizeFormSet,
+    PerfumeFormSet
+)
 from django.contrib import messages
 from .models import (Category,Wishlist, Contact, Notification,)
 from .models import ContactMessage
@@ -42,9 +47,6 @@ def contact(request):
     return render(request, "form.html", {"form":form})
 
 
-
-def welcome(request):
-    return render(request, "test.html")
 
 
 def home(request):
@@ -140,10 +142,25 @@ from django.shortcuts import render, get_object_or_404
 def product_detail(request, slug):
     product = get_object_or_404(Post, slug=slug)
 
-    return render(request, "product_detail.html", {
-        "product": product
-    })
+    images = product.images.all()
+    colors = product.colors.all()
+    sizes = product.sizes.all()
+    perfume_detail = getattr(product, "perfume_detail", None)
 
+    related_products = (
+        Post.objects.filter(category=product.category)
+        .exclude(id=product.id)
+        .order_by("?")[:4]
+    )
+
+    return render(request, "product_detail.html", {
+        "product": product,
+        "images": images,
+        "colors": colors,
+        "sizes": sizes,
+        "related_products": related_products,
+        "perfume_detail": perfume_detail,
+    })
 
 
 
@@ -380,56 +397,50 @@ from django.http import JsonResponse
 
 @require_POST
 @login_required
-def update_cart_qty(request, id):
+def update_cart(request, id):
+
+    item = get_object_or_404(
+        CartItem,
+        id=id,
+        cart__user=request.user
+    )
+
     action = request.POST.get("action")
+    quantity = request.POST.get("quantity")
 
-    item = get_object_or_404(CartItem, id=id, cart__user=request.user)
 
+    # دکمه + و -
     if action == "plus":
         item.quantity += 1
 
     elif action == "minus" and item.quantity > 1:
         item.quantity -= 1
 
+
+    # تغییر مستقیم تعداد
+    elif quantity:
+        quantity = int(quantity)
+
+        if quantity > 0:
+            item.quantity = quantity
+
+
     item.save()
 
+
     cart = item.cart
-    total = sum(i.product.price * i.quantity for i in cart.cartitem_set.all())
+
+    total = sum(
+        i.product.price * i.quantity
+        for i in cart.cartitem_set.all()
+    )
+
 
     return JsonResponse({
         "status": "ok",
         "quantity": item.quantity,
         "total": total
     })
-
-@login_required
-def update_cart(request,id):
-
-    item = get_object_or_404(
-        CartItem,
-        id=id
-    )
-
-
-    if request.method == "POST":
-
-        quantity = int(
-            request.POST.get("quantity")
-        )
-
-
-        if quantity > 0:
-
-            item.quantity = quantity
-
-            item.save()
-
-
-
-    return JsonResponse({
-        "status":"ok"
-    })
-
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 
@@ -505,6 +516,18 @@ def cart(request):
         }
     )
 
+
+@login_required
+def remove_from_cart(request, id):
+    item = get_object_or_404(
+        CartItem,
+        id=id,
+        cart__user=request.user
+    )
+
+    item.delete()
+
+    return JsonResponse({"success": True})
 
 
 
@@ -972,24 +995,58 @@ def admin_add_product(request):
             request.FILES
         )
 
-        if form.is_valid():
+        colors = ColorFormSet(request.POST)
+        sizes = SizeFormSet(request.POST)
+        perfume = PerfumeFormSet(request.POST)
 
-            form.save()
+
+        if (
+            form.is_valid()
+            and colors.is_valid()
+            and sizes.is_valid()
+            and perfume.is_valid()
+        ):
+
+            product = form.save()
+
+
+            colors.instance = product
+            colors.save()
+
+
+            sizes.instance = product
+            sizes.save()
+
+
+            perfume.instance = product
+            perfume.save()
+
 
             return redirect("admin_products")
+
 
     else:
 
         form = ProductForm()
 
+        colors = ColorFormSet()
+
+        sizes = SizeFormSet()
+
+        perfume = PerfumeFormSet()
+
+
+
     return render(
         request,
         "admin_add_product.html",
         {
-            "form": form
+            "form": form,
+            "colors": colors,
+            "sizes": sizes,
+            "perfume": perfume,
         }
     )
-
 @staff_member_required
 def admin_edit_product(request, id):
 

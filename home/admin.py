@@ -204,3 +204,10 @@ from .models import ProductImage, ProductColor, ProductSize
 admin.site.register(ProductImage)
 admin.site.register(ProductColor)
 admin.site.register(ProductSize)
+
+from .models import PerfumeDetail
+
+admin.site.register(PerfumeDetail)
+
+class PerfumeDetailAdmin(admin.ModelAdmin):
+    list_display = ("product", "volume", "longevity", "season")

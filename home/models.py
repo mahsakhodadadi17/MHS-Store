@@ -456,6 +456,9 @@ class ProductImage(models.Model):
     )
     image = models.ImageField(upload_to='products/gallery/')
 
+    def __str__(self):
+        return self.product.title
+
 
 class ProductColor(models.Model):
     product = models.ForeignKey(
@@ -466,6 +469,9 @@ class ProductColor(models.Model):
     name = models.CharField(max_length=50)
     color_code = models.CharField(max_length=10)
 
+    def __str__(self):
+        return f"{self.product.title} - {self.name}"
+
 class ProductSize(models.Model):
     product = models.ForeignKey(
         Post,
@@ -474,3 +480,40 @@ class ProductSize(models.Model):
     )
     size = models.CharField(max_length=20)
     stock = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.product.title} - {self.size}"
+    
+
+class PerfumeDetail(models.Model):
+    SEASONS = [
+       ("بهار", "بهار"),
+       ("تابستان", "تابستان"),
+      ("پاییز", "پاییز"),
+       ("زمستان", "زمستان"),
+      ("بهار و تابستان", "بهار و تابستان"),
+      ("پاییز و زمستان", "پاییز و زمستان"),
+       ("چهار فصل", "چهار فصل"),
+       ("پاییز و بهار", "پاییز و بهار"),
+      
+    ]
+
+    LONGEVITY = [
+        ("کم", "کم"),
+        ("متوسط", "متوسط"),
+        ("زیاد", "زیاد"),
+        ("خیلی زیاد", "خیلی زیاد"),
+    ]
+
+    product = models.OneToOneField(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="perfume_detail"
+    )
+
+    volume = models.CharField(max_length=20)      # 50ml - 100ml
+    longevity = models.CharField(max_length=20, choices=LONGEVITY)
+    season = models.CharField(max_length=20, choices=SEASONS)
+
+    def __str__(self):
+        return self.product.title
