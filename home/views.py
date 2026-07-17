@@ -42,6 +42,7 @@ from .models import AdminNotification
 from django.db.models.functions import TruncMonth
 from datetime import timedelta
 from django.utils import timezone
+from .models import Profile
 
 def contact(request):
     form= ContactForm()
@@ -1805,26 +1806,65 @@ def admin_edit_manager(request, id):
     if not request.user.is_superuser:
         return redirect("admin_dashboard")
 
-    manager = get_object_or_404(User, id=id)
+
+    manager = get_object_or_404(
+        User,
+        id=id
+    )
+
+
+    profile, created = Profile.objects.get_or_create(
+        user=manager
+    )
+
+
 
     if request.method == "POST":
 
+
         manager.username = request.POST.get("username")
+
         manager.email = request.POST.get("email")
+
 
         role = request.POST.get("role")
 
+
         manager.is_staff = True
-        manager.is_superuser = (role == "superadmin")
+
+        manager.is_superuser = (
+            role == "superadmin"
+        )
+
 
         manager.save()
+
+
+
+        profile_image = request.FILES.get(
+            "profile_image"
+        )
+
+
+        if profile_image:
+
+            profile.image = profile_image
+
+            profile.save()
+
+
 
         messages.success(
             request,
             "اطلاعات مدیر با موفقیت ویرایش شد."
         )
 
-        return redirect("admin_managers")
+
+        return redirect(
+            "admin_managers"
+        )
+
+
 
     return render(
         request,
@@ -1833,7 +1873,6 @@ def admin_edit_manager(request, id):
             "manager": manager
         }
     )
-
 @login_required
 def admin_delete_manager(request, id):
 
@@ -2011,3 +2050,17 @@ def admin_edit_banner(request, id):
             "banner": banner
         }
     )
+
+
+def add_category(request):
+
+    if request.method == "POST":
+
+        title = request.POST.get("title")
+
+        if title:
+            Category.objects.create(
+                title=title
+            )
+
+    return redirect("admin_categories")

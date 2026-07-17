@@ -255,6 +255,11 @@ urlpatterns = [
      views.admin_edit_banner,
      name="admin_edit_banner"
     ),
+    path(
+     "admin-panel/categories/add/",
+     views.add_category,
+     name="add_category"
+    ),
 
 ]
 

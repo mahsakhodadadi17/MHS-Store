@@ -28,8 +28,7 @@
 
         </div>
 
-        <form method="POST">
-
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="card-body">
@@ -89,6 +88,44 @@
                                     {% if manager.is_superuser %}selected{% endif %}>
                                     سوپر ادمین
                                 </option>
+
+                                <div class="col-md-6">
+
+    <div class="form-group">
+
+        <label>
+            عکس پروفایل مدیر
+        </label>
+
+
+        {% if manager.profile.image %}
+
+            <div class="mb-3">
+
+                <img 
+                src="{{ manager.profile.image.url }}"
+                class="img-circle elevation-2"
+                style="
+                width:100px;
+                height:100px;
+                object-fit:cover;
+                ">
+
+            </div>
+
+        {% endif %}
+
+
+
+        <input
+            type="file"
+            name="profile_image"
+            class="form-control">
+
+
+    </div>
+
+</div>
 
                             </select>
 
