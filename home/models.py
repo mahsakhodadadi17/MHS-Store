@@ -517,3 +517,35 @@ class PerfumeDetail(models.Model):
 
     def __str__(self):
         return self.product.title
+    
+
+class SiteSettings(models.Model):
+
+    site_name = models.CharField(max_length=100, default="MHS Store")
+
+    logo = models.ImageField(
+        upload_to="site/",
+        blank=True,
+        null=True
+    )
+
+    favicon = models.ImageField(
+        upload_to="site/",
+        blank=True,
+        null=True
+    )
+
+    admin_email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.CharField(max_length=300, blank=True)
+
+    instagram = models.URLField(blank=True)
+    telegram = models.URLField(blank=True)
+
+    about = models.TextField(blank=True)
+
+    maintenance = models.BooleanField(default=False)
+    registration = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.site_name

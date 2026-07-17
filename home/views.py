@@ -1138,9 +1138,6 @@ def admin_notifications(request):
     )
 
 
-@staff_member_required
-def admin_settings(request):
-    return render(request, "admin_settings.html")
 
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
@@ -1391,47 +1388,50 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 
+from .models import SiteSettings
+
+
+@login_required
 def admin_settings(request):
 
-    settings_data = {
-        "site_name": "MHS Store",
-        "admin_email": "",
-        "phone": "",
-        "address": "",
-        "instagram": "",
-        "telegram": "",
-        "about": "",
-        "maintenance": False,
-        "registration": True,
-    }
-
+    settings_data, created = SiteSettings.objects.get_or_create(id=1)
 
     if request.method == "POST":
 
-        settings_data["site_name"] = request.POST.get("site_name")
-        settings_data["admin_email"] = request.POST.get("admin_email")
-        settings_data["phone"] = request.POST.get("phone")
-        settings_data["address"] = request.POST.get("address")
-        settings_data["instagram"] = request.POST.get("instagram")
-        settings_data["telegram"] = request.POST.get("telegram")
-        settings_data["about"] = request.POST.get("about")
+        settings_data.site_name = request.POST.get("site_name")
+        settings_data.admin_email = request.POST.get("admin_email")
+        settings_data.phone = request.POST.get("phone")
+        settings_data.address = request.POST.get("address")
+        settings_data.instagram = request.POST.get("instagram")
+        settings_data.telegram = request.POST.get("telegram")
+        settings_data.about = request.POST.get("about")
 
-        settings_data["maintenance"] = True if request.POST.get("maintenance") else False
-        settings_data["registration"] = True if request.POST.get("registration") else False
+        settings_data.maintenance = bool(request.POST.get("maintenance"))
+        settings_data.registration = bool(request.POST.get("registration"))
 
+        settings_data.save()
 
         messages.success(
             request,
-            "تنظیمات با موفقیت ذخیره شد"
+            "تنظیمات با موفقیت ذخیره شد."
         )
 
         return redirect("admin_settings")
 
-
     return render(
         request,
         "admin_settings.html",
-        settings_data
+        {
+            "site_name": settings_data.site_name,
+            "admin_email": settings_data.admin_email,
+            "phone": settings_data.phone,
+            "address": settings_data.address,
+            "instagram": settings_data.instagram,
+            "telegram": settings_data.telegram,
+            "about": settings_data.about,
+            "maintenance": settings_data.maintenance,
+            "registration": settings_data.registration,
+        }
     )
 
 def admin_user_detail(request, id):
