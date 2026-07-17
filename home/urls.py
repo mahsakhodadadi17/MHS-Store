@@ -152,6 +152,26 @@ urlpatterns = [
      name="admin_delete_notification",
     ),
     path("admin-panel/settings/", views.admin_settings, name="admin_settings"), 
+    path(
+     "admin-panel/managers/",
+     views.admin_managers,
+     name="admin_managers"
+    ),
+    path(
+     "admin-panel/managers/add/",
+     views.admin_add_manager,
+     name="admin_add_manager"
+    ),
+    path(
+     "admin-panel/managers/<int:id>/edit/",
+     views.admin_edit_manager,
+     name="admin_edit_manager"
+    ),
+    path(
+     "admin-panel/managers/<int:id>/delete/",
+     views.admin_delete_manager,
+     name="admin_delete_manager"
+    ), 
     path("admin-panel/users/", views.admin_users, name="admin_users"),
     path("admin-panel/users/add/", views.admin_add_user, name="admin_add_user"),
     path("admin-panel/users/<int:id>/", views.admin_user_detail, name="admin_user_detail"),

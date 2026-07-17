@@ -1652,3 +1652,130 @@ def admin_read_contact(request, id):
     contact.save()
 
     return redirect("admin_contacts")
+
+@login_required
+def admin_managers(request):
+
+    if not request.user.is_superuser:
+        return redirect("admin_dashboard")
+
+    managers = User.objects.filter(is_staff=True)
+
+    return render(
+        request,
+        "admin_managers.html",
+        {
+            "managers": managers
+        }
+    )
+
+
+@login_required
+def admin_add_manager(request):
+
+    if not request.user.is_superuser:
+        return redirect("admin_dashboard")
+
+    if request.method == "POST":
+
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        role = request.POST.get("role")
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "این نام کاربری قبلاً ثبت شده است.")
+            return redirect("admin_add_manager")
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "این ایمیل قبلاً ثبت شده است.")
+            return redirect("admin_add_manager")
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+
+        user.is_staff = True
+
+        if role == "superadmin":
+            user.is_superuser = True
+
+        user.save()
+
+        messages.success(request, "مدیر جدید با موفقیت ایجاد شد.")
+
+        return redirect("admin_managers")
+
+    return render(request, "admin_add_manager.html")
+
+
+@login_required
+def admin_edit_manager(request, id):
+
+    if not request.user.is_superuser:
+        return redirect("admin_dashboard")
+
+    manager = get_object_or_404(User, id=id)
+
+    if request.method == "POST":
+
+        manager.username = request.POST.get("username")
+        manager.email = request.POST.get("email")
+
+        role = request.POST.get("role")
+
+        manager.is_staff = True
+        manager.is_superuser = (role == "superadmin")
+
+        manager.save()
+
+        messages.success(
+            request,
+            "اطلاعات مدیر با موفقیت ویرایش شد."
+        )
+
+        return redirect("admin_managers")
+
+    return render(
+        request,
+        "admin_edit_manager.html",
+        {
+            "manager": manager
+        }
+    )
+
+@login_required
+def admin_delete_manager(request, id):
+
+    if not request.user.is_superuser:
+        return redirect("admin_dashboard")
+
+    manager = get_object_or_404(User, id=id)
+
+    # جلوگیری از حذف خودت
+    if manager == request.user:
+        messages.error(
+            request,
+            "شما نمی‌توانید حساب کاربری خودتان را حذف کنید."
+        )
+        return redirect("admin_managers")
+
+    if request.method == "POST":
+        manager.delete()
+
+        messages.success(
+            request,
+            "مدیر با موفقیت حذف شد."
+        )
+
+        return redirect("admin_managers")
+
+    return render(
+        request,
+        "admin_delete_manager.html",
+        {
+            "manager": manager
+        }
+    )
