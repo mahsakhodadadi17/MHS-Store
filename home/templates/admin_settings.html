@@ -1,384 +1,505 @@
 {% extends "admin_base.html" %}
 
-{% block title %}تنظیمات{% endblock %}
+{% block title %}
+تنظیمات
+{% endblock %}
+
+
 
 {% block page_title %}
 تنظیمات فروشگاه
 {% endblock %}
 
+
+
 {% block breadcrumb %}
 تنظیمات
 {% endblock %}
 
+
+
 {% block content %}
 
-<div class="container-fluid">
+
+<div class="container-fluid" dir="rtl">
+
 
 <div class="row">
 
-<div class="col-lg-3 col-6">
 
-<div class="small-box bg-primary">
+  
 
-<div class="inner">
 
-<h3><i class="fas fa-cog"></i></h3>
 
-<p>تنظیمات عمومی</p>
 
-</div>
 
-<div class="icon">
+    <div class="col-lg-3 col-6">
 
-<i class="fas fa-tools"></i>
 
-</div>
+        <div class="small-box bg-warning">
 
-</div>
 
-</div>
+            <div class="inner">
 
-<div class="col-lg-3 col-6">
+                <h3>
+                    <i class="fas fa-images"></i>
+                </h3>
 
-<div class="small-box bg-success">
 
-<div class="inner">
-
-<h3><i class="fas fa-store"></i></h3>
-
-<p>فروشگاه</p>
-
-</div>
-
-<div class="icon">
-
-<i class="fas fa-shopping-bag"></i>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-<div class="col-lg-3 col-6">
-
-<div class="small-box bg-warning">
-
-<div class="inner">
-
-<h3>
-<i class="fas fa-images"></i>
-</h3>
-
-<p>مدیریت بنرها</p>
-
-</div>
-
-<div class="icon">
-
-<i class="fas fa-photo-video"></i>
-
-</div>
-
-<a href="{% url 'admin_banners' %}" class="small-box-footer">
-
-ورود به مدیریت بنرها
-
-<i class="fas fa-arrow-left"></i>
-
-</a>
-
-</div>
-
-</div>
-<div class="row mb-4">
-
-    <div class="col-md-4">
-
-        <div class="card shadow-sm">
-
-            <div class="card-body text-center">
-
-                <i class="fas fa-user-shield fa-3x text-primary mb-3"></i>
-
-                <h5>مدیریت مدیران</h5>
-
-                <p class="text-muted">
-                    افزودن، ویرایش و حذف مدیران سیستم
+                <p>
+                    مدیریت بنرها
                 </p>
 
-                <a href="{% url 'admin_managers' %}" class="btn btn-primary">
-
-                    مشاهده مدیران
-
-                </a>
 
             </div>
 
+
+            <div class="icon">
+
+                <i class="fas fa-photo-video"></i>
+
+            </div>
+
+
+            <a href="{% url 'admin_banners' %}" 
+               class="small-box-footer">
+
+                ورود به بنرها
+
+                <i class="fas fa-arrow-left"></i>
+
+            </a>
+
+
         </div>
+
 
     </div>
 
+
+
+
+
+    <div class="col-lg-3 col-6">
+
+
+        <div class="small-box bg-danger">
+
+
+            <div class="inner">
+
+                <h3>
+                    <i class="fas fa-users"></i>
+                </h3>
+
+
+                <p>
+                    مدیریت مدیران
+                </p>
+
+
+            </div>
+
+
+            <div class="icon">
+
+                <i class="fas fa-user-shield"></i>
+
+            </div>
+
+
+            <a href="{% url 'admin_managers' %}"
+               class="small-box-footer">
+
+                ورود
+
+                <i class="fas fa-arrow-left"></i>
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
 </div>
 
-<div class="card shadow">
+
+
+
+
+
+<div class="card">
+
 
 <div class="card-header">
 
 <h3 class="card-title">
 
-<i class="fas fa-cogs text-primary"></i>
+<i class="fas fa-cogs"></i>
 
 تنظیمات سایت
 
 </h3>
 
+
 </div>
+
+
+
 
 
 <div class="card-body">
 
+
 <form method="POST" enctype="multipart/form-data">
+
 
 {% csrf_token %}
 
+
+
 <div class="row">
+
+
 
 <div class="col-md-6">
 
+
 <div class="form-group">
 
-<label>نام فروشگاه</label>
 
-<input
+<label>
+نام فروشگاه
+</label>
+
+
+<input 
 type="text"
 name="site_name"
 class="form-control"
 value="{{ site_name }}">
 
-</div>
 
 </div>
-<div class="col-md-4">
-    <div class="form-group">
-        <label>👟 لوگوی کفش</label>
 
-        {% if shoe_logo %}
+
+</div>
+
+
+<div class="row">
+
+
+    <!-- لوگوی کفش -->
+
+    <div class="col-md-4">
+
+        <div class="form-group">
+
+            <label>
+                👟 لوگوی کفش
+            </label>
+
+
+            {% if shoe_logo %}
+
             <div class="mb-2">
-                <img src="{{ shoe_logo.url }}"
-                     style="height:90px;border-radius:10px;">
+
+                <img 
+                src="{{ shoe_logo.url }}"
+                style="height:90px;border-radius:10px;">
+
             </div>
-        {% endif %}
 
-        <input type="file"
-               name="shoe_logo"
-               class="form-control">
+            {% endif %}
+
+
+
+            <input 
+            type="file"
+            name="shoe_logo"
+            class="form-control">
+
+
+        </div>
+
     </div>
-</div>
-<div class="col-md-4">
-    <div class="form-group">
-        <label>🌸 لوگوی عطر</label>
 
-        {% if perfume_logo %}
+
+
+
+
+    <!-- لوگوی عطر -->
+
+    <div class="col-md-4">
+
+        <div class="form-group">
+
+            <label>
+                🌸 لوگوی عطر
+            </label>
+
+
+            {% if perfume_logo %}
+
             <div class="mb-2">
-                <img src="{{ perfume_logo.url }}"
-                     style="height:90px;border-radius:10px;">
+
+                <img 
+                src="{{ perfume_logo.url }}"
+                style="height:90px;border-radius:10px;">
+
             </div>
-        {% endif %}
 
-        <input type="file"
-               name="perfume_logo"
-               class="form-control">
+            {% endif %}
+
+
+
+            <input 
+            type="file"
+            name="perfume_logo"
+            class="form-control">
+
+
+        </div>
+
     </div>
-</div>
-<div class="col-md-4">
-    <div class="form-group">
-        <label>⭐ فاوآیکون</label>
 
-        {% if favicon %}
+
+
+
+
+    <!-- فاوآیکون -->
+
+    <div class="col-md-4">
+
+        <div class="form-group">
+
+            <label>
+                ⭐ فاوآیکون
+            </label>
+
+
+            {% if favicon %}
+
             <div class="mb-2">
-                <img src="{{ favicon.url }}"
-                     style="height:64px;width:64px;">
-            </div>
-        {% endif %}
 
-        <input type="file"
-               name="favicon"
-               class="form-control">
+                <img 
+                 src="{{ favicon.url }}"
+                  style="height:90px;width:90px;object-fit:contain;border-radius:10px;">
+
+            </div>
+
+            {% endif %}
+
+
+
+            <input 
+            type="file"
+            name="favicon"
+            class="form-control">
+
+
+        </div>
+
     </div>
+
+
+
 </div>
 
 
 <div class="col-md-6">
 
+
 <div class="form-group">
 
-<label>ایمیل مدیریت</label>
 
-<input
+<label>
+ایمیل مدیریت
+</label>
+
+
+<input 
 type="email"
 name="admin_email"
 class="form-control"
 value="{{ admin_email }}">
 
-</div>
 
 </div>
+
+
+</div>
+
+
+
+
 
 <div class="col-md-6">
 
+
 <div class="form-group">
 
-<label>شماره تماس</label>
 
-<input
+<label>
+شماره تماس
+</label>
+
+
+<input 
 type="text"
 name="phone"
 class="form-control"
 value="{{ phone }}">
 
-</div>
 
 </div>
+
+
+</div>
+
+
+
+
 
 <div class="col-md-6">
 
+
 <div class="form-group">
 
-<label>آدرس فروشگاه</label>
 
-<input
+<label>
+آدرس فروشگاه
+</label>
+
+
+<input 
 type="text"
 name="address"
 class="form-control"
 value="{{ address }}">
 
-</div>
 
 </div>
-<div class="col-md-6">
 
-    <div class="form-group">
-
-        <label>لینک اینستاگرام</label>
-
-        <input
-            type="url"
-            name="instagram"
-            class="form-control"
-            value="{{ instagram }}">
-
-    </div>
 
 </div>
+
+
+
+
 
 <div class="col-md-6">
 
-    <div class="form-group">
 
-        <label>لینک تلگرام</label>
+<div class="form-group">
 
-        <input
-            type="url"
-            name="telegram"
-            class="form-control"
-            value="{{ telegram }}">
 
-    </div>
+<label>
+لینک اینستاگرام
+</label>
+
+
+<input 
+type="url"
+name="instagram"
+class="form-control"
+value="{{ instagram }}">
+
 
 </div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="form-group">
+
+
+<label>
+لینک تلگرام
+</label>
+
+
+<input 
+type="url"
+name="telegram"
+class="form-control"
+value="{{ telegram }}">
+
+
+</div>
+
+
+</div>
+
+
+
+
 
 <div class="col-md-12">
 
-    <div class="form-group">
 
-        <label>درباره فروشگاه</label>
+<div class="form-group">
 
-        <textarea
-            name="about"
-            class="form-control"
-            rows="5">{{ about }}</textarea>
 
-    </div>
+<label>
+درباره فروشگاه
+</label>
 
-</div>
 
-<div class="col-md-6">
+<textarea
+name="about"
+class="form-control"
+rows="5">{{ about }}</textarea>
 
-    <div class="custom-control custom-switch mt-3">
-
-        <input
-            type="checkbox"
-            class="custom-control-input"
-            id="maintenanceMode"
-            name="maintenance"
-            {% if maintenance %}checked{% endif %}>
-
-        <label
-            class="custom-control-label"
-            for="maintenanceMode">
-
-            فعال بودن حالت تعمیرات
-
-        </label>
-
-    </div>
 
 </div>
 
-<div class="col-md-6">
-
-    <div class="custom-control custom-switch mt-3">
-
-        <input
-            type="checkbox"
-            class="custom-control-input"
-            id="registrationStatus"
-            name="registration"
-            {% if registration %}checked{% endif %}>
-
-        <label
-            class="custom-control-label"
-            for="registrationStatus">
-
-            فعال بودن ثبت‌نام کاربران
-
-        </label>
-
-    </div>
-
-</div>
-</div>
 
 </div>
 
-<div class="card-footer text-left">
 
-    <button type="submit" class="btn btn-primary">
 
-        <i class="fas fa-save"></i>
-
-        ذخیره تنظیمات
-
-    </button>
-
-    <button type="reset" class="btn btn-secondary">
-
-        <i class="fas fa-undo"></i>
-
-        بازنشانی
-
-    </button>
 
 </div>
+
+
+
+
+<button class="btn btn-primary">
+
+<i class="fas fa-save"></i>
+
+ذخیره تنظیمات
+
+</button>
+
+
 
 </form>
 
-</div>
+
 
 </div>
 
+
+
 </div>
+
+
+
+
+</div>
+
 
 {% endblock %}

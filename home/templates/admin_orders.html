@@ -1,12 +1,17 @@
 {% extends 'admin_base.html' %}
 
+
 {% block content %}
+
 
 <div class="container-fluid">
 
+
     <div class="card shadow">
 
+
         <div class="card-header d-flex justify-content-between align-items-center">
+
 
             <h3 class="card-title">
 
@@ -16,138 +21,429 @@
 
             </h3>
 
-        </div>
-
-        <div class="card-body table-responsive p-0">
-
-            <table class="table table-hover text-nowrap">
-
-                <thead class="thead-dark">
-
-                    <tr>
-                       
-
-                        <th>#</th>
-                        <th>مشتری</th>
-                        <th>تعداد محصول</th>
-                        <th>مبلغ</th>
-                        <th>پرداخت</th>
-                        <th>وضعیت سفارش</th>
-                        <th>تاریخ</th>
-                        <th class="text-center">عملیات</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                {% for order in latest_orders %}
-
-                    <tr>
-
-                        <td>{{ order.id }}
-                            {% if order.status == "pending" %}
-
-                               <span class="badge badge-warning">
-                                   جدید
-                                </span>
-                            {% endif %}
-                        </td>
-
-                        <td>{{ order.user.username }}</td>
-
-                        <td>{{ order.items.count }}</td>
-
-                        <td>{{ order.total_price }} تومان</td>
-
-                        <td>
-
-                            {% if order.payment_status == "paid" %}
-
-                                <span class="badge badge-success">پرداخت شده</span>
-
-                            {% else %}
-
-                                <span class="badge badge-danger">پرداخت نشده</span>
-
-                            {% endif %}
-
-                        </td>
-
-                        <td>
-
-                            {% if order.status == "pending" %}
-                                <span class="badge badge-warning">در انتظار</span>
-
-                            {% elif order.status == "paid" %}
-                                <span class="badge badge-primary">پرداخت شده</span>
-
-                            {% elif order.status == "sent" %}
-                                <span class="badge badge-info">ارسال شده</span>
-
-                            {% elif order.status == "done" %}
-                                <span class="badge badge-success">تحویل داده شده</span>
-
-                            {% else %}
-                                <span class="badge badge-danger">لغو شده</span>
-
-                            {% endif %}
-
-                        </td>
-
-                        <td>{{ order.created_at|date:"Y/m/d" }}</td>
-
-                        <td class="text-center">
-
-                            <a href="{% url 'admin_order_detail' order.id %}"
-                               class="btn btn-info btn-sm">
-
-                                <i class="fas fa-eye"></i>
-
-                            </a>
-
-                            <a href="{% url 'admin_edit_order' order.id %}"
-                               class="btn btn-warning btn-sm">
-
-                                <i class="fas fa-edit"></i>
-
-                            </a>
-
-                            <a href="{% url 'admin_delete_order' order.id %}"
-                               class="btn btn-danger btn-sm"
-                               onclick="return confirm('آیا از حذف این سفارش مطمئن هستید؟')">
-
-                                <i class="fas fa-trash"></i>
-
-                            </a>
-
-                        </td>
-
-                    </tr>
-
-                {% empty %}
-
-                    <tr>
-
-                        <td colspan="8" class="text-center p-4">
-
-                            سفارشی وجود ندارد.
-
-                        </td>
-
-                    </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
 
         </div>
+
+
+
+        <div class="card-body">
+
+
+
+            <!-- سرچ -->
+
+            <form method="GET" class="mb-3">
+
+
+                <div class="row">
+
+
+                    <div class="col-md-8">
+
+
+                        <input
+
+                        type="text"
+
+                        name="search"
+
+                        class="form-control"
+
+                        placeholder="جستجو شماره سفارش، نام کاربر یا ایمیل..."
+
+                        value="{{ request.GET.search }}">
+
+
+                    </div>
+
+
+
+                    <div class="col-md-2">
+
+
+                        <button type="submit" class="btn btn-primary w-100">
+
+
+                            <i class="fas fa-search"></i>
+
+                            جستجو
+
+
+                        </button>
+
+
+                    </div>
+
+
+
+
+                    <div class="col-md-2">
+
+
+                        <a href="{% url 'admin_orders' %}"
+
+                           class="btn btn-secondary w-100">
+
+
+                            پاک کردن
+
+
+                        </a>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+            </form>
+
+
+
+
+
+            <div class="table-responsive">
+
+
+
+                <table class="table table-hover text-nowrap">
+
+
+
+                    <thead class="thead-dark">
+
+
+                        <tr>
+
+
+                            <th>#</th>
+
+                            <th>مشتری</th>
+
+                            <th>تعداد محصول</th>
+
+                            <th>مبلغ</th>
+
+                            <th>پرداخت</th>
+
+                            <th>وضعیت سفارش</th>
+
+                            <th>تاریخ</th>
+
+                            <th class="text-center">عملیات</th>
+
+
+                        </tr>
+
+
+                    </thead>
+
+
+
+
+
+                    <tbody>
+
+
+
+                    {% for order in latest_orders %}
+
+
+
+                        <tr>
+
+
+
+                            <td>
+
+
+                                {{ order.id }}
+
+
+                                {% if order.status == "pending" %}
+
+
+                                    <span class="badge badge-warning">
+
+                                        جدید
+
+                                    </span>
+
+
+                                {% endif %}
+
+
+                            </td>
+
+
+
+
+
+
+                            <td>
+
+                                {{ order.user.username }}
+
+                            </td>
+
+
+
+
+
+
+                            <td>
+
+                                {{ order.items.count }}
+
+                            </td>
+
+
+
+
+
+
+                            <td>
+
+                                {{ order.total_price }}
+
+                                تومان
+
+                            </td>
+
+
+
+
+
+
+
+                            <td>
+
+
+                                {% if order.payment_status == "paid" %}
+
+
+                                    <span class="badge badge-success">
+
+                                        پرداخت شده
+
+                                    </span>
+
+
+                                {% else %}
+
+
+                                    <span class="badge badge-danger">
+
+                                        پرداخت نشده
+
+                                    </span>
+
+
+                                {% endif %}
+
+
+                            </td>
+
+
+
+
+
+
+
+
+                            <td>
+
+
+
+                                {% if order.status == "pending" %}
+
+
+                                    <span class="badge badge-warning">
+
+                                        در انتظار
+
+                                    </span>
+
+
+
+                                {% elif order.status == "paid" %}
+
+
+
+                                    <span class="badge badge-primary">
+
+                                        پرداخت شده
+
+                                    </span>
+
+
+
+                                {% elif order.status == "sent" %}
+
+
+
+                                    <span class="badge badge-info">
+
+                                        ارسال شده
+
+                                    </span>
+
+
+
+                                {% elif order.status == "done" %}
+
+
+
+                                    <span class="badge badge-success">
+
+                                        تحویل داده شده
+
+                                    </span>
+
+
+
+                                {% else %}
+
+
+
+                                    <span class="badge badge-danger">
+
+                                        لغو شده
+
+                                    </span>
+
+
+
+                                {% endif %}
+
+
+
+                            </td>
+
+
+
+
+
+
+
+                            <td>
+
+
+                                {{ order.created_at|date:"Y/m/d" }}
+
+
+                            </td>
+
+
+
+
+
+
+
+                            <td class="text-center">
+
+
+
+                                <a href="{% url 'admin_order_detail' order.id %}"
+
+                                   class="btn btn-info btn-sm">
+
+
+                                    <i class="fas fa-eye"></i>
+
+
+                                </a>
+
+
+
+
+
+                                <a href="{% url 'admin_edit_order' order.id %}"
+
+                                   class="btn btn-warning btn-sm">
+
+
+                                    <i class="fas fa-edit"></i>
+
+
+                                </a>
+
+
+
+
+
+                                <a href="{% url 'admin_delete_order' order.id %}"
+
+                                   class="btn btn-danger btn-sm"
+
+                                   onclick="return confirm('آیا از حذف سفارش مطمئن هستید؟')">
+
+
+                                    <i class="fas fa-trash"></i>
+
+
+                                </a>
+
+
+
+                            </td>
+
+
+
+                        </tr>
+
+
+
+
+
+                    {% empty %}
+
+
+
+                        <tr>
+
+
+                            <td colspan="8" class="text-center p-4">
+
+
+                                سفارشی وجود ندارد.
+
+
+                            </td>
+
+
+                        </tr>
+
+
+
+                    {% endfor %}
+
+
+
+                    </tbody>
+
+
+
+                </table>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
 
     </div>
 
+
+
 </div>
+
+
 
 {% endblock %}

@@ -940,15 +940,42 @@ def admin_dashboard(request):
 
     return render(request, "admin_dashboard.html", context)
 
+from django.db.models import Q
+from django.contrib.admin.views.decorators import staff_member_required
+
+
 @staff_member_required
 def admin_orders(request):
+
+    search = request.GET.get("search")
+
 
     latest_orders = (
         Order.objects
         .select_related("user")
         .prefetch_related("items")
-        .order_by("-created_at")
+        .all()
     )
+
+
+    # 🔍 جستجو
+    if search:
+
+        latest_orders = latest_orders.filter(
+
+            Q(id__icontains=search) |
+
+            Q(user__username__icontains=search) |
+
+            Q(user__email__icontains=search)
+
+        )
+
+
+    # مرتب سازی
+    latest_orders = latest_orders.order_by("-created_at")
+
+
 
     return render(
         request,
