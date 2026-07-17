@@ -1406,6 +1406,17 @@ def admin_settings(request):
         settings_data.telegram = request.POST.get("telegram")
         settings_data.about = request.POST.get("about")
 
+        if request.FILES.get("shoe_logo"):
+         settings_data.shoe_logo = request.FILES["shoe_logo"]
+
+        if request.FILES.get("perfume_logo"):
+         settings_data.perfume_logo = request.FILES["perfume_logo"]
+
+        if request.FILES.get("favicon"):
+          settings_data.favicon = request.FILES["favicon"]
+
+        
+
         settings_data.maintenance = bool(request.POST.get("maintenance"))
         settings_data.registration = bool(request.POST.get("registration"))
 
@@ -1431,6 +1442,10 @@ def admin_settings(request):
             "about": settings_data.about,
             "maintenance": settings_data.maintenance,
             "registration": settings_data.registration,
+            "shoe_logo": settings_data.shoe_logo,
+            "perfume_logo": settings_data.perfume_logo,
+            "favicon": settings_data.favicon,
+            
         }
     )
 

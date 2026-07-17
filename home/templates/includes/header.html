@@ -1,4 +1,5 @@
 {% load static %}
+{% load site_tags %}
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol xmlns="http://www.w3.org/2000/svg" id="shopping-carriage" viewBox="0 0 24 24" fill="none">
       <path
@@ -73,6 +74,7 @@
         d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396l1.414-1.414l-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8s3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6s-6-2.691-6-6s2.691-6 6-6z" />
     </symbol>
   </svg>
+  
   
   <!-- Loader 4 -->
 
@@ -372,8 +374,9 @@
  
     <nav id="header-nav" class="navbar navbar-expand-lg">
       <div class="container-lg">
+        {% site_logo as logo_url %}
         <a class="navbar-brand" href="{% url 'home' %}">
-          <img src="{% static logo %}" class="logo" alt="logo" width="{{ logo_width|default:'170' }}">
+          <img src="{{ logo_url }}" class="logo" alt="logo" width="180">
         </a>
         <button class="navbar-toggler d-flex d-lg-none order-3 border-0 p-1 ms-2" type="button" data-bs-toggle="offcanvas"
           data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -384,7 +387,7 @@
         <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar">
           <div class="offcanvas-header px-4 pb-0">
             <a class="navbar-brand ps-3" href="{% url 'home' %}">
-              <img src="{% static logo %}" class="logo" alt="logo" width="{{ logo_width|default:'170' }}" width="180">
+              <img src="{{ logo_url }}" class="logo" alt="logo" width="180">
             </a>
             <button type="button" class="btn-close btn-close-black p-5" data-bs-dismiss="offcanvas" aria-label="Close"
               data-bs-target="#bdNavbar"></button>

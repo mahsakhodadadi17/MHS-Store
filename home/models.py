@@ -523,17 +523,25 @@ class SiteSettings(models.Model):
 
     site_name = models.CharField(max_length=100, default="MHS Store")
 
-    logo = models.ImageField(
-        upload_to="site/",
-        blank=True,
-        null=True
+    shoe_logo = models.ImageField(
+     upload_to="site/",
+     blank=True,
+     null=True
+    )
+
+    perfume_logo = models.ImageField(
+     upload_to="site/",
+     blank=True,
+     null=True
     )
 
     favicon = models.ImageField(
-        upload_to="site/",
-        blank=True,
-        null=True
+     upload_to="site/",
+     blank=True,
+     null=True
     )
+
+ 
 
     admin_email = models.EmailField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
