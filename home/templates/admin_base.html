@@ -145,21 +145,39 @@ body{
 
     <!-- Logo -->
 
-    <a href="{% url 'admin_dashboard' %}" class="brand-link">
+<a href="{% url 'admin_dashboard' %}" class="brand-link">
 
-        <img src="{% static 'image/logo.png' %}"
 
-             class="brand-image img-circle elevation-3"
+    {% if site_settings.favicon %}
 
-             style="opacity:.9">
+        <img 
+        src="{{ site_settings.favicon.url }}"
+        alt="Logo"
+        class="brand-image img-circle elevation-3"
+        style="opacity:.9">
 
-        <span class="brand-text font-weight-light">
 
-            My Admin
+    {% else %}
 
-        </span>
+        <img 
+        src="{% static 'image/logo.png' %}"
+        alt="Logo"
+        class="brand-image img-circle elevation-3"
+        style="opacity:.9">
 
-    </a>
+
+    {% endif %}
+
+
+
+    <span class="brand-text font-weight-bold">
+
+        {{ site_settings.site_name|default:"MHS Store" }}
+
+    </span>
+
+
+</a>
 
     <div class="sidebar">
 

@@ -1,5 +1,4 @@
-from .models import Notification, ContactMessage, Order
-from .models import SiteSettings
+from .models import Notification, ContactMessage, Order, SiteSettings
 
 
 def admin_notifications(request):
@@ -15,8 +14,9 @@ def admin_notifications(request):
             is_read=False
         ).count()
 
+
         orders_count = Order.objects.filter(
-          admin_seen=False
+            admin_seen=False
         ).count()
 
     else:
@@ -29,14 +29,15 @@ def admin_notifications(request):
     return {
         "notifications_count": notifications_count,
         "contacts_count": contacts_count,
-         "orders_count": orders_count,
+        "orders_count": orders_count,
     }
+
 
 
 def site_settings(request):
 
-    settings = SiteSettings.objects.first()
+    site_config = SiteSettings.objects.first()
 
     return {
-        "site_settings": settings
+        "site_settings": site_config
     }
