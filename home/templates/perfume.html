@@ -38,44 +38,109 @@
     <div class="container-lg">
       <div class="swiper main-swiper">
         <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <div class="card d-flex flex-row align-items-end border-0 large jarallax-keep-img">
-              <img src="{% static 'image/card-image11.jpeg' %}" alt="shoes" class="img-fluid jarallax-img">
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="row g-4">
-              <div class="col-lg-12 mb-4">
-                <div class="card d-flex flex-row align-items-end border-0 jarallax-keep-img">
-                  <img src="{% static 'image/card-image12.jpeg' %}" alt="shoes" class="img-fluid jarallax-img">
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="card d-flex flex-row align-items-end border-0 jarallax-keep-img">
-                  <img src="{% static 'image/card-image13.jpeg' %}" alt="shoes" class="img-fluid jarallax-img">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="card d-flex flex-row align-items-end border-0 large jarallax-keep-img">
-              <img src="{% static 'image/card-image14.jpeg' %}" alt="shoes" class="img-fluid jarallax-img">
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="row g-4">
-              <div class="col-lg-12 mb-4">
-                <div class="card d-flex flex-row align-items-end border-0 jarallax-keep-img">
-                  <img src="{% static 'image/card-image16.jpg' %}" alt="shoes" class="img-fluid jarallax-img">
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="card d-flex flex-row align-items-end border-0 jarallax-keep-img">
-                  <img src="{% static 'image/card-image17.jpg' %}" alt="shoes" class="img-fluid jarallax-img">
-                </div>
-              </div>
-            </div>
-          </div>
+          {% for banner in perfume_slider_banners %}
+
+<div class="swiper-slide">
+
+
+{% if banner.layout == "double" %}
+
+
+<div class="row g-4">
+
+
+<div class="col-lg-12 mb-4">
+
+<div class="card border-0 jarallax-keep-img">
+
+
+{% if banner.video %}
+
+<video autoplay muted loop playsinline class="jarallax-img">
+
+<source src="{{ banner.video.url }}" type="video/mp4">
+
+</video>
+
+{% elif banner.image %}
+
+<img src="{{ banner.image.url }}" 
+class="img-fluid jarallax-img">
+
+{% endif %}
+
+
+</div>
+
+</div>
+
+
+
+<div class="col-lg-12">
+
+<div class="card border-0 jarallax-keep-img">
+
+
+{% if banner.second_video %}
+
+<video autoplay muted loop playsinline class="jarallax-img">
+
+<source src="{{ banner.second_video.url }}" type="video/mp4">
+
+</video>
+
+
+{% elif banner.second_image %}
+
+<img src="{{ banner.second_image.url }}"
+class="img-fluid jarallax-img">
+
+{% endif %}
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+{% else %}
+
+
+<div class="card border-0 large jarallax-keep-img">
+
+
+{% if banner.video %}
+
+<video autoplay muted loop playsinline class="jarallax-img">
+
+<source src="{{ banner.video.url }}" type="video/mp4">
+
+</video>
+
+
+{% elif banner.image %}
+
+<img src="{{ banner.image.url }}"
+class="img-fluid jarallax-img">
+
+{% endif %}
+
+
+</div>
+
+
+{% endif %}
+
+
+
+</div>
+
+
+{% endfor %}
         </div>
       </div>
       <div class="swiper-pagination"></div>
@@ -123,22 +188,82 @@
       </div>
     </div>
   </section>
-  <section id="collection-products" class="py-2 my-2 py-md-5 my-md-5">
-    <div class="container-md">
-      <div class="row">
-        <div class="col-lg-6 col-md-6 mb-4">
-          <div class="collection-card card border-0 d-flex flex-row align-items-end jarallax-keep-img">
-            <img src="{% static 'image/collection-item31.png' %}" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-6">
-          <div class="collection-card card border-0 d-flex flex-row jarallax-keep-img">
-            <img src="{% static 'image/collection-item41.png' %}" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<section id="collection-products" class="py-2 my-2 py-md-5 my-md-5">
+
+<div class="container-md">
+
+<div class="row">
+
+
+{% for banner in perfume_collection_banners %}
+
+
+<div class="col-lg-6 col-md-6 mb-4">
+
+
+<div class="collection-card card border-0 d-flex flex-row align-items-end jarallax-keep-img">
+
+
+{% if banner.image %}
+
+<img 
+src="{{ banner.image.url }}"
+alt="{{ banner.title }}"
+class="border-rounded-10 img-fluid jarallax-img">
+
+{% endif %}
+
+
+
+<div class="card-detail p-3 m-3 p-lg-5 m-lg-5">
+
+
+{% if banner.title %}
+
+<h3 class="card-title display-3">
+
+<a href="{{ banner.link|default:'#' }}">
+
+{{ banner.title }}
+
+</a>
+
+</h3>
+
+{% endif %}
+
+
+
+{% if banner.link %}
+
+<a href="{{ banner.link }}"
+class="text-uppercase mt-3 d-inline-block text-hover fw-bold">
+
+Shop Now
+
+</a>
+
+{% endif %}
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+</div>
+
+</section>
   <section id="latest-products" class="product-store py-2 my-2 py-md-5 my-md-5 pt-0">
     <div class="container-md">
       <div class="display-header d-flex align-items-center justify-content-between">

@@ -234,6 +234,28 @@ urlpatterns = [
      views.admin_read_contact,
      name="admin_read_contact"
     ),
+    path(
+     "admin-panel/banners/",
+     views.admin_banners,
+     name="admin_banners"
+    ),
+
+    path(
+     "admin-panel/banners/add/",
+     views.admin_add_banner,
+     name="admin_add_banner"
+    ),
+    path(
+     "admin-panel/banners/delete/<int:id>/",
+     views.admin_delete_banner,
+     name="admin_delete_banner"
+    ),
+    path(
+     "admin-panel/banners/edit/<int:id>/",
+     views.admin_edit_banner,
+     name="admin_edit_banner"
+    ),
+
 ]
 
 

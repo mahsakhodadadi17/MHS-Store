@@ -211,3 +211,21 @@ admin.site.register(PerfumeDetail)
 
 class PerfumeDetailAdmin(admin.ModelAdmin):
     list_display = ("product", "volume", "longevity", "season")
+
+
+from .models import Banner
+
+
+@admin.register(Banner)
+class BannerAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "title",
+        "active",
+        "order",
+    )
+
+    list_editable = (
+        "active",
+        "order",
+    )

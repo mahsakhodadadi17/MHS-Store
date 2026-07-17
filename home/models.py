@@ -557,3 +557,84 @@ class SiteSettings(models.Model):
 
     def __str__(self):
         return self.site_name
+    
+
+class Banner(models.Model):
+
+    TYPES = (
+        ("slider", "اسلایدر اصلی"),
+        ("collection", "کالکشن"),
+    )
+
+    title = models.CharField(
+        max_length=200,
+        blank=True
+    )
+
+    image = models.ImageField(
+        upload_to="banners/",
+        blank=True,
+        null=True
+    )
+
+    video = models.FileField(
+        upload_to="banners/videos/",
+        blank=True,
+        null=True
+    )
+
+    link = models.CharField(
+        max_length=300,
+        blank=True
+    )
+
+    banner_type = models.CharField(
+        max_length=20,
+        choices=TYPES,
+        default="slider"
+    )
+
+    order = models.IntegerField(
+        default=0
+    )
+
+    active = models.BooleanField(
+        default=True
+    )
+    LAYOUTS = (
+     ("single", "اسلاید بزرگ"),
+     ("double", "اسلاید دو بخشی"),
+    )
+
+
+    layout = models.CharField(
+     max_length=20,
+     choices=LAYOUTS,
+     default="single"
+    )
+
+
+    second_image = models.ImageField(
+     upload_to="banners/",
+     blank=True,
+     null=True
+    )
+
+
+    second_video = models.FileField(
+     upload_to="banners/videos/",
+     blank=True,
+     null=True
+    )
+    section = models.CharField(
+       max_length=20,
+        choices=[
+         ("shoes", "کفش"),
+         ("perfume", "عطر و ادکلن"),
+        ],
+        default="shoes"
+    )
+
+
+    def __str__(self):
+        return self.title or "Banner"

@@ -30,6 +30,7 @@ from .forms import (
     SizeFormSet,
     PerfumeFormSet
 )
+from .models import Banner
 from django.contrib import messages
 from .models import (Category,Wishlist, Contact, Notification,)
 from .models import ContactMessage
@@ -50,17 +51,47 @@ def contact(request):
 
 
 def home(request):
+
     shoes = Post.objects.filter(category__title='کفش')
 
-    featured_posts = shoes.filter(featured=True).order_by('order')
+    featured_posts = shoes.filter(
+        featured=True
+    ).order_by('order')
 
-    latest_posts = shoes.filter(show_in_new=True).order_by('order')[:5]
+    latest_posts = shoes.filter(
+        show_in_new=True
+    ).order_by('order')[:5]
+
+    slider_banners = Banner.objects.filter(
+     banner_type="slider",
+     section="shoes",
+     active=True
+    ).order_by("order")
+
+
+    collection_banners = Banner.objects.filter(
+     banner_type="collection",
+     section="shoes",
+     active=True
+    ).order_by("order")
+
+  
+
 
     return render(request, 'index.html', {
+
         'featured_posts': featured_posts,
+
         'latest_posts': latest_posts,
+
+        'slider_banners': slider_banners,
+
+        'collection_banners': collection_banners,
+
         'logo': 'image/main-logo.png',
+
         "logo_width": 170,
+
     })
 
 from django.shortcuts import render, get_object_or_404
@@ -73,11 +104,26 @@ def perfume(request):
 
     latest_perfumes = perfumes.filter(show_in_new=True).order_by('order')[:5]
 
+    perfume_slider_banners = Banner.objects.filter(
+     banner_type="slider",
+     section="perfume",
+     active=True
+    ).order_by("order")
+
+
+    perfume_collection_banners = Banner.objects.filter(
+     banner_type="collection",
+     section="perfume",
+     active=True
+    ).order_by("order")
+
     return render(request, 'perfume.html', {
          'featured_perfumes': featured_perfumes,
          'latest_perfumes': latest_perfumes,
          'logo': 'image/perfume-logo.png',
          "logo_width": 200,
+         'perfume_slider_banners': perfume_slider_banners,
+         'perfume_collection_banners': perfume_collection_banners,
     })
 
 def about(request):
@@ -1792,5 +1838,149 @@ def admin_delete_manager(request, id):
         "admin_delete_manager.html",
         {
             "manager": manager
+        }
+    )
+
+
+def admin_banners(request):
+
+    banners = Banner.objects.all().order_by("order")
+
+    return render(
+        request,
+        "admin_banners.html",
+        {
+            "banners": banners
+        }
+    )
+
+
+
+def admin_add_banner(request):
+
+    if request.method == "POST":
+
+        banner = Banner.objects.create(
+
+           title=request.POST.get("title"),
+
+          banner_type=request.POST.get("banner_type"),
+          section=request.POST.get("section"),
+  
+          layout=request.POST.get("layout"),
+
+          link=request.POST.get("link"),
+
+           order=request.POST.get("order") or 0,
+
+          active=True if request.POST.get("active") else False,
+        )
+
+
+        if request.FILES.get("image"):
+
+            banner.image = request.FILES.get("image")
+
+
+        if request.FILES.get("video"):
+
+            banner.video = request.FILES.get("video")
+
+        if request.FILES.get("second_image"):
+
+           banner.second_image = request.FILES.get("second_image")
+
+
+        if request.FILES.get("second_video"):
+
+          banner.second_video = request.FILES.get("second_video")
+
+
+        banner.save()
+
+
+        messages.success(
+            request,
+            "بنر با موفقیت اضافه شد"
+        )
+
+
+        return redirect("admin_banners")
+
+
+
+    return render(
+        request,
+        "admin_add_banner.html"
+    )
+
+
+def admin_delete_banner(request, id):
+
+    banner = get_object_or_404(
+        Banner,
+        id=id
+    )
+
+    banner.delete()
+
+    messages.success(
+        request,
+        "بنر حذف شد"
+    )
+
+    return redirect("admin_banners")
+
+def admin_edit_banner(request, id):
+
+    banner = get_object_or_404(
+        Banner,
+        id=id
+    )
+
+
+    if request.method == "POST":
+
+        banner.title = request.POST.get("title")
+        banner.banner_type = request.POST.get("banner_type")
+        banner.layout = request.POST.get("layout")
+        banner.link = request.POST.get("link")
+        banner.order = request.POST.get("order") or 0
+        banner.active = True if request.POST.get("active") else False
+
+
+        if request.FILES.get("image"):
+            banner.image = request.FILES.get("image")
+
+
+        if request.FILES.get("video"):
+            banner.video = request.FILES.get("video")
+
+
+        if request.FILES.get("second_image"):
+            banner.second_image = request.FILES.get("second_image")
+
+
+        if request.FILES.get("second_video"):
+            banner.second_video = request.FILES.get("second_video")
+
+
+        banner.save()
+
+
+        messages.success(
+            request,
+            "بنر ویرایش شد"
+        )
+
+
+        return redirect("admin_banners")
+
+
+    return render(
+        request,
+        "admin_edit_banner.html",
+        {
+            "banner": banner
         }
     )
