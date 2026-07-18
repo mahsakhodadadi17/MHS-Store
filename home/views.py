@@ -913,6 +913,19 @@ def admin_dashboard(request):
         last30_labels.append(day.strftime("%d/%m"))
         last30_data.append(total)
 
+        shoe_orders = OrderItem.objects.filter(
+            product__category__title__icontains="کفش"
+        ).aggregate(
+           total=Count("id")
+        )["total"] or 0
+
+
+        perfume_orders = OrderItem.objects.filter(
+            product__category__title__icontains="عطر"
+        ).aggregate(
+          total=Count("id")
+        )["total"] or 0
+
 
 
 
@@ -936,6 +949,8 @@ def admin_dashboard(request):
         "latest_orders": Order.objects.select_related("user").prefetch_related("items").order_by("-created_at")[:10],
         "sales_labels": last30_labels,
         "sales_data": last30_data,
+        "shoe_orders": shoe_orders,
+        "perfume_orders": perfume_orders,
     }
 
 

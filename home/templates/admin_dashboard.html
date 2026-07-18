@@ -1180,65 +1180,39 @@ new Chart(ctx, {
 </script>
 <script>
 
-const orderCtx = document.getElementById("orderStatusChart");
+const ctx2 = document.getElementById("orderStatusChart");
 
-new Chart(orderCtx, {
+new Chart(ctx2, {
 
     type: "doughnut",
 
     data: {
 
-        labels: [
-
-            "در انتظار",
-            "پرداخت شده",
-            "ارسال شده",
-            "تحویل داده شده"
-
-        ],
+        labels: ["کفش", "عطر"],
 
         datasets: [{
 
             data: [
-
-                {{ pending_orders }},
-                {{ paid_orders }},
-                {{ sent_orders }},
-                {{ done_orders }}
-
+                {{ shoe_orders }},
+                {{ perfume_orders }}
             ],
 
             backgroundColor: [
-
-                "#ffc107",
-                "#17a2b8",
-                "#007bff",
-                "#28a745"
-
-            ],
-
-            borderWidth: 2
+                "#3b82f6",
+                "#d4af37"
+            ]
 
         }]
 
     },
 
     options: {
-
         responsive: true,
-
-        maintainAspectRatio: false,
-
         plugins: {
-
             legend: {
-
                 position: "bottom"
-
             }
-
         }
-
     }
 
 });
