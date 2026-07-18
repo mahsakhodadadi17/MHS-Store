@@ -260,6 +260,29 @@ urlpatterns = [
      views.add_category,
      name="add_category"
     ),
+    path(
+     "admin-panel/tasks/<int:id>/edit/",
+     views.edit_admin_task,
+     name="edit_admin_task"
+    ),
+
+    path(
+     "admin-panel/tasks/<int:id>/delete/",
+     views.delete_admin_task,
+     name="delete_admin_task"
+    ),
+
+    path(
+     "admin-panel/tasks/<int:id>/toggle/",
+     views.toggle_admin_task,
+     name="toggle_admin_task"
+    ),
+
+    path(
+     "admin-panel/tasks/add/",
+     views.add_admin_task,
+     name="add_admin_task"
+    ),
 
 ]
 

@@ -43,6 +43,7 @@ from django.db.models.functions import TruncMonth
 from datetime import timedelta
 from django.utils import timezone
 from .models import Profile
+from .models import AdminTask
 
 def contact(request):
     form= ContactForm()
@@ -926,6 +927,42 @@ def admin_dashboard(request):
           total=Count("id")
         )["total"] or 0
 
+        default_tasks = [
+
+           "بررسی سفارش‌های جدید",
+
+            "ارسال سفارش‌های پرداخت شده",
+
+            "پاسخ به پیام‌های تماس با ما",
+
+            "بررسی موجودی محصولات",
+
+            "افزودن محصولات جدید",
+
+          "بررسی گزارش فروش",
+        ]
+
+        for title in default_tasks:
+
+            AdminTask.objects.get_or_create(
+
+              title=title,
+
+             is_default=True,
+
+                defaults={
+
+                 "created_by": request.user
+                }
+            )
+
+        tasks = AdminTask.objects.order_by(
+         "completed",
+         "due_date",
+         "-created_at"
+        )
+
+
 
 
 
@@ -951,6 +988,7 @@ def admin_dashboard(request):
         "sales_data": last30_data,
         "shoe_orders": shoe_orders,
         "perfume_orders": perfume_orders,
+        "tasks": tasks,
     }
 
 
@@ -2079,3 +2117,101 @@ def add_category(request):
             )
 
     return redirect("admin_categories")
+
+
+
+
+@login_required
+def toggle_admin_task(request, id):
+
+    if not request.user.is_staff:
+        return redirect("admin_dashboard")
+
+    task = get_object_or_404(
+        AdminTask,
+        id=id
+    )
+
+    task.completed = not task.completed
+
+    task.save()
+
+    return redirect("admin_dashboard")
+
+@login_required
+def delete_admin_task(request, id):
+
+    if not request.user.is_staff:
+        return redirect("admin_dashboard")
+
+    task = get_object_or_404(
+        AdminTask,
+        id=id
+    )
+
+    task.delete()
+
+    messages.success(
+        request,
+        "کار حذف شد."
+    )
+
+    return redirect("admin_dashboard")
+
+@login_required
+def edit_admin_task(request, id):
+
+    if not request.user.is_staff:
+        return redirect("admin_dashboard")
+
+    task = get_object_or_404(
+        AdminTask,
+        id=id
+    )
+
+    if request.method == "POST":
+
+        task.title = request.POST.get("title")
+
+        due_date = request.POST.get("due_date")
+
+        task.due_date = due_date if due_date else None
+
+        task.save()
+
+        messages.success(
+            request,
+            "کار ویرایش شد."
+        )
+
+        return redirect("admin_dashboard")
+
+    return render(
+        request,
+        "admin_edit_task.html",
+        {
+            "task": task
+        }
+    )
+
+@login_required
+def add_admin_task(request):
+
+    if request.method == "POST":
+
+        AdminTask.objects.create(
+
+            title=request.POST.get("title"),
+
+            due_date=request.POST.get("due_date") or None,
+
+            created_by=request.user
+
+        )
+
+        messages.success(
+            request,
+            "کار جدید اضافه شد."
+        )
+
+    return redirect("admin_dashboard")

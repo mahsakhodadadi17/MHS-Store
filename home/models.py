@@ -651,3 +651,26 @@ def create_profile(sender, instance, created, **kwargs):
         Profile.objects.create(
             user=instance
         )
+
+
+class AdminTask(models.Model):
+
+    title = models.CharField(max_length=200)
+
+    completed = models.BooleanField(default=False)
+
+    due_date = models.DateField(blank=True, null=True)
+
+    is_default = models.BooleanField(default=False)
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+      return self.title

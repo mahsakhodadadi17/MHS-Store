@@ -1,4 +1,5 @@
 {% load static %}
+{% load jalali %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -617,112 +618,108 @@ body{
               <!-- /.card-header -->
               <div class="card-body">
                 <ul class="todo-list" data-widget="todo-list">
-                  <li>
-                    <!-- drag handle -->
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <!-- checkbox -->
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo1" id="todoCheck1">
-                      <label for="todoCheck1"></label>
-                    </div>
-                    <!-- todo text -->
-                    <span class="text">بررسی سفارش‌های جدید</span>
-                    <!-- Emphasis label -->
-                    <small class="badge badge-danger"><i class="far fa-clock"></i> امروز</small>
-                    <!-- General tools such as edit or delete-->
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo2" id="todoCheck2" checked>
-                      <label for="todoCheck2"></label>
-                    </div>
-                    <span class="text">ارسال سفارش‌های پرداخت شد</span>
-                    <small class="badge badge-info"><i class="far fa-clock"></i> امروز</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo3" id="todoCheck3">
-                      <label for="todoCheck3"></label>
-                    </div>
-                    <span class="text">پاسخ به پیام‌های تماس با ما</span>
-                    <small class="badge badge-warning"><i class="far fa-clock"></i> امروز</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo4" id="todoCheck4">
-                      <label for="todoCheck4"></label>
-                    </div>
-                    <span class="text">بررسی موجودی محصولات</span>
-                    <small class="badge badge-success"><i class="far fa-clock"></i> این هفته</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo5" id="todoCheck5">
-                      <label for="todoCheck5"></label>
-                    </div>
-                    <span class="text">افزودن محصولات جدید</span>
-                    <small class="badge badge-primary"><i class="far fa-clock"></i>این هفته</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo6" id="todoCheck6">
-                      <label for="todoCheck6"></label>
-                    </div>
-                    <span class="text">بررسی گزارش فروش</span>
-                    <small class="badge badge-secondary"><i class="far fa-clock"></i>پایان ماه</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                </ul>
+
+{% for task in tasks %}
+
+<li>
+
+    <span class="handle">
+
+        <i class="fas fa-ellipsis-v"></i>
+        <i class="fas fa-ellipsis-v"></i>
+
+    </span>
+
+    <div class="icheck-primary d-inline ml-2">
+
+        <form
+            method="POST"
+            action="{% url 'toggle_admin_task' task.id %}">
+
+            {% csrf_token %}
+
+            <input
+                type="checkbox"
+                onchange="this.form.submit()"
+                id="task{{ task.id }}"
+                {% if task.completed %}checked{% endif %}>
+
+            <label for="task{{ task.id }}"></label>
+
+        </form>
+
+    </div>
+
+    <span class="text {% if task.completed %}text-muted{% endif %}">
+
+        {{ task.title }}
+
+    </span>
+
+    {% if task.due_date %}
+
+        <small class="badge badge-info">
+
+            <i class="far fa-clock"></i>
+
+            {{ task.due_date|jalali }}
+
+        </small>
+
+    {% endif %}
+
+    <div class="tools">
+
+        <button
+          class="btn btn-warning btn-sm edit-task-btn"
+          data-id="{{ task.id }}"
+          data-title="{{ task.title }}"
+          data-date={{ task.due_date|jalali }}>
+
+          <i class="fas fa-edit"></i>
+
+        </button>
+
+{% if not task.is_default %}
+
+<a href="{% url 'delete_admin_task' task.id %}"
+   onclick="return confirm('این کار حذف شود؟')">
+
+    <i class="fas fa-trash text-danger"></i>
+
+</a>
+
+{% endif %}
+
+    </div>
+
+</li>
+
+{% empty %}
+
+<li class="text-center p-3">
+
+    هیچ کاری ثبت نشده است.
+
+</li>
+
+{% endfor %}
+
+</ul>
               </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
-                <button type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i>افزودن کار جدید</button>
+                <button
+                 type="button"
+                 class="btn btn-primary float-right"
+                 data-toggle="modal"
+                 data-target="#addTaskModal">
+
+                  <i class="fas fa-plus"></i>
+
+                  افزودن کار جدید
+
+                </button>
               </div>
             </div>
             <!-- /.card -->
@@ -1017,7 +1014,7 @@ body{
 
                         <td>
 
-                            {{ order.created_at|date:"Y/m/d" }}
+                            {{ order.created_at|jalali }}
 
                         </td>
 
@@ -1214,6 +1211,201 @@ new Chart(ctx2, {
             }
         }
     }
+
+});
+
+</script>
+
+<!-- Modal افزودن کار جدید -->
+
+<div class="modal fade" id="addTaskModal">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form method="POST" action="{% url 'add_admin_task' %}">
+
+                {% csrf_token %}
+
+                <div class="modal-header">
+
+                    <h4 class="modal-title">
+
+                        <i class="fas fa-plus-circle text-primary"></i>
+
+                        افزودن کار جدید
+
+                    </h4>
+
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal">
+
+                        <span>&times;</span>
+
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                        <label>
+
+                            عنوان کار
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            placeholder="مثلاً بررسی سفارش‌های امروز"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            تاریخ انجام
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="due_date"
+                            class="form-control">
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+
+                        انصراف
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        <i class="fas fa-save"></i>
+
+                        ذخیره
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="editTaskModal">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form method="POST" id="editTaskForm">
+
+                {% csrf_token %}
+
+                <div class="modal-header">
+
+                    <h4 class="modal-title">
+                        ویرایش کار
+                    </h4>
+
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal">
+
+                        <span>&times;</span>
+
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                        <label>عنوان</label>
+
+                        <input
+                            type="text"
+                            id="editTaskTitle"
+                            name="title"
+                            class="form-control">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>تاریخ</label>
+
+                        <input
+                            type="date"
+                            id="editTaskDate"
+                            name="due_date"
+                            class="form-control">
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-warning">
+
+                        ذخیره تغییرات
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+document.querySelectorAll(".edit-task-btn").forEach(function(btn){
+
+    btn.addEventListener("click", function(){
+
+        document.getElementById("editTaskTitle").value =
+            this.dataset.title;
+
+        document.getElementById("editTaskDate").value =
+            this.dataset.date;
+
+        document.getElementById("editTaskForm").action =
+            "/admin-panel/tasks/" + this.dataset.id + "/edit/";
+
+        $("#editTaskModal").modal("show");
+
+    });
 
 });
 
