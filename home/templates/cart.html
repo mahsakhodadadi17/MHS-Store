@@ -35,7 +35,7 @@
                 {% for item in cart_items %}
 
                 <div class="lux-product-card"
-                     data-price="{{ item.product.price }}">
+                     data-price="{{ item.item_price }}">
 
                     <img src="{{ item.product.image.url }}"
                          class="lux-product-image"
@@ -48,8 +48,26 @@
                         </h3>
 
                         <p class="lux-product-price">
-                            ${{ item.product.price }}
-                        </p>
+
+    {% if item.product.final_price < item.product.price %}
+
+        <del>
+            {{ item.product.price }} تومان
+        </del>
+
+        <br>
+
+        <strong>
+            {{ item.item_price }} تومان
+        </strong>
+
+    {% else %}
+
+        {{ item.item_price }} تومان
+
+    {% endif %}
+
+</p>
 
                         <div class="lux-quantity-box">
 

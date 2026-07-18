@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from .views import dashboard
+from .views import admin_discounts, add_discount, delete_discount
 urlpatterns = [
     path("", views.home, name="home"),
 
@@ -282,6 +283,30 @@ urlpatterns = [
      "admin-panel/tasks/add/",
      views.add_admin_task,
      name="add_admin_task"
+    ),
+    path(
+     "admin-panel/discounts/",
+     admin_discounts,
+     name="admin_discounts"
+    ),
+
+
+    path(
+     "admin-panel/discounts/add/",
+     add_discount,
+     name="add_discount"
+    ),
+
+
+    path(
+     "admin-panel/discounts/delete/<int:id>/",
+     delete_discount,
+     name="delete_discount"
+    ),
+    path(
+     "admin-panel/discounts/<int:id>/toggle/",
+     views.toggle_discount,
+     name="toggle_discount"
     ),
 
 ]

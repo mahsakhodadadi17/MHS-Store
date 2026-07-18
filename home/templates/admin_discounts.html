@@ -1,0 +1,523 @@
+{% extends "admin_base.html" %}
+
+{% block title %}
+مدیریت تخفیف‌ها
+{% endblock %}
+
+
+{% block page_title %}
+مدیریت تخفیف‌ها
+{% endblock %}
+
+
+{% block breadcrumb %}
+تخفیف‌ها
+{% endblock %}
+
+
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="card shadow-sm border-0">
+
+
+<div class="card-header bg-white d-flex justify-content-between align-items-center">
+
+
+<h3 class="card-title mb-0">
+
+<i class="fas fa-percent text-danger"></i>
+
+لیست تخفیف‌ها
+
+</h3>
+
+
+<button class="btn btn-primary"
+data-toggle="modal"
+data-target="#addDiscountModal">
+
+<i class="fas fa-plus"></i>
+
+افزودن تخفیف
+
+</button>
+
+
+</div>
+
+
+
+
+<div class="card-body p-0">
+
+
+<div class="table-responsive">
+
+
+<table class="table table-hover mb-0">
+
+
+<thead class="thead-light">
+
+<tr>
+
+<th>#</th>
+
+<th>عنوان</th>
+
+<th>نوع</th>
+
+<th>مقدار</th>
+
+<th>شروع</th>
+
+<th>پایان</th>
+
+<th>وضعیت</th>
+
+<th>عملیات</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+{% for discount in discounts %}
+
+
+<tr>
+
+
+<td>
+{{ forloop.counter }}
+</td>
+
+
+<td>
+
+<strong>
+{{ discount.title }}
+</strong>
+
+</td>
+
+
+
+<td>
+
+{% if discount.discount_type == "percent" %}
+
+<span class="badge badge-info">
+درصدی
+</span>
+
+{% else %}
+
+<span class="badge badge-warning">
+مبلغ ثابت
+</span>
+
+{% endif %}
+
+
+</td>
+
+
+
+<td>
+
+{{ discount.value }}
+
+{% if discount.discount_type == "percent" %}
+%
+{% else %}
+تومان
+{% endif %}
+
+</td>
+
+
+
+<td>
+{{ discount.start_date|date:"Y/m/d" }}
+</td>
+
+
+<td>
+{{ discount.end_date|date:"Y/m/d" }}
+</td>
+
+
+
+<td>
+
+
+{% if discount.status == "active" %}
+
+<span class="badge badge-success">
+فعال
+</span>
+
+
+{% elif discount.status == "pending" %}
+
+<span class="badge badge-warning">
+شروع نشده
+</span>
+
+
+{% else %}
+
+<span class="badge badge-danger">
+منقضی شده
+</span>
+
+
+{% endif %}
+
+
+</td>
+
+
+
+<td>
+
+<a href="{% url 'toggle_discount' discount.id %}"
+class="btn btn-sm 
+{% if discount.active %}
+btn-success
+{% else %}
+btn-secondary
+{% endif %}">
+
+{% if discount.active %}
+
+<i class="fas fa-toggle-on"></i>
+فعال
+
+{% else %}
+
+<i class="fas fa-toggle-off"></i>
+غیرفعال
+
+{% endif %}
+
+</a>
+
+
+<a href="{% url 'delete_discount' discount.id %}"
+class="btn btn-danger btn-sm">
+
+<i class="fas fa-trash"></i>
+
+</a>
+
+</td>
+
+
+</tr>
+
+
+{% empty %}
+
+
+<tr>
+
+<td colspan="8" class="text-center py-5 text-muted">
+
+<i class="fas fa-percent fa-3x mb-3"></i>
+
+<br>
+
+هنوز تخفیفی ثبت نشده است.
+
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- Add Modal -->
+
+
+<div class="modal fade" id="addDiscountModal">
+
+
+<div class="modal-dialog">
+
+
+<div class="modal-content">
+
+
+<form method="POST" action="{% url 'add_discount' %}">
+
+
+{% csrf_token %}
+
+
+
+<div class="modal-header">
+
+
+<h5 class="modal-title">
+
+افزودن تخفیف جدید
+
+</h5>
+
+
+<button type="button"
+class="close"
+data-dismiss="modal">
+
+×
+
+
+</button>
+
+
+</div>
+
+
+
+<div class="modal-body">
+
+
+
+<div class="form-group">
+
+<label>
+عنوان
+</label>
+
+<input 
+type="text"
+name="title"
+class="form-control"
+required>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+نوع تخفیف
+</label>
+
+
+<select name="discount_type"
+class="form-control">
+
+
+<option value="percent">
+درصدی
+</option>
+
+
+<option value="fixed">
+مبلغ ثابت
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+مقدار
+</label>
+
+
+<input
+type="number"
+name="value"
+class="form-control"
+required>
+
+
+</div>
+
+<div class="form-group">
+
+<label>
+محصولات
+</label>
+
+
+<select 
+name="products"
+class="form-control select2"
+multiple="multiple">
+
+
+{% for product in products %}
+
+<option value="{{ product.id }}">
+
+{{ product.title }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+<div class="form-group">
+
+<label>
+دسته‌بندی‌ها
+</label>
+
+
+<select 
+name="categories"
+class="form-control"
+multiple>
+
+
+{% for category in categories %}
+
+<option value="{{ category.id }}">
+
+{{ category.title }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+<div class="form-group">
+
+<label>
+تاریخ شروع
+</label>
+
+<input
+type="datetime-local"
+name="start_date"
+class="form-control"
+required>
+
+
+</div>
+
+
+
+<div class="form-group">
+
+<label>
+تاریخ پایان
+</label>
+
+<input
+type="datetime-local"
+name="end_date"
+class="form-control"
+required>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="modal-footer">
+
+
+<button class="btn btn-primary">
+
+ذخیره
+
+</button>
+
+
+</div>
+
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+{% endblock %}
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+<script>
+
+$(document).ready(function(){
+
+    $('.select2').select2({
+
+        placeholder: "انتخاب محصولات",
+
+        width: "100%"
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

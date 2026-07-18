@@ -1,11 +1,13 @@
 {% load static %}
 {% load humanize %}
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Special Offers</title>
@@ -25,9 +27,7 @@
 
     <header class="mhs-offers-hero">
 
-
         <div class="mhs-hero-content">
-
 
             <h1>
                 تخفیف‌های ویژه
@@ -43,11 +43,10 @@
                 مجموعه پیشنهادهای ویژه
             </span>
 
-
         </div>
 
-
     </header>
+
 
 
 
@@ -64,6 +63,7 @@
                 تخفیفات ویژه
             </h2>
 
+
             <p>
                 محصولات منتخب با قیمت‌های استثنایی
             </p>
@@ -73,99 +73,140 @@
 
 
 
+
         <div class="mhs-products-grid">
 
 
-            {% for product in discounted_products %}
+
+            {% for discount in discounts %}
+
+
+                {% for product in discount.products.all %}
 
 
 
-            <article class="mhs-product-card">
-
-
-                <div class="mhs-product-image">
-
-
-                    <img src="{{ product.image.url }}"
-                         alt="{{ product.title }}">
+                    <article class="mhs-product-card">
 
 
 
-                    <div class="mhs-discount-badge">
-
-                        {{ product.discount }}%
-
-                    </div>
+                        <div class="mhs-product-image">
 
 
-
-                </div>
+                            <img src="{{ product.image.url }}"
+                                 alt="{{ product.title }}">
 
 
 
+                            <div class="mhs-discount-badge">
 
 
-                <div class="mhs-product-info">
+                                {{ discount.value }}
 
 
-                    <h3>
+                                {% if discount.discount_type == "percent" %}
 
-                        {{ product.title }}
+                                    %
 
-                    </h3>
+                                {% else %}
 
+                                    تومان
 
-
-                    <div class="mhs-price-box">
-
-
-                        <del>
-
-                            {{ product.old_price }} تومان
-
-                        </del>
+                                {% endif %}
 
 
-
-                        <strong>
-
-                            {{ product.new_price }} تومان
-
-                        </strong>
+                            </div>
 
 
-                    </div>
+                        </div>
 
 
 
 
-                    <a href="{% url 'product_detail' product.slug %}"
-                       class="mhs-buy-btn">
-
-
-                        مشاهده محصول
-
-
-                    </a>
 
 
 
-                </div>
+                        <div class="mhs-product-info">
+
+
+                            <h3>
+
+                                {{ product.title }}
+
+                            </h3>
 
 
 
-            </article>
+
+
+
+
+                            <div class="mhs-price-box">
+
+
+                                <del>
+
+                                    {{ product.price|intcomma }}
+
+                                    تومان
+
+                                </del>
+
+
+
+
+
+                                <strong>
+
+                                    {{ product.final_price|floatformat:0|intcomma }}
+
+                                    تومان
+
+                                </strong>
+
+
+                            </div>
+
+
+
+
+
+
+
+
+                            <a href="{% url 'product_detail' product.slug %}"
+                               class="mhs-buy-btn">
+
+
+                                مشاهده محصول
+
+
+                            </a>
+
+
+
+                        </div>
+
+
+
+                    </article>
+
+
+
+
+                {% endfor %}
 
 
 
             {% empty %}
 
 
-            <p class="mhs-empty">
 
-                محصول تخفیف‌داری وجود ندارد
+                <p class="mhs-empty">
 
-            </p>
+                    محصول تخفیف‌داری وجود ندارد
+
+                </p>
+
 
 
             {% endfor %}
@@ -183,7 +224,10 @@
 
 
 
+
+
     <!-- Limited Offers -->
+
 
 
     <section class="mhs-limited">
@@ -193,13 +237,19 @@
 
 
             <h2>
+
                 پیشنهادهای محدود
+
             </h2>
 
 
+
             <p>
+
                 فرصت محدود برای خرید محصولات خاص برند
+
             </p>
+
 
 
             <button>
@@ -212,13 +262,15 @@
         </div>
 
 
-
     </section>
 
 
 
 
+
 </section>
+
+
 
 
 

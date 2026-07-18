@@ -44,6 +44,7 @@ from datetime import timedelta
 from django.utils import timezone
 from .models import Profile
 from .models import AdminTask
+from .models import Discount
 
 def contact(request):
     form= ContactForm()
@@ -167,10 +168,18 @@ def products(request):
         }
     )
 
+
+
+
 def offers(request):
 
-    products = Post.objects.filter(
-        discount__gt=0
+    now = timezone.now()
+
+
+    discounts = Discount.objects.filter(
+        active=True,
+        start_date__lte=now,
+        end_date__gte=now
     )
 
 
@@ -178,10 +187,9 @@ def offers(request):
         request,
         "offers.html",
         {
-            "discounted_products":products
+            "discounts": discounts
         }
     )
-
 from django.shortcuts import render, get_object_or_404
 
 
@@ -553,7 +561,8 @@ def cart(request):
     total = 0
 
     for item in cart_items:
-        total += item.product.price * item.quantity
+        total += item.total_price
+
 
     return render(
         request,
@@ -600,7 +609,7 @@ def checkout(request):
     # محاسبه total
     total = 0
     for item in cart_items:
-        total += item.product.price * item.quantity
+       total += item.total_price
 
     # POST (ثبت سفارش)
     if request.method == "POST":
@@ -616,7 +625,7 @@ def checkout(request):
         # دوباره محاسبه total (امن‌تر)
         total = 0
         for item in cart_items:
-            total += item.product.price * item.quantity
+            total += item.total_price
 
         # ساخت سفارش
         order = Order.objects.create(
@@ -633,7 +642,7 @@ def checkout(request):
                 order=order,
                 product=item.product,
                 quantity=item.quantity,
-                price=item.product.price
+                price=item.item_price
             )
 
         # 💥 خالی کردن سبد خرید
@@ -2215,3 +2224,146 @@ def add_admin_task(request):
         )
 
     return redirect("admin_dashboard")
+
+@login_required
+def admin_discounts(request):
+
+    if not request.user.is_staff:
+        return redirect("admin_dashboard")
+
+
+    discounts = Discount.objects.all().order_by("-created_at")
+
+
+    for discount in discounts:
+
+        now = timezone.now()
+
+        if discount.start_date > now:
+
+            discount.status = "pending"
+
+
+        elif discount.end_date < now:
+
+            discount.status = "expired"
+
+
+        else:
+
+            discount.status = "active"
+
+
+
+    products = Post.objects.all()
+
+    categories = Category.objects.all()
+
+
+
+    return render(
+        request,
+        "admin_discounts.html",
+        {
+            "discounts": discounts,
+            "products": products,
+            "categories": categories,
+        }
+    )
+
+@login_required
+def add_discount(request):
+
+    if not request.user.is_staff:
+        return redirect("admin_dashboard")
+
+
+    if request.method == "POST":
+
+        discount = Discount.objects.create(
+
+            title=request.POST.get("title"),
+
+            discount_type=request.POST.get("discount_type"),
+
+            value=request.POST.get("value"),
+
+            start_date=request.POST.get("start_date"),
+
+            end_date=request.POST.get("end_date"),
+
+            active=True
+        )
+
+
+        # محصولات انتخاب شده
+        product_ids = request.POST.getlist("products")
+
+        if product_ids:
+            discount.products.set(product_ids)
+
+
+        # دسته‌بندی‌های انتخاب شده
+        category_ids = request.POST.getlist("categories")
+
+        if category_ids:
+            discount.categories.set(category_ids)
+
+
+
+        messages.success(
+            request,
+            "تخفیف با موفقیت اضافه شد."
+        )
+
+
+    return redirect("admin_discounts")
+
+@login_required
+def delete_discount(request, id):
+
+    if not request.user.is_staff:
+        return redirect("admin_dashboard")
+
+
+    discount = get_object_or_404(
+        Discount,
+        id=id
+    )
+
+    discount.delete()
+
+
+    messages.success(
+        request,
+        "تخفیف حذف شد."
+    )
+
+
+    return redirect("admin_discounts")
+
+@login_required
+def toggle_discount(request, id):
+
+    if not request.user.is_staff:
+        return redirect("admin_dashboard")
+
+
+    discount = get_object_or_404(
+        Discount,
+        id=id
+    )
+
+
+    discount.active = not discount.active
+
+    discount.save()
+
+
+    messages.success(
+        request,
+        "وضعیت تخفیف تغییر کرد."
+    )
+
+
+    return redirect("admin_discounts")

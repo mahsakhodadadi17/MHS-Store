@@ -11,20 +11,54 @@ class Category(models.Model):
         return self.title
 
 
-class Post(models.Model):
-    title = models.CharField(max_length=60)
-    content = models.TextField()
-    date = models.DateTimeField()
-    price = models.PositiveIntegerField(verbose_name="قیمت تومان")
-    discount = models.PositiveIntegerField(default=0)
-    mojodi = models.BooleanField(default=False)
-    image = models.ImageField(upload_to='home/')
-    email = models.EmailField()
-    order = models.IntegerField(default=0)
-    featured = models.BooleanField(default=False)
-    show_in_new = models.BooleanField(default=False)
 
-    slug = models.CharField(max_length=200, unique=True, blank=True)
+
+
+class Post(models.Model):
+
+    title = models.CharField(max_length=60)
+
+    content = models.TextField()
+
+    date = models.DateTimeField()
+
+    price = models.PositiveIntegerField(
+        verbose_name="قیمت تومان"
+    )
+
+    discount = models.PositiveIntegerField(
+        default=0
+    )
+
+    mojodi = models.BooleanField(
+        default=False
+    )
+
+    image = models.ImageField(
+        upload_to='home/'
+    )
+
+    email = models.EmailField()
+
+    order = models.IntegerField(
+        default=0
+    )
+
+    featured = models.BooleanField(
+        default=False
+    )
+
+    show_in_new = models.BooleanField(
+        default=False
+    )
+
+
+    slug = models.CharField(
+        max_length=200,
+        unique=True,
+        blank=True
+    )
+
 
     category = models.ForeignKey(
         Category,
@@ -33,31 +67,167 @@ class Post(models.Model):
         blank=True
     )
 
+
     def save(self, *args, **kwargs):
-     if not self.slug:
-        super().save(*args, **kwargs)
 
-        english_slug = {
-            "کتونی زنانه": "women-sneakers",
-            "کتونی مردانه": "men-sneakers",
-            "کفش زنانه": "women-shoes",
-            "کفش مردانه": "men-shoes",
-            "صندل زنانه": "women-sandals",
-        }
+        if not self.slug:
 
-        self.slug = f"{english_slug.get(self.title, 'product')}-{self.id}"
+            super().save(*args, **kwargs)
 
-        super().save(update_fields=["slug"])
-     else:
-        super().save(*args, **kwargs)
+
+            english_slug = {
+
+                "کتونی زنانه": "women-sneakers",
+
+                "کتونی مردانه": "men-sneakers",
+
+                "کفش زنانه": "women-shoes",
+
+                "کفش مردانه": "men-shoes",
+
+                "صندل زنانه": "women-sandals",
+
+            }
+
+
+            self.slug = f"{english_slug.get(self.title, 'product')}-{self.id}"
+
+
+            super().save(
+                update_fields=["slug"]
+            )
+
+        else:
+
+            super().save(*args, **kwargs)
+
+
 
     @property
     def discounted_price(self):
-        return self.price - (self.price * self.discount / 100)
+
+        return self.price - (
+            self.price * self.discount / 100
+        )
+
+
+
+    @property
+    def active_discount(self):
+
+        from django.utils import timezone
+
+
+        now = timezone.now()
+
+
+        discounts = self.discount_items.filter(
+
+            active=True,
+
+            start_date__lte=now,
+
+            end_date__gte=now
+
+        )
+
+
+        return discounts.first()
+
+
+
+    @property
+    def final_price(self):
+
+        discount = self.active_discount
+
+
+        if not discount:
+
+            return self.price
+
+
+
+        if discount.discount_type == "percent":
+
+            return self.price - (
+                self.price * discount.value / 100
+            )
+
+
+
+        elif discount.discount_type == "fixed":
+
+            return self.price - discount.value
+
+
+
+        return self.price
+
+
+
+    def __str__(self):
+
+        return self.title
+
+class Discount(models.Model):
+
+    TYPE_CHOICES = (
+        ("percent", "درصدی"),
+        ("fixed", "مبلغ ثابت"),
+    )
+
+    title = models.CharField(
+        max_length=200,
+        verbose_name="عنوان تخفیف"
+    )
+
+    discount_type = models.CharField(
+        max_length=20,
+        choices=TYPE_CHOICES,
+        default="percent",
+        verbose_name="نوع تخفیف"
+    )
+
+    value = models.PositiveIntegerField(
+        verbose_name="مقدار تخفیف"
+    )
+
+    start_date = models.DateTimeField(
+        verbose_name="تاریخ شروع"
+    )
+
+    end_date = models.DateTimeField(
+        verbose_name="تاریخ پایان"
+    )
+
+    active = models.BooleanField(
+        default=True,
+        verbose_name="فعال"
+    )
+
+    products = models.ManyToManyField(
+        Post,
+        blank=True,
+        related_name="discount_items",
+        verbose_name="محصولات"
+    )
+
+    categories = models.ManyToManyField(
+        Category,
+        blank=True,
+        related_name="discount_items",
+        verbose_name="دسته‌بندی‌ها"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
 
     def __str__(self):
         return self.title
-    
+
 class Contact(models.Model):
    name=models.CharField()
    email=models.EmailField()
@@ -302,24 +472,31 @@ class CartItem(models.Model):
         on_delete=models.CASCADE
     )
 
-
     product = models.ForeignKey(
         Post,
         on_delete=models.CASCADE
     )
 
-
     quantity = models.PositiveIntegerField(
         default=1
     )
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Post, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+
+
+    @property
+    def item_price(self):
+        return self.product.final_price
+
+
+    @property
+    def total_price(self):
+        return self.item_price * self.quantity
+
 
     class Meta:
         unique_together = ('cart', 'product')
 
 
+        
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.CharField(max_length=255)
