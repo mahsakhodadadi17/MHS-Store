@@ -5,8 +5,8 @@
 
 .mhs-offers-page{
 
-    background:#000;
-    color:#fff;
+    background:#fff0f0;
+    color:#fff5f5;
     font-family:Tahoma, sans-serif;
     min-height:100vh;
     padding-bottom:80px;
@@ -86,7 +86,9 @@
 }
 
 
-
+.mhs-section-title p {
+    color: #000;
+}
 
 
 /* Products */
@@ -296,6 +298,8 @@
     1px solid #d4af37;
 
     border-radius:25px;
+    background-color: #000;
+    color: #ffffff;
 
 
 }
@@ -351,5 +355,168 @@ height:330px;
 
 }
 
+
+}
+
+/* ==========================
+   Countdown Timer
+========================== */
+
+.mhs-offer-timer{
+
+    margin-top:20px;
+
+    background:#181818;
+
+    border:1px solid #2f2f2f;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    transition:.3s;
+
+}
+
+.mhs-offer-timer:hover{
+
+    border-color:#d4af37;
+
+}
+
+.mhs-timer-title{
+
+    color:#d4af37;
+
+    font-size:15px;
+
+    margin-bottom:15px;
+
+    font-weight:bold;
+
+}
+
+.mhs-timer-box{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+}
+
+.mhs-timer-box div{
+
+    flex:1;
+
+    background:#000;
+
+    border:1px solid #333;
+
+    border-radius:12px;
+
+    padding:12px 6px;
+
+    text-align:center;
+
+}
+
+.mhs-timer-box span{
+
+    display:block;
+
+    color:#fff;
+
+    font-size:26px;
+
+    font-weight:bold;
+
+    line-height:1;
+
+}
+
+.mhs-timer-box small{
+
+    display:block;
+
+    color:#999;
+
+    margin-top:8px;
+
+    font-size:12px;
+
+}
+
+.mhs-offer-ended{
+
+    background:#330000;
+
+    border-color:#b30000;
+
+}
+
+.mhs-offer-ended .mhs-timer-title{
+
+    color:#ff4d4d;
+
+}
+
+/* Progress */
+
+.mhs-progress{
+
+    width:100%;
+
+    height:8px;
+
+    background:#222;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    margin-top:15px;
+
+}
+
+.mhs-progress-fill{
+
+    width:100%;
+
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        #18c964,
+        #d4af37,
+        #ff3b30
+    );
+
+    transition:width 1s linear;
+
+}
+
+.mhs-saving{
+
+    margin-top:12px;
+
+    color:#9ca3af;
+
+    font-size:14px;
+
+}
+
+.mhs-saving span{
+
+    display:block;
+
+    margin-top:6px;
+
+    color:#22c55e;
+
+    font-size:20px;
+
+    font-weight:bold;
 
 }

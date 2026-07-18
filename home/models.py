@@ -133,6 +133,7 @@ class Post(models.Model):
 
 
         return discounts.first()
+    
 
 
 
@@ -163,6 +164,12 @@ class Post(models.Model):
 
 
         return self.price
+    
+
+
+    @property
+    def saving_amount(self):
+       return int(max(0, self.price - self.final_price))
 
 
 
