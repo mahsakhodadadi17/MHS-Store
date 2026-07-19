@@ -1,38 +1,94 @@
 {% load static %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
+
     <title>پرداخت</title>
 
     <link rel="stylesheet" href="{% static 'css/payment.css' %}?v=22">
+
 </head>
 
 <body>
 
-    <div class="payment-box">
+<div class="payment-box">
 
-        <h1 class="payment-title">
-            پرداخت سفارش #{{ order.id }}
-        </h1>
+    <h1 class="payment-title">
 
-        <p class="payment-price">
-            مبلغ:
-            <span>{{ order.total_price }}</span>
-            تومان
-        </p>
+        پرداخت سفارش #{{ order.id }}
 
-        <form method="POST">
-            {% csrf_token %}
+    </h1>
 
-            <button type="submit" class="pay-btn">
-                پرداخت موفق
-            </button>
-        </form>
+    <div class="payment-summary">
+
+        <div class="payment-row">
+
+            <span>جمع سفارش</span>
+
+            <strong>
+
+                {{ order.total_price|intcomma }} تومان
+
+            </strong>
+
+        </div>
+
+        {% if order.discount_amount > 0 %}
+
+        <div class="payment-row discount">
+
+            <span>
+
+                تخفیف
+
+                {% if order.coupon %}
+                    ({{ order.coupon.code }})
+                {% endif %}
+
+            </span>
+
+            <strong>
+
+                - {{ order.discount_amount|intcomma }} تومان
+
+            </strong>
+
+        </div>
+
+        {% endif %}
+
+        <div class="payment-row final">
+
+            <span>مبلغ قابل پرداخت</span>
+
+            <strong>
+
+                {{ order.final_price|intcomma }} تومان
+
+            </strong>
+
+        </div>
 
     </div>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <button type="submit" class="pay-btn">
+
+            پرداخت موفق
+
+        </button>
+
+    </form>
+
+</div>
 
 </body>
 

@@ -1,8 +1,8 @@
 {% load static %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 
 <head>
 
@@ -12,20 +12,15 @@
 تکمیل سفارش | MHS
 </title>
 
-
 <link rel="stylesheet" href="{% static 'css/checkout.css' %}?v=10">
 
-
 </head>
-
 
 
 <body>
 
 
-
 <div class="checkout-container">
-
 
 
 <h1>
@@ -34,10 +29,7 @@
 
 
 
-
 <div class="checkout-box">
-
-
 
 
 
@@ -47,30 +39,26 @@
 
 
 
-
 {% for item in cart_items %}
-
 
 
 <div class="cart-item">
 
 
-
-<img src="{{item.product.image.url}}">
-
+<img src="{{ item.product.image.url }}">
 
 
 <div class="product-info">
 
 
 <h3>
-{{item.product.title}}
+{{ item.product.title }}
 </h3>
 
 
 <p>
 تعداد:
-{{item.quantity}}
+{{ item.quantity }}
 </p>
 
 
@@ -80,12 +68,11 @@
 
 <strong>
 
-{{item.product.price}}
+{{ item.item_price|intcomma }}
 
 تومان
 
 </strong>
-
 
 
 </div>
@@ -107,10 +94,10 @@
 
 
 
-
 <h2>
 📍 انتخاب آدرس ارسال
 </h2>
+
 
 
 
@@ -122,13 +109,11 @@
 
 
 
-
 {% for address in addresses %}
 
 
 
 <div class="address">
-
 
 
 <input 
@@ -137,10 +122,9 @@ type="radio"
 
 name="address"
 
-value="{{address.id}}"
+value="{{ address.id }}"
 
 required>
-
 
 
 <div>
@@ -148,26 +132,20 @@ required>
 
 <h4>
 
-{{address.full_name}}
+{{ address.full_name }}
 
 </h4>
 
 
 <p>
-
-📞 {{address.phone}}
-
+📞 {{ address.phone }}
 </p>
 
 
 <p>
-
-{{address.city}}
-
-- 
-
-{{address.address}}
-
+{{ address.city }}
+-
+{{ address.address }}
 </p>
 
 
@@ -175,7 +153,6 @@ required>
 
 
 </div>
-
 
 
 
@@ -194,21 +171,79 @@ required>
 
 
 
+<!-- کد تخفیف -->
+
+<div class="coupon-box">
+
+
+<h3>
+🎁 کد تخفیف
+</h3>
+
+
+<div class="coupon-input-group">
+
+
+<input
+
+type="text"
+
+id="coupon-input"
+
+placeholder="کد تخفیف را وارد کنید">
+
+
+<button
+
+type="button"
+
+id="apply-coupon-btn">
+
+اعمال کد
+
+</button>
+
+
+</div>
+
+
+
+<!-- این مقدار موقع ثبت سفارش ارسال میشه -->
+
+<input
+
+type="hidden"
+
+name="coupon"
+
+id="coupon-hidden">
+
+
+
+<p id="coupon-message"></p>
+
+
+</div>
+
+
+
+
+
+
 
 <div class="summary">
 
 
+<div class="summary-row">
 
-<h3>
-
-مبلغ نهایی
-
-</h3>
+<span>
+جمع سفارش
+</span>
 
 
-<strong>
+<strong id="total-price">
 
-{{total}}
+{{ total|intcomma }}
 
 تومان
 
@@ -216,6 +251,63 @@ required>
 
 
 </div>
+
+
+
+
+
+<div 
+
+class="summary-row text-success"
+
+id="discount-row"
+
+style="display:none;">
+
+
+<span>
+تخفیف
+</span>
+
+
+<strong id="discount-price">
+
+</strong>
+
+
+</div>
+
+
+
+
+
+
+<div class="summary-row total">
+
+
+<span>
+مبلغ قابل پرداخت
+</span>
+
+
+<strong id="final-price">
+
+
+{{ total|intcomma }}
+
+تومان
+
+
+</strong>
+
+
+</div>
+
+
+
+</div>
+
+
 
 
 
@@ -234,17 +326,178 @@ required>
 
 
 
-</div>
-
-
 
 
 </div>
 
 
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+
+const btn = document.getElementById(
+"apply-coupon-btn"
+);
+
+
+
+btn.addEventListener(
+"click",
+function(){
+
+
+
+let coupon =
+document.getElementById(
+"coupon-input"
+).value;
+
+
+
+
+
+fetch(
+"{% url 'apply_coupon' %}",
+{
+
+
+method:"POST",
+
+
+headers:{
+
+
+"X-CSRFToken":
+"{{ csrf_token }}",
+
+
+"Content-Type":
+"application/x-www-form-urlencoded"
+
+
+},
+
+
+body:new URLSearchParams({
+
+coupon: coupon
+
+})
+
+
+}
+
+)
+
+
+.then(
+res => res.json()
+)
+
+
+.then(
+data => {
+
+
+
+const msg =
+document.getElementById(
+"coupon-message"
+);
+
+
+
+
+if(data.success){
+
+
+
+// ذخیره کد برای فرم اصلی
+
+document.getElementById(
+"coupon-hidden"
+).value = coupon;
+
+
+
+
+document.getElementById(
+"discount-row"
+).style.display =
+"flex";
+
+
+
+
+document.getElementById(
+"discount-price"
+).innerHTML =
+"- " +
+data.discount +
+" تومان";
+
+
+
+
+document.getElementById(
+"final-price"
+).innerHTML =
+data.final +
+" تومان";
+
+
+
+
+msg.style.color =
+"#28a745";
+
+
+msg.innerHTML =
+"✅ کد تخفیف اعمال شد";
+
+
+
+}
+
+else{
+
+
+msg.style.color =
+"red";
+
+
+msg.innerHTML =
+data.message;
+
+
+
+}
+
+
+
+}
+
+);
+
+
+
+}
+
+);
+
+
+
+</script>
 
 
 </body>
-
 
 </html>

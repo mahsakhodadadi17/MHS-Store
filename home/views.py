@@ -44,7 +44,7 @@ from datetime import timedelta
 from django.utils import timezone
 from .models import Profile
 from .models import AdminTask
-from .models import Discount
+from .models import Discount , Coupon
 
 def contact(request):
     form= ContactForm()
@@ -596,22 +596,21 @@ from .models import Cart, CartItem, Order, OrderItem, Address
 @login_required
 def checkout(request):
 
-    # گرفتن سبد کاربر
     cart = get_object_or_404(Cart, user=request.user)
 
-    # آیتم‌های سبد
     cart_items = CartItem.objects.filter(cart=cart)
 
-    # اگر سبد خالی بود
     if not cart_items.exists():
         return redirect("cart")
 
-    # محاسبه total
     total = 0
     for item in cart_items:
-       total += item.total_price
+        total += item.total_price
 
-    # POST (ثبت سفارش)
+    coupon = None
+    discount_amount = 0
+    final_total = total
+
     if request.method == "POST":
 
         address_id = request.POST.get("address")
@@ -622,44 +621,110 @@ def checkout(request):
             user=request.user
         )
 
-        # دوباره محاسبه total (امن‌تر)
-        total = 0
-        for item in cart_items:
-            total += item.total_price
+        coupon_code = request.POST.get("coupon")
+        print("COUPON CODE:", coupon_code)
 
-        # ساخت سفارش
+        if coupon_code:
+
+            try:
+
+                coupon = Coupon.objects.get(
+                    code=coupon_code,
+                    active=True
+                )
+
+                if coupon.is_valid() and total >= coupon.minimum_order:
+
+                    if coupon.discount_type == "percent":
+
+                        discount_amount = int(
+                            total * coupon.value / 100
+                        )
+
+                        if coupon.max_discount:
+
+                            discount_amount = min(
+                                discount_amount,
+                                coupon.max_discount
+                            )
+
+                    else:
+
+                        discount_amount = coupon.value
+
+                else:
+                    coupon = None
+
+            except Coupon.DoesNotExist:
+
+                coupon = None
+
+        final_total = total - discount_amount
+
+        if final_total < 0:
+            final_total = 0
+
+
+        print("TOTAL:", total)
+        print("DISCOUNT:", discount_amount)
+        print("FINAL:", final_total)
+
         order = Order.objects.create(
+
             user=request.user,
+
             address=address,
+
             total_price=total,
+
+            discount_amount=discount_amount,
+
+            final_price=final_total,
+
+            coupon=coupon,
+
             status="pending",
+
             payment_status="unpaid"
+
         )
 
-        # ساخت آیتم‌های سفارش
         for item in cart_items:
+
             OrderItem.objects.create(
+
                 order=order,
+
                 product=item.product,
+
                 quantity=item.quantity,
+
                 price=item.item_price
+
             )
 
-        # 💥 خالی کردن سبد خرید
+        if coupon:
+
+            coupon.used_count += 1
+            coupon.save()
+
         cart_items.delete()
 
-        # رفتن به صفحه پرداخت
         return redirect("payment", id=order.id)
 
-    # آدرس‌ها برای انتخاب
     addresses = Address.objects.filter(user=request.user)
 
-    return render(request, "checkout.html", {
-        "cart_items": cart_items,
-        "total": total,
-        "addresses": addresses
-    })
-
+    return render(
+        request,
+        "checkout.html",
+        {
+            "cart_items": cart_items,
+            "total": total,
+            "discount_amount": discount_amount,
+            "final_total": final_total,
+            "addresses": addresses,
+        }
+    )
 
 @login_required
 def add_to_cart(request, id):
@@ -807,36 +872,34 @@ def payment(request, id):
         user=request.user
     )
 
-
     if request.method == "POST":
 
+        # اگر قبلاً پرداخت شده باشد
+        if order.status != "paid":
 
-        order.status = "paid"
+            order.status = "paid"
+            order.payment_status = "paid"
+            order.save()
 
-        order.save()
-
-
-
-        Notification.objects.create(
-
-            user=request.user,
-
-            text=f"پرداخت سفارش شماره {order.id} با موفقیت انجام شد ✅"
-
-        )
-
+            Notification.objects.create(
+                user=request.user,
+                text=f"پرداخت سفارش شماره {order.id} با موفقیت انجام شد ✅"
+            )
 
         return redirect(
             "order_detail",
             order.id
         )
 
-
     return render(
         request,
         "payment.html",
         {
-            "order":order
+            "order": order,
+            "total_price": order.total_price,
+            "discount_amount": order.discount_amount,
+            "final_price": order.final_price,
+            "coupon": order.coupon,
         }
     )
 
@@ -2367,3 +2430,124 @@ def toggle_discount(request, id):
 
 
     return redirect("admin_discounts")
+
+
+@login_required
+def admin_coupons(request):
+
+    if not request.user.is_staff:
+        return redirect("admin_dashboard")
+
+    coupons = Coupon.objects.all().order_by("-id")
+
+    return render(
+        request,
+        "admin_coupons.html",
+        {
+            "coupons": coupons
+        }
+    )
+
+
+@login_required
+def add_coupon(request):
+
+    if not request.user.is_staff:
+        return redirect("admin_dashboard")
+
+    if request.method == "POST":
+
+        Coupon.objects.create(
+
+            code=request.POST.get("code"),
+
+            discount_type=request.POST.get("discount_type"),
+
+            value=request.POST.get("value"),
+
+            minimum_order=request.POST.get("minimum_order"),
+
+            usage_limit=request.POST.get("usage_limit"),
+
+            start_date=request.POST.get("start_date"),
+
+            end_date=request.POST.get("end_date"),
+
+            active=True
+
+        )
+
+        messages.success(
+            request,
+            "کد تخفیف با موفقیت ساخته شد."
+        )
+
+    return redirect("admin_coupons")
+
+
+from django.http import JsonResponse
+
+@login_required
+def apply_coupon(request):
+
+    if request.method != "POST":
+        return JsonResponse({"success": False})
+
+    cart = Cart.objects.get(user=request.user)
+    cart_items = CartItem.objects.filter(cart=cart)
+
+    total = sum(item.total_price for item in cart_items)
+
+    code = request.POST.get("coupon", "").strip()
+
+    try:
+
+        coupon = Coupon.objects.get(
+            code=code,
+            active=True
+        )
+
+    except Coupon.DoesNotExist:
+
+        return JsonResponse({
+            "success": False,
+            "message": "کد تخفیف معتبر نیست."
+        })
+
+    if not coupon.is_valid():
+
+        return JsonResponse({
+            "success": False,
+            "message": "این کد منقضی شده است."
+        })
+
+    if total < coupon.minimum_order:
+
+        return JsonResponse({
+            "success": False,
+            "message": f"حداقل خرید {coupon.minimum_order:,} تومان است."
+        })
+
+    if coupon.discount_type == "percent":
+
+        discount = int(total * coupon.value / 100)
+
+        if coupon.max_discount:
+
+            discount = min(discount, coupon.max_discount)
+
+    else:
+
+        discount = coupon.value
+
+    final = max(total - discount, 0)
+
+    return JsonResponse({
+
+        "success": True,
+
+        "discount": f"{discount:,}",
+
+        "final": f"{final:,}"
+
+    })

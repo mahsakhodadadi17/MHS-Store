@@ -7,6 +7,7 @@ from .models import (
     Order,
     OrderItem
 )
+from .models import Coupon
 
 
 
@@ -228,4 +229,29 @@ class BannerAdmin(admin.ModelAdmin):
     list_editable = (
         "active",
         "order",
+    )
+
+
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "code",
+        "discount_type",
+        "value",
+        "minimum_order",
+        "used_count",
+        "usage_limit",
+        "active",
+        "start_date",
+        "end_date",
+    )
+
+    list_filter = (
+        "active",
+        "discount_type",
+    )
+
+    search_fields = (
+        "code",
     )

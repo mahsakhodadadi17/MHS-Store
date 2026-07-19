@@ -166,3 +166,65 @@ button:hover{
 transform:translateY(-3px);
 
 }
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:12px 0;
+    font-size:16px;
+}
+
+.summary-row.total{
+    border-top:1px solid #ddd;
+    margin-top:15px;
+    padding-top:15px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.text-success{
+    color:#2e7d32;
+}
+
+.coupon-input-group{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:10px;
+
+}
+
+.coupon-input-group input{
+
+    flex:1;
+
+}
+
+.coupon-input-group button{
+
+    padding:12px 20px;
+
+    border:none;
+
+    background:#111;
+
+    color:#fff;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+}
+
+#coupon-message{
+
+    margin-top:10px;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+}

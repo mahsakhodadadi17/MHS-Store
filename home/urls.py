@@ -308,6 +308,22 @@ urlpatterns = [
      views.toggle_discount,
      name="toggle_discount"
     ),
+    path(
+     "admin-panel/coupons/",
+     views.admin_coupons,
+     name="admin_coupons",
+    ),
+
+    path(
+     "admin-panel/coupons/add/",
+     views.add_coupon,
+     name="add_coupon",
+    ),
+    path(
+     "apply-coupon/",
+     views.apply_coupon,
+     name="apply_coupon"
+    ),
 
 ]
 

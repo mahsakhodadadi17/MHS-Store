@@ -326,6 +326,68 @@ class Address(models.Model):
     def __str__(self):
         return self.full_name
     
+
+class Coupon(models.Model):
+
+    TYPE_CHOICES = (
+        ("percent", "درصدی"),
+        ("fixed", "مبلغ ثابت"),
+    )
+
+    code = models.CharField(
+        max_length=50,
+        unique=True,
+        verbose_name="کد تخفیف"
+    )
+
+    discount_type = models.CharField(
+        max_length=20,
+        choices=TYPE_CHOICES,
+        default="percent"
+    )
+
+    value = models.PositiveIntegerField()
+
+    minimum_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="حداقل خرید"
+    )
+
+    max_discount = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        verbose_name="حداکثر تخفیف"
+    )
+
+    usage_limit = models.PositiveIntegerField(
+        default=1,
+        verbose_name="تعداد دفعات استفاده"
+    )
+
+    used_count = models.PositiveIntegerField(
+        default=0
+    )
+
+    start_date = models.DateTimeField()
+
+    end_date = models.DateTimeField()
+
+    active = models.BooleanField(default=True)
+
+    def is_valid(self):
+
+        now = timezone.now()
+
+        return (
+            self.active
+            and self.start_date <= now <= self.end_date
+            and self.used_count < self.usage_limit
+        )
+
+    def __str__(self):
+        return self.code
+
+
 class Order(models.Model):
 
     STATUS = (
@@ -380,6 +442,21 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(
         auto_now_add=True
+    )
+
+    coupon = models.ForeignKey(
+      Coupon,
+      on_delete=models.SET_NULL,
+      null=True,
+      blank=True
+    )
+
+    discount_amount = models.PositiveIntegerField(
+     default=0
+    )
+
+    final_price = models.PositiveIntegerField(
+     default=0
     )
 
 
@@ -449,10 +526,10 @@ class OrderItem(models.Model):
     price = models.IntegerField()
 
 
+    @property
     def total_price(self):
 
-        return self.price * self.quantity
-
+       return self.price * self.quantity
 
     def __str__(self):
 
@@ -858,3 +935,5 @@ class AdminTask(models.Model):
 
     def __str__(self):
       return self.title
+    
+
