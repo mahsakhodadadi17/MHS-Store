@@ -70,8 +70,66 @@ name="image"
 class="form-control">
 
 </div>
+{% if product.category.title == "عطر و ادکلن" %}
+
+<div class="form-group">
+
+    <label>موجودی عطر</label>
+
+    <input
+        type="number"
+        name="stock"
+        class="form-control"
+        value="{{ product.stock }}"
+        min="0">
 
 </div>
+
+{% endif %}
+
+</div>
+
+<h4 class="mt-4">
+موجودی سایزها
+</h4>
+
+<table class="table table-bordered">
+
+    <thead>
+
+        <tr>
+            <th>سایز</th>
+            <th>موجودی</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for size in product.sizes.all %}
+
+        <tr>
+
+            <td>{{ size.size }}</td>
+
+            <td>
+
+                <input
+                    type="number"
+                    name="stock_{{ size.id }}"
+                    value="{{ size.stock }}"
+                    class="form-control"
+                    min="0">
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
 
 <div class="card-footer">
 

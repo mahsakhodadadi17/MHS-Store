@@ -489,3 +489,41 @@
 .wishlist-btn{
     text-decoration:none;
 }
+
+.toast-message{
+    position: fixed;
+    top: 30px;
+    left: 30px;
+
+    background: #222;
+    color: #fff;
+
+    padding: 14px 22px;
+
+    border-radius: 12px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    opacity: 0;
+    transform: translateY(-20px);
+
+    transition: .35s;
+
+    z-index: 999999;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+.toast-message.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.toast-message.success{
+    background:#0f9d58;
+}
+
+.toast-message.error{
+    background:#d93025;
+}

@@ -55,13 +55,50 @@
 
             </div>
 
+            <div class="row mb-3">
+
+    <div class="col-md-4">
+        <select id="categoryFilter" class="form-control">
+            <option value="">همه دسته‌ها</option>
+
+            {% for category in categories %}
+                <option value="{{ category.title }}">
+                    {{ category.title }}
+                </option>
+            {% endfor %}
+
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <select id="stockFilter" class="form-control">
+            <option value="">همه محصولات</option>
+            <option value="in">موجود</option>
+            <option value="out">ناموجود</option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <select id="featuredFilter" class="form-control">
+            <option value="">همه</option>
+            <option value="yes">ویژه</option>
+            <option value="no">عادی</option>
+        </select>
+    </div>
+
+</div>
+
             <div class="table-responsive">
 
                 <table class="table table-hover align-middle text-center">
 
                     <thead class="thead-dark">
 
-                        <tr>
+                        <tr
+                         data-category="{{ product.category.title }}"
+                          data-stock="{% if product.total_stock > 0 %}in{% else %}out{% endif %}"
+                         data-featured="{% if product.featured %}yes{% else %}no{% endif %}"
+                         >
 
                             <th>#</th>
 
@@ -91,7 +128,11 @@
 
                     {% for product in products %}
 
-                        <tr>
+                        <tr
+                            data-category="{{ product.category.title }}"
+                          data-stock="{% if product.total_stock > 0 %}in{% else %}out{% endif %}"
+                          data-featured="{% if product.featured %}yes{% else %}no{% endif %}"
+                           >
 
                             <td>{{ product.id }}</td>
 
@@ -146,27 +187,35 @@
 
                             </td>
 
-                            <td>
+<td>
 
-                                {% if product.mojodi %}
+{% if product.total_stock > 10 %}
 
-                                    <span class="badge badge-success">
+<span class="badge badge-success">
 
-                                        موجود
+{{ product.total_stock }}
 
-                                    </span>
+</span>
 
-                                {% else %}
+{% elif product.total_stock > 0 %}
 
-                                    <span class="badge badge-danger">
+<span class="badge badge-warning">
 
-                                        ناموجود
+{{ product.total_stock }}
 
-                                    </span>
+</span>
 
-                                {% endif %}
+{% else %}
 
-                            </td>
+<span class="badge badge-danger">
+
+ناموجود
+
+</span>
+
+{% endif %}
+
+</td>
 
                             <td>
 
@@ -215,7 +264,11 @@
 
                     {% empty %}
 
-                        <tr>
+                        <tr
+                            data-category="{{ product.category.title }}"
+                            data-stock="{% if product.total_stock > 0 %}in{% else %}out{% endif %}"
+                          data-featured="{% if product.featured %}yes{% else %}no{% endif %}"
+                           >
 
                             <td colspan="10">
 
@@ -241,22 +294,49 @@
 
 <script>
 
-const searchInput=document.getElementById("searchInput");
+const searchInput = document.getElementById("searchInput");
+const categoryFilter = document.getElementById("categoryFilter");
+const stockFilter = document.getElementById("stockFilter");
+const featuredFilter = document.getElementById("featuredFilter");
 
-searchInput.addEventListener("keyup",function(){
+function filterProducts(){
 
-let value=this.value.toLowerCase();
+    let search = searchInput.value.toLowerCase();
+    let category = categoryFilter.value;
+    let stock = stockFilter.value;
+    let featured = featuredFilter.value;
 
-let rows=document.querySelectorAll("#productsTable tr");
+    document.querySelectorAll("#productsTable tr").forEach(row=>{
 
-rows.forEach(function(row){
+        let text = row.innerText.toLowerCase();
 
-row.style.display=row.innerText.toLowerCase().includes(value)
-?"":"none";
+        let okSearch = text.includes(search);
 
-});
+        let okCategory = !category || row.dataset.category == category;
 
-});
+        let okStock = !stock || row.dataset.stock == stock;
+
+        let okFeatured = !featured || row.dataset.featured == featured;
+
+        row.style.display =
+            okSearch &&
+            okCategory &&
+            okStock &&
+            okFeatured
+            ? ""
+            : "none";
+
+    });
+
+}
+
+searchInput.addEventListener("keyup", filterProducts);
+
+categoryFilter.addEventListener("change", filterProducts);
+
+stockFilter.addEventListener("change", filterProducts);
+
+featuredFilter.addEventListener("change", filterProducts);
 
 </script>
 

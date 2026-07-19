@@ -1,7 +1,12 @@
 {% load humanize %}
 
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/product_detail.css' %}?v=105">
+
+
+
+<link rel="stylesheet" href="{% static 'css/product_detail.css' %}?v=107">
+
+
 
 <div class="product-detail">
 
@@ -42,7 +47,6 @@
         </div>
 
     </div>
-
 
 
 
@@ -201,23 +205,41 @@
 
 <div class="stock-status">
 
-    {% if product.mojodi %}
+{% if product.category.title == "عطر و ادکلن" %}
+
+    {% if product.stock > 0 %}
 
         <span class="in-stock">
-
-            ✔ موجود در انبار
-
+            ✔ موجود در انبار ({{ product.stock }} عدد)
         </span>
 
     {% else %}
 
         <span class="out-stock">
-
             ✖ ناموجود
-
         </span>
 
     {% endif %}
+
+
+{% else %}
+
+    {% if product.total_stock > 0 %}
+
+        <span class="in-stock">
+            ✔ موجود در انبار ({{ product.total_stock }} عدد)
+        </span>
+
+    {% else %}
+
+        <span class="out-stock">
+            ✖ ناموجود
+        </span>
+
+    {% endif %}
+
+
+{% endif %}
 
 </div>
 
@@ -258,15 +280,49 @@
 
 <div class="cart-btn-wrapper">
 
-    <button
-        type="button"
-        class="add-to-cart"
-        data-id="{{ product.id }}"
-    >
+{% if product.category.title == "عطر و ادکلن" %}
 
-        🛒 افزودن به سبد خرید
+    {% if product.stock > 0 %}
 
-    </button>
+        <button
+            type="button"
+            class="add-to-cart"
+            data-id="{{ product.id }}">
+            🛒 افزودن به سبد خرید
+        </button>
+
+    {% else %}
+
+        <button
+            class="add-to-cart"
+            disabled>
+            ❌ ناموجود
+        </button>
+
+    {% endif %}
+
+{% else %}
+
+    {% if product.total_stock > 0 %}
+
+        <button
+            type="button"
+            class="add-to-cart"
+            data-id="{{ product.id }}">
+            🛒 افزودن به سبد خرید
+        </button>
+
+    {% else %}
+
+        <button
+            class="add-to-cart"
+            disabled>
+            ❌ ناموجود
+        </button>
+
+    {% endif %}
+
+{% endif %}
 
 </div>
 
@@ -382,57 +438,87 @@
 
 </section>
 
+<div id="toast" class="toast-message"></div>
+
 
 
 
 <script>
-
 function increaseQty(){
 
-    let qty=document.getElementById("qty");
+    let qty = document.getElementById("qty");
 
-    qty.value=parseInt(qty.value)+1;
+    qty.value = parseInt(qty.value) + 1;
 
 }
 
 function decreaseQty(){
 
-    let qty=document.getElementById("qty");
+    let qty = document.getElementById("qty");
 
-    if(parseInt(qty.value)>1){
+    if(parseInt(qty.value) > 1){
 
-        qty.value=parseInt(qty.value)-1;
+        qty.value = parseInt(qty.value) - 1;
 
     }
 
 }
 
-</script>
-<script>
-function getCookie(name) {
+function showToast(message,type){
+
+    const toast = document.getElementById("toast");
+
+    toast.innerText = message;
+
+    toast.className = "toast-message show " + type;
+
+    setTimeout(function(){
+
+        toast.className = "toast-message";
+
+    },3000);
+
+}
+
+function getCookie(name){
+
     let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
+
+    if(document.cookie && document.cookie !== ""){
+
         const cookies = document.cookie.split(";");
-        for (let cookie of cookies) {
+
+        for(let cookie of cookies){
+
             cookie = cookie.trim();
-            if (cookie.startsWith(name + "=")) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+
+            if(cookie.startsWith(name + "=")){
+
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+
                 break;
+
             }
+
         }
+
     }
+
     return cookieValue;
+
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded",function(){
+
+    /* افزودن به سبد خرید */
 
     const cartBtn = document.querySelector(".add-to-cart");
 
-
     if(cartBtn){
 
-        cartBtn.addEventListener("click", function(){
-
+        cartBtn.addEventListener("click",function(){
 
             const color = document.querySelector(
                 'input[name="color"]:checked'
@@ -442,27 +528,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 'input[name="size"]:checked'
             );
 
+            fetch(`/add-to-cart/${this.dataset.id}/`,{
 
-            fetch(`/add-to-cart/${this.dataset.id}/`, {
+                method:"POST",
 
-                method: "POST",
+                headers:{
 
-                headers: {
-
-                    "X-CSRFToken": getCookie("csrftoken"),
-
-                    "X-Requested-With": "XMLHttpRequest",
-
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    "X-CSRFToken":getCookie("csrftoken"),
+                    "X-Requested-With":"XMLHttpRequest",
+                    "Content-Type":"application/x-www-form-urlencoded"
 
                 },
 
-
                 body:
-                    `color=${color ? color.value : ""}&size=${size ? size.value : ""}`
+                `color=${color ? color.value : ""}&size=${size ? size.value : ""}`
 
             })
-
 
             .then(response => response.json())
 
@@ -472,70 +553,79 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if(data.added){
 
-                    alert("✅ محصول به سبد خرید اضافه شد");
+                    showToast(
+                        "محصول با موفقیت به سبد خرید اضافه شد",
+                        "success"
+                    );
+
+                }else{
+
+                    showToast(
+                        data.message,
+                        "error"
+                    );
 
                 }
 
             })
 
-
-            .catch(error => {
+            .catch(error=>{
 
                 console.log(error);
 
             });
 
+        });
+
+    }
+
+    /* علاقه مندی */
+
+    const wishlistBtn = document.querySelector(".wishlist-btn");
+
+    if(wishlistBtn){
+
+        wishlistBtn.addEventListener("click",function(){
+
+            const btn = this;
+
+            fetch(`/wishlist/toggle/${btn.dataset.id}/`,{
+
+                method:"POST",
+
+                headers:{
+
+                    "X-CSRFToken":getCookie("csrftoken"),
+                    "X-Requested-With":"XMLHttpRequest",
+
+                }
+
+            })
+
+            .then(res=>res.json())
+
+            .then(data=>{
+
+                const heart = btn.querySelector(".heart");
+                const text = btn.querySelector(".text");
+
+                if(data.liked){
+
+                    heart.textContent = "❤️";
+                    text.textContent = "در علاقه‌مندی‌ها";
+
+                }else{
+
+                    heart.textContent = "🤍";
+                    text.textContent = "افزودن به علاقه‌مندی";
+
+                }
+
+            });
 
         });
 
-
     }
-
-
-});
-</script>
-<script>
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-            if (cookie.startsWith(name + "=")) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-document.querySelector(".wishlist-btn").addEventListener("click", function () {
-
-    const btn = this;
-
-    fetch(`/wishlist/toggle/${btn.dataset.id}/`, {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": getCookie("csrftoken"),
-            "X-Requested-With": "XMLHttpRequest",
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-
-        const heart = btn.querySelector(".heart");
-        const text = btn.querySelector(".text");
-
-        if (data.liked) {
-            heart.textContent = "❤️";
-            text.textContent = "در علاقه‌مندی‌ها";
-        } else {
-            heart.textContent = "🤍";
-            text.textContent = "افزودن به علاقه‌مندی";
-        }
-
-    });
 
 });
 </script>

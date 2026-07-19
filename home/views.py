@@ -736,92 +736,69 @@ def checkout(request):
 @login_required
 def add_to_cart(request, id):
 
-    product = get_object_or_404(
-        Post,
-        id=id
-    )
+    product = get_object_or_404(Post, id=id)
 
-
-    cart, _ = Cart.objects.get_or_create(
-        user=request.user
-    )
-
-
-    color_id = request.POST.get("color")
-
-    size_id = request.POST.get("size")
-
-
+    cart, _ = Cart.objects.get_or_create(user=request.user)
 
     color = None
     size = None
 
-
+    color_id = request.POST.get("color")
+    size_id = request.POST.get("size")
 
     if color_id:
-
-        color = get_object_or_404(
-            ProductColor,
-            id=color_id
-        )
-
-
+        color = get_object_or_404(ProductColor, id=color_id)
 
     if size_id:
+        size = get_object_or_404(ProductSize, id=size_id)
 
-        size = get_object_or_404(
-            ProductSize,
-            id=size_id
-        )
+        # بررسی موجودی سایز
+        if size.stock <= 0:
+            return JsonResponse({
+                "added": False,
+                "message": "این سایز ناموجود است."
+            })
 
-
-
-
+    else:
+        # اگر محصول سایز ندارد (مثل عطر)
+        if product.stock <= 0:
+            return JsonResponse({
+                "added": False,
+                "message": "این محصول ناموجود است."
+            })
 
     item, created = CartItem.objects.get_or_create(
-
         cart=cart,
-
         product=product,
-
         color=color,
-
         size=size,
-
-        defaults={
-            "quantity":1
-        }
-
+        defaults={"quantity": 1},
     )
-
-
 
     if not created:
 
-        item.quantity += 1
+        # بررسی اینکه از موجودی بیشتر نشود
+        if size:
+            if item.quantity >= size.stock:
+                return JsonResponse({
+                    "added": False,
+                    "message": "موجودی این سایز کافی نیست."
+                })
+        else:
+            if item.quantity >= product.stock:
+                return JsonResponse({
+                    "added": False,
+                    "message": "موجودی محصول کافی نیست."
+                })
 
+        item.quantity += 1
         item.save()
 
+    return JsonResponse({
+        "added": True,
+        "quantity": item.quantity
+    })
 
-
-
-
-    if request.headers.get(
-        "X-Requested-With"
-    ) == "XMLHttpRequest":
-
-
-        return JsonResponse({
-
-            "added": True,
-
-            "quantity": item.quantity
-
-        })
-
-
-
-    return redirect("cart")
 
 @login_required
 def delete_address(request, id):
@@ -936,39 +913,64 @@ def payment(request, id):
 
     if request.method == "POST":
 
-        if order.status != "paid":
+        # اگر قبلاً پرداخت شده
+        if order.status == "paid":
+            return redirect("order_detail", order.id)
 
-            # بررسی موجودی قبل از پرداخت
-            for item in order.items.all():
+        # ========= بررسی موجودی =========
+        for item in order.items.all():
 
-                if item.size:
+            # کفش
+            if item.size:
 
-                    if item.size.stock < item.quantity:
+                if item.size.stock < item.quantity:
 
-                        messages.error(
-                            request,
-                            f"موجودی سایز {item.size.size} برای محصول «{item.product.title}» کافی نیست."
-                        )
+                    messages.error(
+                        request,
+                        f"موجودی سایز {item.size.size} برای {item.product.title} کافی نیست."
+                    )
 
-                        return redirect("order_detail", order.id)
+                    return redirect("order_detail", order.id)
 
-            # ثبت پرداخت
-            order.status = "paid"
-            order.payment_status = "paid"
-            order.save()
+            # عطر
+            else:
 
-            # کم کردن موجودی
-            for item in order.items.all():
+                if item.product.stock < item.quantity:
 
-                if item.size:
+                    messages.error(
+                        request,
+                        f"موجودی {item.product.title} کافی نیست."
+                    )
 
-                    item.size.stock -= item.quantity
-                    item.size.save()
+                    return redirect("order_detail", order.id)
 
-            Notification.objects.create(
-                user=request.user,
-                text=f"پرداخت سفارش شماره {order.id} با موفقیت انجام شد ✅"
-            )
+        # ========= ثبت پرداخت =========
+        order.status = "paid"
+        order.payment_status = "paid"
+        order.save()
+
+        # ========= کم کردن موجودی =========
+        for item in order.items.all():
+
+            if item.size:
+
+                item.size.stock -= item.quantity
+                item.size.save()
+
+            else:
+
+                item.product.stock -= item.quantity
+                item.product.save()
+
+        Notification.objects.create(
+            user=request.user,
+            text=f"پرداخت سفارش شماره {order.id} با موفقیت انجام شد ✅"
+        )
+
+        messages.success(
+            request,
+            "پرداخت با موفقیت انجام شد."
+        )
 
         return redirect("order_detail", order.id)
 
@@ -983,7 +985,6 @@ def payment(request, id):
             "coupon": order.coupon,
         }
     )
-
 from django.contrib.admin.views.decorators import staff_member_required
 
 
@@ -1268,13 +1269,16 @@ def admin_delete_order(request, id):
 @staff_member_required
 def admin_products(request):
 
-    products = Post.objects.all().order_by("-id")
+    products = Post.objects.select_related("category").order_by("-id")
+
+    categories = Category.objects.all().order_by("title")
 
     return render(
         request,
         "admin_products.html",
         {
-            "products": products
+            "products": products,
+            "categories": categories,
         }
     )
 
@@ -1355,14 +1359,29 @@ def admin_edit_product(request, id):
         if request.FILES.get("image"):
             product.image = request.FILES["image"]
 
+        # موجودی عطر
+        if product.category.title == "عطر و ادکلن":
+            product.stock = int(request.POST.get("stock", 0))
+
         product.save()
+
+        # موجودی سایزهای کفش
+        for size in product.sizes.all():
+
+            stock = request.POST.get(f"stock_{size.id}")
+
+            if stock is not None:
+                size.stock = int(stock)
+                size.save()
 
         return redirect("admin_products")
 
     return render(
         request,
         "admin_edit_product.html",
-        {"product": product},
+        {
+            "product": product
+        },
     )
 
 

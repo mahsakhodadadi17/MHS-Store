@@ -52,19 +52,22 @@ class Post(models.Model):
         default=False
     )
 
-
     slug = models.CharField(
         max_length=200,
         unique=True,
         blank=True
     )
 
-
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
         null=True,
         blank=True
+    )
+
+    stock = models.PositiveIntegerField(
+        default=0,
+        verbose_name="موجودی"
     )
 
 
@@ -74,24 +77,17 @@ class Post(models.Model):
 
             super().save(*args, **kwargs)
 
-
             english_slug = {
 
                 "کتونی زنانه": "women-sneakers",
-
                 "کتونی مردانه": "men-sneakers",
-
                 "کفش زنانه": "women-shoes",
-
                 "کفش مردانه": "men-shoes",
-
                 "صندل زنانه": "women-sandals",
 
             }
 
-
             self.slug = f"{english_slug.get(self.title, 'product')}-{self.id}"
-
 
             super().save(
                 update_fields=["slug"]
@@ -100,6 +96,22 @@ class Post(models.Model):
         else:
 
             super().save(*args, **kwargs)
+
+
+
+    @property
+    def total_stock(self):
+
+        # عطرها موجودی مستقیم دارند
+        if self.category and self.category.title == "عطر و ادکلن":
+
+            return self.stock
+
+
+        # کفش‌ها موجودی از روی سایزها حساب می‌شود
+        return sum(
+            size.stock for size in self.sizes.all()
+        )
 
 
 
@@ -117,9 +129,7 @@ class Post(models.Model):
 
         from django.utils import timezone
 
-
         now = timezone.now()
-
 
         discounts = self.discount_items.filter(
 
@@ -131,9 +141,7 @@ class Post(models.Model):
 
         )
 
-
         return discounts.first()
-    
 
 
 
@@ -164,18 +172,26 @@ class Post(models.Model):
 
 
         return self.price
-    
+
 
 
     @property
     def saving_amount(self):
-       return int(max(0, self.price - self.final_price))
+
+        return int(
+            max(
+                0,
+                self.price - self.final_price
+            )
+        )
 
 
 
     def __str__(self):
 
         return self.title
+
+
 
 class Discount(models.Model):
 
