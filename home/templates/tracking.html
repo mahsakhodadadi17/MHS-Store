@@ -4,7 +4,7 @@
 <html lang="fa" dir="rtl">
 
 <head>
- <link rel="stylesheet" href="{% static 'css/tracking.css' %}?v=108">
+ <link rel="stylesheet" href="{% static 'css/tracking.css' %}?v=109">
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -63,23 +63,11 @@
 
 <input
 type="text"
-name="orderNumber"
-placeholder="شماره سفارش"
+name="tracking_code"
+placeholder="کد رهگیری (مثلاً MHS-AB12CD34)"
 required>
 
-</div>
 
-
-
-<div class="form-group">
-
-<input
-type="text"
-name="customerInfo"
-placeholder="ایمیل"
-required>
-
-</div>
 
 
 
@@ -197,6 +185,48 @@ required>
 </div>
 
 
+
+</div>
+
+<div class="order-products">
+
+    <h3>محصولات سفارش</h3>
+
+    {% for item in order.items.all %}
+
+    <div class="product-row">
+
+        <div class="product-image">
+
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}">
+
+        </div>
+
+        <div class="product-info">
+
+            <h4>{{ item.product.title }}</h4>
+
+            {% if item.color %}
+                <p>رنگ: {{ item.color.name }}</p>
+            {% endif %}
+
+            {% if item.size %}
+                <p>سایز: {{ item.size.size }}</p>
+            {% endif %}
+
+            <p>تعداد: {{ item.quantity }}</p>
+
+            <p>{{ item.price }} تومان</p>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <p>محصولی برای این سفارش ثبت نشده است.</p>
+
+    {% endfor %}
 
 </div>
 

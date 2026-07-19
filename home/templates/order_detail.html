@@ -12,7 +12,7 @@
 جزئیات سفارش
 </title>
 
-<link rel="stylesheet" href="{% static 'css/order_detail.css' %}?v=100">
+<link rel="stylesheet" href="{% static 'css/order_detail.css' %}?v=101">
 
 </head>
 
@@ -47,14 +47,6 @@
 وضعیت:
 {{ order.get_status_display }}
 </p>
-
-
-
-</div>
-
-
-
-
 
 <!-- قیمت سفارش -->
 
@@ -147,6 +139,14 @@
 
 
 </div>
+
+</div>
+
+
+
+
+
+
 
 
 
@@ -458,7 +458,17 @@ active
 
 </div>
 
+<div class="tracking-box">
 
+    <h4>کد رهگیری سفارش</h4>
+
+    <div class="tracking-code">
+
+        {{ order.tracking_code }}
+
+    </div>
+
+</div>
 
 
 

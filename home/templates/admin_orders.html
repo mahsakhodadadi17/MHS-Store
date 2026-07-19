@@ -49,7 +49,7 @@
 
                         class="form-control"
 
-                        placeholder="جستجو شماره سفارش، نام کاربر یا ایمیل..."
+                        placeholder="جستجو شماره سفارش، کد رهگیری، نام کاربر یا ایمیل..."
 
                         value="{{ request.GET.search }}">
 
@@ -125,6 +125,8 @@
                             <th>تعداد محصول</th>
 
                             <th>مبلغ</th>
+
+                            <th>کد رهگیری</th>
 
                             <th>پرداخت</th>
 
@@ -209,6 +211,24 @@
                                 {{ order.total_price }}
 
                                 تومان
+
+                            </td>
+
+                            <td>
+
+                               {% if order.tracking_code %}
+                                    <span class="badge badge-dark">
+                                       {{ order.tracking_code }}
+                                  
+                                    </span>
+
+                                {% else %}
+
+                                   <span class="badge badge-secondary">
+                                      هنوز ایجاد نشده
+                                    </span>
+
+                                {% endif %}
 
                             </td>
 

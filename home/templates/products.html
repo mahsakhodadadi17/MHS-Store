@@ -426,42 +426,15 @@
 
 
 
-                    <form method="POST"
-
-                    action="{% url 'add_to_cart' product.id %}">
-
-
-
-                        {% csrf_token %}
-
-
-
-
-
+                    <form action="{% url 'product_detail' product.slug %}" method="get">
 
                         <button
+                          type="submit"
+                         class="cart-btn">
 
-                        type="submit"
-
-                        class="cart-btn"
-
-                        {% if not product.mojodi %}
-
-                        disabled
-
-                        {% endif %}>
-
-
-
-                            افزودن به سبد خرید
-
-
+                         مشاهده محصول
 
                         </button>
-
-
-
-
 
                     </form>
 

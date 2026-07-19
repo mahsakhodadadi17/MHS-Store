@@ -3,6 +3,8 @@ from django.utils.text import slugify
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
+import random
+import string
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
@@ -451,6 +453,13 @@ class Order(models.Model):
         default="unpaid"
     )
 
+    tracking_code = models.CharField(
+     max_length=20,
+     unique=True,
+     blank=True,
+     null=True
+    )
+
     admin_seen = models.BooleanField(
      default=False
     )
@@ -480,47 +489,61 @@ class Order(models.Model):
     def can_cancel(self):
 
         return (
-            timezone.now()
-            <= self.created_at + timedelta(hours=24)
-            and self.status in ["pending","paid"]
+            timezone.now() <= self.created_at + timedelta(hours=24)
+            and self.status in ["pending", "paid"]
         )
 
+
+    def generate_tracking_code(self):
+
+        while True:
+
+            code = "MHS-" + "".join(
+                random.choices(
+                    string.ascii_uppercase + string.digits,
+                    k=8
+                )
+            )
+
+            if not Order.objects.filter(
+                tracking_code=code
+            ).exists():
+
+                return code
 
 
     def save(self, *args, **kwargs):
 
+        old_status = None
+
         if self.pk:
 
-            old_order = Order.objects.get(
+            old_status = Order.objects.get(
                 pk=self.pk
-            )
+            ).status
 
+        if not self.tracking_code:
 
-            if old_order.status != self.status:
-
-                super().save(*args, **kwargs)
-
-
-                Notification.objects.create(
-
-                    user=self.user,
-
-                    text=f"وضعیت سفارش شماره {self.id} تغییر کرد به {self.get_status_display()}"
-
-                )
-
-
-                return
-
+            self.tracking_code = self.generate_tracking_code()
 
         super().save(*args, **kwargs)
 
+        if old_status and old_status != self.status:
 
+            Notification.objects.create(
+
+                user=self.user,
+
+                text=f"وضعیت سفارش شماره {self.id} تغییر کرد به {self.get_status_display()}"
+
+            )
 
 
     def __str__(self):
 
         return f"Order {self.id}"
+
+
     
 
 

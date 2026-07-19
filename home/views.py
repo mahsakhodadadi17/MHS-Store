@@ -733,6 +733,8 @@ def checkout(request):
         }
     )
 
+
+
 @login_required
 def add_to_cart(request, id):
 
@@ -1175,8 +1177,9 @@ def admin_orders(request):
 
             Q(user__username__icontains=search) |
 
-            Q(user__email__icontains=search)
+            Q(user__email__icontains=search) |
 
+            Q(tracking_code__icontains=search)
         )
 
 
@@ -1777,17 +1780,17 @@ def tracking(request):
 
     if request.method == "POST":
 
-        order_id = request.POST.get("orderNumber")
-        email = request.POST.get("customerInfo")
+        tracking_code = request.POST.get("tracking_code")
 
         try:
+
             order = Order.objects.get(
-                id=order_id,
-                user__email=email
+                tracking_code=tracking_code
             )
 
         except Order.DoesNotExist:
-            error = "سفارش با این اطلاعات پیدا نشد"
+
+            error = "سفارشی با این کد رهگیری پیدا نشد."
 
     return render(
         request,
@@ -1797,7 +1800,6 @@ def tracking(request):
             "error": error
         }
     )
-
 
 from django.contrib import messages
  
