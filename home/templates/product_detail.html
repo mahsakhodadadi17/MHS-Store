@@ -428,29 +428,69 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const cartBtn = document.querySelector(".add-to-cart");
 
+
     if(cartBtn){
 
         cartBtn.addEventListener("click", function(){
 
-            fetch(`/add-to-cart/${this.dataset.id}/`,{
-                method:"POST",
-                headers:{
-                    "X-CSRFToken":getCookie("csrftoken"),
-                    "X-Requested-With":"XMLHttpRequest"
-                }
+
+            const color = document.querySelector(
+                'input[name="color"]:checked'
+            );
+
+            const size = document.querySelector(
+                'input[name="size"]:checked'
+            );
+
+
+            fetch(`/add-to-cart/${this.dataset.id}/`, {
+
+                method: "POST",
+
+                headers: {
+
+                    "X-CSRFToken": getCookie("csrftoken"),
+
+                    "X-Requested-With": "XMLHttpRequest",
+
+                    "Content-Type": "application/x-www-form-urlencoded"
+
+                },
+
+
+                body:
+                    `color=${color ? color.value : ""}&size=${size ? size.value : ""}`
+
             })
 
-            .then(res=>res.json())
 
-            .then(data=>{
+            .then(response => response.json())
+
+            .then(data => {
+
+                console.log(data);
+
                 if(data.added){
+
                     alert("✅ محصول به سبد خرید اضافه شد");
+
                 }
+
+            })
+
+
+            .catch(error => {
+
+                console.log(error);
+
             });
+
 
         });
 
+
     }
+
 
 });
 </script>

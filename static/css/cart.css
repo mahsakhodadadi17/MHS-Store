@@ -415,3 +415,18 @@ body{
 
 
 }
+
+.cart-option{
+
+    color:#777;
+    font-size:14px;
+    margin:8px 0;
+
+}
+
+
+.cart-option:first-letter{
+
+    font-size:18px;
+
+}

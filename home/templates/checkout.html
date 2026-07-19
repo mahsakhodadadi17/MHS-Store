@@ -60,6 +60,24 @@
 تعداد:
 {{ item.quantity }}
 </p>
+{% if item.color %}
+
+<p class="cart-option">
+🎨 رنگ:
+{{ item.color.name }}
+</p>
+
+{% endif %}
+
+
+{% if item.size %}
+
+<p class="cart-option">
+📏 سایز:
+{{ item.size.size }}
+</p>
+
+{% endif %}
 
 
 </div>

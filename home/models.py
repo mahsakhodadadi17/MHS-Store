@@ -506,6 +506,102 @@ class Order(models.Model):
 
         return f"Order {self.id}"
     
+
+
+
+
+class ProductColor(models.Model):
+
+    product = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='colors'
+    )
+
+    name = models.CharField(
+        max_length=50
+    )
+
+    color_code = models.CharField(
+        max_length=10
+    )
+
+
+
+class ProductImage(models.Model):
+
+    product = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
+
+    image = models.ImageField(
+        upload_to='products/gallery/'
+    )
+
+
+    def __str__(self):
+        return self.product.title
+
+
+
+
+    def __str__(self):
+        return f"{self.product.title} - {self.name}"
+
+
+class ProductSize(models.Model):
+    product = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='sizes'
+    )
+    size = models.CharField(max_length=20)
+    stock = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.product.title} - {self.size}"
+    
+
+class PerfumeDetail(models.Model):
+    SEASONS = [
+       ("بهار", "بهار"),
+       ("تابستان", "تابستان"),
+      ("پاییز", "پاییز"),
+       ("زمستان", "زمستان"),
+      ("بهار و تابستان", "بهار و تابستان"),
+      ("پاییز و زمستان", "پاییز و زمستان"),
+       ("چهار فصل", "چهار فصل"),
+       ("پاییز و بهار", "پاییز و بهار"),
+      
+    ]
+
+    LONGEVITY = [
+        ("کم", "کم"),
+        ("متوسط", "متوسط"),
+        ("زیاد", "زیاد"),
+        ("خیلی زیاد", "خیلی زیاد"),
+    ]
+
+    product = models.OneToOneField(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="perfume_detail"
+    )
+
+    volume = models.CharField(max_length=20)      # 50ml - 100ml
+    longevity = models.CharField(max_length=20, choices=LONGEVITY)
+    season = models.CharField(max_length=20, choices=SEASONS)
+
+    def __str__(self):
+        return self.product.title
+    
+
+
+
+
+    
 class OrderItem(models.Model):
 
     order = models.ForeignKey(
@@ -526,15 +622,29 @@ class OrderItem(models.Model):
     price = models.IntegerField()
 
 
+    color = models.ForeignKey(
+        ProductColor,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+
+    size = models.ForeignKey(
+        ProductSize,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+
     @property
     def total_price(self):
+        return self.price * self.quantity
 
-       return self.price * self.quantity
 
     def __str__(self):
-
-        return self.product.title   
-    
+        return self.product.title
 
 class Cart(models.Model):
 
@@ -543,11 +653,13 @@ class Cart(models.Model):
         on_delete=models.CASCADE
     )
 
-
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
+
+    def __str__(self):
+        return self.user.username
 
 class CartItem(models.Model):
 
@@ -559,6 +671,20 @@ class CartItem(models.Model):
     product = models.ForeignKey(
         Post,
         on_delete=models.CASCADE
+    )
+
+    color = models.ForeignKey(
+        ProductColor,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    size = models.ForeignKey(
+        ProductSize,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
     )
 
     quantity = models.PositiveIntegerField(
@@ -576,10 +702,14 @@ class CartItem(models.Model):
         return self.item_price * self.quantity
 
 
+
     class Meta:
-        unique_together = ('cart', 'product')
-
-
+        unique_together = (
+            'cart',
+            'product',
+            'color',
+            'size'
+        )
         
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -709,76 +839,7 @@ class AdminNotification(models.Model):
         return self.title
     
 
-class ProductImage(models.Model):
-    product = models.ForeignKey(
-        Post,
-        on_delete=models.CASCADE,
-        related_name='images'
-    )
-    image = models.ImageField(upload_to='products/gallery/')
 
-    def __str__(self):
-        return self.product.title
-
-
-class ProductColor(models.Model):
-    product = models.ForeignKey(
-        Post,
-        on_delete=models.CASCADE,
-        related_name='colors'
-    )
-    name = models.CharField(max_length=50)
-    color_code = models.CharField(max_length=10)
-
-    def __str__(self):
-        return f"{self.product.title} - {self.name}"
-
-class ProductSize(models.Model):
-    product = models.ForeignKey(
-        Post,
-        on_delete=models.CASCADE,
-        related_name='sizes'
-    )
-    size = models.CharField(max_length=20)
-    stock = models.PositiveIntegerField(default=0)
-
-    def __str__(self):
-        return f"{self.product.title} - {self.size}"
-    
-
-class PerfumeDetail(models.Model):
-    SEASONS = [
-       ("بهار", "بهار"),
-       ("تابستان", "تابستان"),
-      ("پاییز", "پاییز"),
-       ("زمستان", "زمستان"),
-      ("بهار و تابستان", "بهار و تابستان"),
-      ("پاییز و زمستان", "پاییز و زمستان"),
-       ("چهار فصل", "چهار فصل"),
-       ("پاییز و بهار", "پاییز و بهار"),
-      
-    ]
-
-    LONGEVITY = [
-        ("کم", "کم"),
-        ("متوسط", "متوسط"),
-        ("زیاد", "زیاد"),
-        ("خیلی زیاد", "خیلی زیاد"),
-    ]
-
-    product = models.OneToOneField(
-        Post,
-        on_delete=models.CASCADE,
-        related_name="perfume_detail"
-    )
-
-    volume = models.CharField(max_length=20)      # 50ml - 100ml
-    longevity = models.CharField(max_length=20, choices=LONGEVITY)
-    season = models.CharField(max_length=20, choices=SEASONS)
-
-    def __str__(self):
-        return self.product.title
-    
 
 class SiteSettings(models.Model):
 

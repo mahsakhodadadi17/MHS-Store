@@ -47,6 +47,31 @@
                             {{ item.product.title }}
                         </h3>
 
+                        {% if item.color %}
+
+<p class="cart-option">
+    🎨 رنگ:
+    {{ item.color.name }}
+</p>
+
+{% endif %}
+
+
+
+{% if item.size %}
+
+<p class="cart-option">
+    📏 سایز:
+    {{ item.size.size }}
+</p>
+
+{% endif %}
+
+
+
+
+
+
                         <p class="lux-product-price">
 
     {% if item.product.final_price < item.product.price %}

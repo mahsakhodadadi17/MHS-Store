@@ -407,6 +407,25 @@ active
 
 </p>
 
+{% if item.color %}
+
+<p>
+🎨 رنگ:
+{{ item.color.name }}
+</p>
+
+{% endif %}
+
+
+{% if item.size %}
+
+<p>
+📏 سایز:
+{{ item.size.size }}
+</p>
+
+{% endif %}
+
 
 
 <p>

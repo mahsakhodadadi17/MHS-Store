@@ -24,12 +24,16 @@ from django.db.models.functions import TruncDate
 import json
 from django.views.decorators.http import require_POST
 from .models import Contact
-from .forms import (
-    ProductForm,
-    ColorFormSet,
-    SizeFormSet,
-    PerfumeFormSet
+from .models import (
+    Post,
+    Cart,
+    CartItem,
+    Order,
+    OrderItem,
+    ProductColor,
+    ProductSize,
 )
+from .forms import ProductForm, ColorFormSet, SizeFormSet, PerfumeFormSet
 from .models import Banner
 from django.contrib import messages
 from .models import (Category,Wishlist, Contact, Notification,)
@@ -693,14 +697,17 @@ def checkout(request):
 
             OrderItem.objects.create(
 
-                order=order,
+             order=order,
 
-                product=item.product,
+              product=item.product,
 
-                quantity=item.quantity,
+             quantity=item.quantity,
 
-                price=item.item_price
+             price=item.item_price,
 
+              color=item.color,
+
+              size=item.size
             )
 
         if coupon:
@@ -729,37 +736,92 @@ def checkout(request):
 @login_required
 def add_to_cart(request, id):
 
-    product = get_object_or_404(Post, id=id)
+    product = get_object_or_404(
+        Post,
+        id=id
+    )
+
 
     cart, _ = Cart.objects.get_or_create(
         user=request.user
     )
 
+
+    color_id = request.POST.get("color")
+
+    size_id = request.POST.get("size")
+
+
+
+    color = None
+    size = None
+
+
+
+    if color_id:
+
+        color = get_object_or_404(
+            ProductColor,
+            id=color_id
+        )
+
+
+
+    if size_id:
+
+        size = get_object_or_404(
+            ProductSize,
+            id=size_id
+        )
+
+
+
+
+
     item, created = CartItem.objects.get_or_create(
+
         cart=cart,
+
         product=product,
+
+        color=color,
+
+        size=size,
+
         defaults={
-            "quantity": 1
+            "quantity":1
         }
+
     )
 
+
+
     if not created:
+
         item.quantity += 1
+
         item.save()
 
 
-    # اگر درخواست AJAX بود
-    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+
+
+
+    if request.headers.get(
+        "X-Requested-With"
+    ) == "XMLHttpRequest":
+
 
         return JsonResponse({
+
             "added": True,
+
             "quantity": item.quantity
+
         })
 
 
-    # اگر فرم معمولی بود
-    return redirect("cart")
 
+    return redirect("cart")
 
 @login_required
 def delete_address(request, id):
@@ -874,22 +936,41 @@ def payment(request, id):
 
     if request.method == "POST":
 
-        # اگر قبلاً پرداخت شده باشد
         if order.status != "paid":
 
+            # بررسی موجودی قبل از پرداخت
+            for item in order.items.all():
+
+                if item.size:
+
+                    if item.size.stock < item.quantity:
+
+                        messages.error(
+                            request,
+                            f"موجودی سایز {item.size.size} برای محصول «{item.product.title}» کافی نیست."
+                        )
+
+                        return redirect("order_detail", order.id)
+
+            # ثبت پرداخت
             order.status = "paid"
             order.payment_status = "paid"
             order.save()
+
+            # کم کردن موجودی
+            for item in order.items.all():
+
+                if item.size:
+
+                    item.size.stock -= item.quantity
+                    item.size.save()
 
             Notification.objects.create(
                 user=request.user,
                 text=f"پرداخت سفارش شماره {order.id} با موفقیت انجام شد ✅"
             )
 
-        return redirect(
-            "order_detail",
-            order.id
-        )
+        return redirect("order_detail", order.id)
 
     return render(
         request,
