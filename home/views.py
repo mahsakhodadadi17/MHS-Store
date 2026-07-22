@@ -524,8 +524,15 @@ def add_to_wishlist(request, id):
 
     return redirect('product_detail', slug=post.slug)
 
-@login_required
+
 def toggle_wishlist(request, id):
+
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "login_required": True,
+            "message": "ابتدا وارد حساب کاربری خود شوید"
+        })
+
     post = get_object_or_404(Post, id=id)
 
     obj, created = Wishlist.objects.get_or_create(
@@ -540,6 +547,8 @@ def toggle_wishlist(request, id):
         liked = True
 
     return JsonResponse({"liked": liked})
+
+
 
 @login_required
 def remove_from_wishlist(request, id):
@@ -735,8 +744,15 @@ def checkout(request):
 
 
 
-@login_required
 def add_to_cart(request, id):
+
+    # بررسی ورود کاربر
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "added": False,
+            "login_required": True,
+            "message": "ابتدا وارد حساب کاربری خود شوید"
+        })
 
     product = get_object_or_404(Post, id=id)
 
@@ -779,7 +795,6 @@ def add_to_cart(request, id):
 
     if not created:
 
-        # بررسی اینکه از موجودی بیشتر نشود
         if size:
             if item.quantity >= size.stock:
                 return JsonResponse({
@@ -800,7 +815,6 @@ def add_to_cart(request, id):
         "added": True,
         "quantity": item.quantity
     })
-
 
 @login_required
 def delete_address(request, id):

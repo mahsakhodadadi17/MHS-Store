@@ -549,20 +549,38 @@ document.addEventListener("DOMContentLoaded",function(){
 
             .then(data => {
 
-                console.log(data);
+               console.log(data);
+
+                if(data.login_required){
+
+                    showToast(
+                      "ابتدا وارد حساب کاربری شوید.",
+                      "warning"
+                    );
+
+                  // اگر خواستی بعد از ۱.۵ ثانیه مودال ورود باز شود
+                    setTimeout(() => {
+                       const modal = new bootstrap.Modal(
+                           document.getElementById("modallogin")
+                        );
+                        modal.show();
+                    }, 1500);
+
+                    return;
+               }
 
                 if(data.added){
 
                     showToast(
-                        "محصول با موفقیت به سبد خرید اضافه شد",
-                        "success"
+                     "محصول با موفقیت به سبد خرید اضافه شد",
+                     "success"
                     );
 
                 }else{
 
-                    showToast(
-                        data.message,
-                        "error"
+                   showToast(
+                     data.message,
+                     "error"
                     );
 
                 }
@@ -578,54 +596,66 @@ document.addEventListener("DOMContentLoaded",function(){
         });
 
     }
+/* علاقه مندی */
 
-    /* علاقه مندی */
+const wishlistBtn = document.querySelector(".wishlist-btn");
 
-    const wishlistBtn = document.querySelector(".wishlist-btn");
+if (wishlistBtn) {
 
-    if(wishlistBtn){
+    wishlistBtn.addEventListener("click", function () {
 
-        wishlistBtn.addEventListener("click",function(){
+        const btn = this;
 
-            const btn = this;
+        fetch(`/wishlist/toggle/${btn.dataset.id}/`, {
 
-            fetch(`/wishlist/toggle/${btn.dataset.id}/`,{
+            method: "POST",
 
-                method:"POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "X-Requested-With": "XMLHttpRequest",
+            }
 
-                headers:{
+        })
 
-                    "X-CSRFToken":getCookie("csrftoken"),
-                    "X-Requested-With":"XMLHttpRequest",
+        .then(res => res.json())
 
-                }
+        .then(data => {
 
-            })
+            if (data.login_required) {
 
-            .then(res=>res.json())
+                showToast(
+                    data.message,
+                    "error"
+                );
 
-            .then(data=>{
+                return;
+            }
 
-                const heart = btn.querySelector(".heart");
-                const text = btn.querySelector(".text");
+            const heart = btn.querySelector(".heart");
+            const text = btn.querySelector(".text");
 
-                if(data.liked){
+            if (data.liked) {
 
-                    heart.textContent = "❤️";
-                    text.textContent = "در علاقه‌مندی‌ها";
+                heart.textContent = "❤️";
+                text.textContent = "در علاقه‌مندی‌ها";
 
-                }else{
+            } else {
 
-                    heart.textContent = "🤍";
-                    text.textContent = "افزودن به علاقه‌مندی";
+                heart.textContent = "🤍";
+                text.textContent = "افزودن به علاقه‌مندی";
 
-                }
+            }
 
-            });
+        })
+
+        .catch(error => {
+
+            console.log(error);
 
         });
 
-    }
+    });
 
+}
 });
 </script>
