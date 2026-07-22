@@ -842,7 +842,33 @@ button:hover svg,
 @media(max-width:768px){
 
 .search-wrap{
-    width:90%;
+    position: relative;
 }
 
 }
+
+
+.close-button{
+    position: absolute;
+    top: 50%;
+    right: calc(25% - 60px);
+    transform: translateY(-50%);
+    z-index: 9999;
+    cursor: pointer;
+}
+
+.close-button svg{
+    width: 30px;
+    height: 30px;
+    fill: #000;
+    display: block;
+}
+
+.close-button:hover svg{
+    fill: #d4af37;
+    transform: rotate(90deg);
+    transition: .3s;
+}
+
+
+

@@ -75,6 +75,9 @@
     </symbol>
   </svg>
   
+
+  
+  
   
   <!-- Loader 4 -->
 
@@ -113,8 +116,8 @@
   <div class="search-wrap">
 
     <div class="close-button">
-      <svg class="close" style="fill:white; width:30px; height:30px;">
-        <use xlink:href="#close"></use>
+      <svg width="30" height="30" viewBox="0 0 16 16" fill="white">
+       <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
       </svg>
     </div>
 
@@ -141,13 +144,7 @@
   <!-- quick view -->
 
   <!-- / quick view -->
-  <li>
-    <a href="{% url 'admin_dashboard' %}">
-        <i class="fas fa-user-shield"></i>
-        پنل مدیریت
-    </a>
- </li>
-
+  
 
   <div class="modal fade" id="modallong" tabindex="-1" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-fullscreen-md-down modal-md modal-dialog-centered">
@@ -264,12 +261,12 @@
                                         <label>
 
 
-                                            <input 
-                                            name="rememberme"
-                                            type="checkbox">
+                                          <input 
+                                          name="rememberme"
+                                          type="checkbox">
 
 
-                                            مرا به خاطر بسپار
+                                             مرا به خاطر بسپار
 
 
                                         </label>
@@ -329,6 +326,7 @@
 
 
 
+
                                 </div>
 
 
@@ -369,6 +367,13 @@
 
 
 <!-- End Login -->
+ <li>
+    <a href="{% url 'admin_login' %}">
+        <i class="fas fa-user-shield"></i>
+        پنل مدیریت
+    </a>
+ </li>
+
 
   <header id="header" class="site-header text-black">
  

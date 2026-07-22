@@ -324,6 +324,7 @@ urlpatterns = [
      views.apply_coupon,
      name="apply_coupon"
     ),
+    path("admin-login/", views.admin_login, name="admin_login"),
 
 ]
 

@@ -2653,3 +2653,27 @@ def apply_coupon(request):
         "final": f"{final:,}"
 
     })
+
+
+def admin_login(request):
+    error = ""
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None and user.is_staff:
+            login(request, user)
+            return redirect("admin_dashboard")
+        else:
+            error = "نام کاربری یا رمز عبور اشتباه است."
+
+    return render(request, "admin_login.html", {
+        "error": error
+    })
