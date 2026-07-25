@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -167,3 +168,11 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "ایمیل_خودت"
 
 EMAIL_HOST_PASSWORD = "App Password"
+
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
