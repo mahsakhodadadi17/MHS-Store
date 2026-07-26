@@ -343,6 +343,7 @@ class Address(models.Model):
 
     def __str__(self):
         return self.full_name
+
     
 
 class Coupon(models.Model):
@@ -637,9 +638,6 @@ class PerfumeDetail(models.Model):
         return self.product.title
     
 
-
-
-
     
 class OrderItem(models.Model):
 
@@ -699,6 +697,8 @@ class Cart(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    
 
 class CartItem(models.Model):
 

@@ -79,7 +79,6 @@ urlpatterns = [
      name="password_done"
     ),
     path("notifications/", views.notifications, name="notifications"),
-    path("api/notifications/", views.notifications_api, name="notifications_api"),
     path(
      "order/cancel/<int:id>/",
      views.cancel_order,
