@@ -1,187 +1,304 @@
-# 🛍 فروشگاه اینترنتی MHS Store
+# 🛍️ فروشگاه اینترنتی MHS Store
 
-یک فروشگاه اینترنتی کامل توسعه داده شده با **Django** و **Django REST Framework** که دارای پنل مدیریت اختصاصی، پنل کاربری، سیستم سفارش، سبد خرید، علاقه‌مندی‌ها، تخفیف‌ها و API مستند شده با Swagger می‌باشد.
+<div align="center">
+
+### یک فروشگاه اینترنتی مدرن توسعه داده شده با Django
+
+سیستم کامل فروشگاه آنلاین شامل پنل کاربری، پنل مدیریت اختصاصی، API و امکانات حرفه‌ای مدیریت سفارشات
+
+---
+
+**توسعه‌دهنده:** مهسا خدادادی
+
+</div>
+
+---
+
+# 📖 معرفی پروژه
+
+MHS Store یک فروشگاه اینترنتی کامل است که با استفاده از **Django** و **Django REST Framework** توسعه داده شده است.
+
+این پروژه با هدف یادگیری توسعه وب، طراحی معماری فروشگاه اینترنتی و پیاده‌سازی قابلیت‌های واقعی فروشگاهی ایجاد شده و شامل بخش کاربری، مدیریت، API و امکانات متنوع فروشگاهی است.
 
 ---
 
 # ✨ امکانات پروژه
 
-- 👤 ثبت نام و ورود کاربران
-- 🔐 احراز هویت با JWT
-- 👟 مدیریت محصولات
-- 📂 مدیریت دسته‌بندی‌ها
-- 🛒 سبد خرید
-- ❤️ علاقه‌مندی‌ها
-- 💳 ثبت سفارش (Checkout)
-- 🚚 رهگیری سفارش
-- 📋 مشاهده سفارش‌های کاربر
-- 🏷️ سیستم تخفیف
-- 🔔 سیستم اعلان‌ها
-- ⚙️ پنل مدیریت اختصاصی
-- 📚 مستندسازی کامل API با Swagger
+## 👤 سیستم کاربران
+
+- ثبت نام کاربران
+- ورود و خروج
+- ویرایش پروفایل
+- داشبورد اختصاصی کاربر
+- مدیریت آدرس‌ها
+- مدیریت علاقه‌مندی‌ها
 
 ---
 
-# 🛠 تکنولوژی‌های استفاده شده
+## 🛍️ فروشگاه
 
-- Python
-- Django
-- Django REST Framework
-- Simple JWT
-- SQLite
-- HTML
-- CSS
-- JavaScript
-- Bootstrap
-- Git
-- GitHub
+- نمایش محصولات
+- دسته‌بندی محصولات
+- صفحه اختصاصی کفش
+- صفحه اختصاصی عطر و ادکلن
+- جستجوی محصولات
+- مشاهده جزئیات هر محصول
+- تصاویر متعدد برای هر محصول
+- انتخاب رنگ
+- انتخاب سایز
 
 ---
+
+## 🛒 خرید
+
+- افزودن به سبد خرید
+- حذف از سبد خرید
+- بروزرسانی تعداد کالا
+- محاسبه قیمت نهایی
+- صفحه تسویه حساب
+
+---
+
+## 📦 سفارشات
+
+- ثبت سفارش
+- پرداخت سفارش
+- رهگیری سفارش
+- مشاهده وضعیت سفارش
+- جزئیات سفارش
+- تاریخچه سفارش‌ها
+
+---
+
+## 🎁 تخفیف‌ها
+
+- مدیریت تخفیف محصولات
+- نمایش محصولات تخفیف‌دار
+- محاسبه قیمت بعد از تخفیف
+
+---
+
+## ❤️ علاقه‌مندی‌ها
+
+- افزودن محصول به علاقه‌مندی
+- حذف از علاقه‌مندی
+- مشاهده لیست علاقه‌مندی‌ها
+
+---
+
+## ⚙️ پنل مدیریت
+
+- داشبورد مدیریتی
+- مدیریت محصولات
+- مدیریت سفارش‌ها
+- مدیریت کاربران
+- مدیریت دسته‌بندی‌ها
+- مدیریت تنظیمات سایت
+- مشاهده آمار فروش
+
+---
+
+## 🌐 API
+
+- پیاده‌سازی Django REST Framework
+- مستندات کامل Swagger
+- احراز هویت API
+- عملیات CRUD
+
+---
+
+# 🛠️ تکنولوژی‌های استفاده شده
+
+| Backend | Frontend | سایر |
+|---------|----------|------|
+| Python | HTML5 | SQLite |
+| Django | CSS3 | Bootstrap |
+| Django REST Framework | JavaScript | AdminLTE |
+| JWT Authentication | Responsive Design | Swagger |
+
+---
+
 
 # 📸 تصاویر پروژه
 
 ## 🏠 صفحه اصلی
 
-![خانه](screenshots/home(shoes).png)
+<p align="center">
+<img src="screenshots/home(shoes).png" width="900">
+</p>
 
 ---
 
-## 👟 محصولات
+## 🛍️ صفحه محصولات
 
-![Products](screenshots/products.png)
-
----
-
-## 📦 جزئیات محصول
-
-![Product](screenshots/product-detail1.png)
-
-![Product](screenshots/product-detail2.png)
+<p align="center">
+<img src="screenshots/products.png" width="900">
+</p>
 
 ---
 
-## 🌸 بخش عطر و ادکلن
+## 🌸 صفحه عطر و ادکلن
 
-![Perfume](screenshots/perfume.png)
+<p align="center">
+<img src="screenshots/perfume.png" width="900">
+</p>
 
 ---
 
-## 🏷️ تخفیف‌ها
+## 👟 صفحه جزئیات محصول
 
-![Discounts](screenshots/discounts.png)
+<p align="center">
+<img src="screenshots/product-detail1.png" width="900">
+</p>
+
+<p align="center">
+<img src="screenshots/product-detail2.png" width="900">
+</p>
 
 ---
 
 ## 🛒 سبد خرید
 
-![Cart](screenshots/cart.png)
+<p align="center">
+<img src="screenshots/cart.png" width="800">
+</p>
 
 ---
 
-## 💳 صفحه ثبت سفارش
+## 💳 صفحه تسویه حساب
 
-![Checkout](screenshots/checkout-page.png)
-
----
-
-## 👤 داشبورد کاربر
-
-![User Dashboard](screenshots/user-dashboard.png)
+<p align="center">
+<img src="screenshots/checkout-page.png" width="800">
+</p>
 
 ---
 
-## 📋 سفارش‌های من
+## 🎁 صفحه تخفیف‌ها
 
-![Orders](screenshots/user-orders.png)
+<p align="center">
+<img src="screenshots/discounts.png" width="800">
+</p>
+
+---
+
+## 👤 پنل کاربری
+
+<p align="center">
+<img src="screenshots/user-dashboard.png" width="800">
+</p>
+
+---
+
+## 📦 سفارش‌های کاربر
+
+<p align="center">
+<img src="screenshots/user-orders.png" width="800">
+</p>
 
 ---
 
 ## 📄 جزئیات سفارش
 
-![Order Detail](screenshots/order_detail.png)
+<p align="center">
+<img src="screenshots/order_detail.png" width="800">
+</p>
 
 ---
 
 ## 🚚 رهگیری سفارش
 
-![Tracking](screenshots/tracking.png)
+<p align="center">
+<img src="screenshots/tracking.png" width="800">
+</p>
 
 ---
 
-## ⚙️ داشبورد مدیریت
+# ⚙️ پنل مدیریت
 
-![Admin Dashboard](screenshots/admin-dashboard.png)
+## داشبورد مدیریت
 
----
-
-## 📦 مدیریت محصولات
-
-![Admin Products](screenshots/admin-products.png)
+<p align="center">
+<img src="screenshots/admin-dashboard.png" width="900">
+</p>
 
 ---
 
-## 📋 مدیریت سفارش‌ها
+## مدیریت محصولات
 
-![Admin Orders](screenshots/admin-orders.png)
-
----
-
-## ⚙️ تنظیمات مدیریت
-
-![Settings](screenshots/admin_settings.png)
+<p align="center">
+<img src="screenshots/admin-products.png" width="900">
+</p>
 
 ---
 
-## 📚 مستندات API (Swagger)
+## مدیریت سفارش‌ها
 
-![Swagger](screenshots/swagger.png)
+<p align="center">
+<img src="screenshots/admin-orders.png" width="900">
+</p>
 
 ---
 
-# 🚀 نحوه اجرا
+## تنظیمات پنل مدیریت
 
-ابتدا پروژه را Clone کنید:
+<p align="center">
+<img src="screenshots/admin_settings.png" width="900">
+</p>
+
+---
+
+# 📖 مستندات API
+
+<p align="center">
+<img src="screenshots/swagger.png" width="900">
+</p>
+
+---
+
+# 🚀 نحوه اجرای پروژه
 
 ```bash
 git clone https://github.com/mahsakhodadadi17/MHS-Store.git
-```
 
-وارد پوشه پروژه شوید:
-
-```bash
 cd MHS-Store
-```
 
-پکیج‌ها را نصب کنید:
+python -m venv venv
 
-```bash
+venv\Scripts\activate
+
 pip install -r requirements.txt
-```
 
-مایگریشن‌ها را اجرا کنید:
-
-```bash
 python manage.py migrate
-```
 
-سرور را اجرا کنید:
-
-```bash
 python manage.py runserver
 ```
 
 ---
 
-# 📌 هدف پروژه
+# 📌 نکات پروژه
 
-این پروژه به عنوان یک نمونه‌کار (Portfolio Project) با استفاده از Django و Django REST Framework توسعه داده شده است و شامل امکانات کامل یک فروشگاه اینترنتی مدرن، پنل مدیریت، پنل کاربری و API مستندسازی‌شده می‌باشد.
+- طراحی کاملاً واکنش‌گرا
+- معماری MVC جنگو
+- استفاده از Template Engine
+- استفاده از Class Based View و Function Based View
+- استفاده از Django REST Framework
+- مستندسازی API با Swagger
+- استفاده از JWT Authentication
+- پنل مدیریت اختصاصی
+- استفاده از Git و GitHub برای مدیریت نسخه‌ها
 
 ---
 
-# 👩‍💻 توسعه‌دهنده
+# 📬 ارتباط با توسعه‌دهنده
 
-**مهسا خدادادی**
+👩‍💻 **مهسا خدادادی**
 
-GitHub:
+- GitHub: https://github.com/mahsakhodadadi17
+- Email: mahsakhodadadi17@gmail.com
 
-https://github.com/mahsakhodadadi17
+---
+
+## 💼 هدف پروژه
+
+این پروژه با هدف یادگیری، توسعه مهارت‌های برنامه‌نویسی و ارائه به عنوان نمونه‌کار (Portfolio) طراحی و پیاده‌سازی شده است و تلاش شده تا امکانات یک فروشگاه اینترنتی واقعی در آن پیاده‌سازی شود.
+
