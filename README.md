@@ -1,50 +1,144 @@
-# 🛍️ MHS Store
+# 🛍 فروشگاه اینترنتی MHS Store
 
-فروشگاه اینترنتی **MHS Store** یک پروژه فروشگاهی کامل است که با استفاده از **Django** و **Django REST Framework** توسعه داده شده است.
-
-این پروژه شامل پنل کاربری، پنل مدیریت اختصاصی و API کامل برای ارتباط با فرانت‌اند یا اپلیکیشن موبایل است.
+یک فروشگاه اینترنتی کامل توسعه داده شده با **Django** و **Django REST Framework** که دارای پنل مدیریت اختصاصی، پنل کاربری، سیستم سفارش، سبد خرید، علاقه‌مندی‌ها، تخفیف‌ها و API مستند شده با Swagger می‌باشد.
 
 ---
 
 # ✨ امکانات پروژه
 
-- ثبت‌نام و ورود کاربران
-- احراز هویت با JWT
-- مدیریت محصولات
-- مدیریت دسته‌بندی‌ها
-- سبد خرید
-- علاقه‌مندی‌ها (Wishlist)
-- ثبت سفارش
-- کد تخفیف (Coupon)
-- تخفیف محصولات
-- سیستم تیکت
-- اعلان‌ها (Notifications)
-- مدیریت بنرها
-- تنظیمات سایت
-- پنل مدیریت اختصاصی
-- مستندات کامل API با Swagger
-- محدودسازی درخواست‌ها (Throttling)
+- 👤 ثبت نام و ورود کاربران
+- 🔐 احراز هویت با JWT
+- 👟 مدیریت محصولات
+- 📂 مدیریت دسته‌بندی‌ها
+- 🛒 سبد خرید
+- ❤️ علاقه‌مندی‌ها
+- 💳 ثبت سفارش (Checkout)
+- 🚚 رهگیری سفارش
+- 📋 مشاهده سفارش‌های کاربر
+- 🏷️ سیستم تخفیف
+- 🔔 سیستم اعلان‌ها
+- ⚙️ پنل مدیریت اختصاصی
+- 📚 مستندسازی کامل API با Swagger
 
 ---
 
-# 🛠️ تکنولوژی‌های استفاده شده
+# 🛠 تکنولوژی‌های استفاده شده
 
 - Python
 - Django
 - Django REST Framework
+- Simple JWT
 - SQLite
-- JWT Authentication
-- Swagger (drf-yasg)
 - HTML
 - CSS
-- Bootstrap
 - JavaScript
+- Bootstrap
 - Git
 - GitHub
 
 ---
 
-# 🚀 نحوه اجرای پروژه
+# 📸 تصاویر پروژه
+
+## 🏠 صفحه اصلی
+
+![خانه](screenshots/home(shoes).png)
+
+---
+
+## 👟 محصولات
+
+![Products](screenshots/products.png)
+
+---
+
+## 📦 جزئیات محصول
+
+![Product](screenshots/product-detail1.png)
+
+![Product](screenshots/product-detail2.png)
+
+---
+
+## 🌸 بخش عطر و ادکلن
+
+![Perfume](screenshots/perfume.png)
+
+---
+
+## 🏷️ تخفیف‌ها
+
+![Discounts](screenshots/discounts.png)
+
+---
+
+## 🛒 سبد خرید
+
+![Cart](screenshots/cart.png)
+
+---
+
+## 💳 صفحه ثبت سفارش
+
+![Checkout](screenshots/checkout-page.png)
+
+---
+
+## 👤 داشبورد کاربر
+
+![User Dashboard](screenshots/user-dashboard.png)
+
+---
+
+## 📋 سفارش‌های من
+
+![Orders](screenshots/user-orders.png)
+
+---
+
+## 📄 جزئیات سفارش
+
+![Order Detail](screenshots/order_detail.png)
+
+---
+
+## 🚚 رهگیری سفارش
+
+![Tracking](screenshots/tracking.png)
+
+---
+
+## ⚙️ داشبورد مدیریت
+
+![Admin Dashboard](screenshots/admin-dashboard.png)
+
+---
+
+## 📦 مدیریت محصولات
+
+![Admin Products](screenshots/admin-products.png)
+
+---
+
+## 📋 مدیریت سفارش‌ها
+
+![Admin Orders](screenshots/admin-orders.png)
+
+---
+
+## ⚙️ تنظیمات مدیریت
+
+![Settings](screenshots/admin_settings.png)
+
+---
+
+## 📚 مستندات API (Swagger)
+
+![Swagger](screenshots/swagger.png)
+
+---
+
+# 🚀 نحوه اجرا
 
 ابتدا پروژه را Clone کنید:
 
@@ -52,25 +146,25 @@
 git clone https://github.com/mahsakhodadadi17/MHS-Store.git
 ```
 
-سپس وارد پوشه پروژه شوید:
+وارد پوشه پروژه شوید:
 
 ```bash
 cd MHS-Store
 ```
 
-محیط مجازی را فعال کنید و پکیج‌ها را نصب کنید:
+پکیج‌ها را نصب کنید:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-سپس Migrationها را اجرا کنید:
+مایگریشن‌ها را اجرا کنید:
 
 ```bash
 python manage.py migrate
 ```
 
-در نهایت پروژه را اجرا کنید:
+سرور را اجرا کنید:
 
 ```bash
 python manage.py runserver
@@ -78,37 +172,16 @@ python manage.py runserver
 
 ---
 
-# 📚 مستندات API
+# 📌 هدف پروژه
 
-پس از اجرای پروژه، مستندات API از طریق Swagger در دسترس است:
-
-```
-http://127.0.0.1:8000/swagger/
-```
-
----
-
-# 📸 بخش‌های پروژه
-
-این پروژه شامل بخش‌های زیر است:
-
-- صفحه اصلی
-- صفحه محصولات
-- صفحه جزئیات محصول
-- سبد خرید
-- علاقه‌مندی‌ها
-- ثبت سفارش
-- پنل مدیریت اختصاصی
-- مستندات Swagger
+این پروژه به عنوان یک نمونه‌کار (Portfolio Project) با استفاده از Django و Django REST Framework توسعه داده شده است و شامل امکانات کامل یک فروشگاه اینترنتی مدرن، پنل مدیریت، پنل کاربری و API مستندسازی‌شده می‌باشد.
 
 ---
 
 # 👩‍💻 توسعه‌دهنده
 
-**Mahsa**
+**مهسا خدادادی**
 
----
+GitHub:
 
-# 📄 مجوز
-
-این پروژه صرفاً جهت نمونه‌کار و یادگیری توسعه داده شده است.
+https://github.com/mahsakhodadadi17
