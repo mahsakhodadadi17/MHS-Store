@@ -60,6 +60,9 @@ from .serializers import SiteSettingsSerializer
 from .models import Banner
 from .serializers import BannerSerializer
 from .serializers import ManagerSerializer
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+from .permissions import IsOwner
 
 
 
@@ -77,6 +80,7 @@ class ProductListAPIView(generics.ListAPIView):
     search_fields = [
         "title",
         "content",
+        "category__title",
     ]
 
     filterset_fields = [
@@ -192,6 +196,7 @@ class WishlistDeleteAPIView(generics.DestroyAPIView):
 
 
 class WishlistToggleAPIView(generics.GenericAPIView):
+    serializer_class = WishlistSerializer
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -298,6 +303,8 @@ class CartItemDeleteAPIView(generics.DestroyAPIView):
             cart__user=self.request.user
         )
 
+
+
 class ProfileAPIView(generics.RetrieveAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
@@ -308,6 +315,7 @@ class ProfileAPIView(generics.RetrieveAPIView):
         )
 
         return profile
+    
 
 class ProfileUpdateAPIView(generics.UpdateAPIView):
     serializer_class = ProfileSerializer
@@ -411,7 +419,7 @@ class AddressListCreateAPIView(generics.ListCreateAPIView):
 class AddressUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = AddressSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 
     def get_queryset(self):
@@ -433,7 +441,8 @@ class OrderListAPIView(generics.ListAPIView):
 
 class OrderDetailAPIView(generics.RetrieveAPIView):
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
+
 
     def get_queryset(self):
         return Order.objects.filter(
@@ -446,7 +455,7 @@ class OrderDetailAPIView(generics.RetrieveAPIView):
 class NotificationListAPIView(generics.ListAPIView):
 
     serializer_class = NotificationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
 
@@ -454,10 +463,11 @@ class NotificationListAPIView(generics.ListAPIView):
             user=self.request.user
         ).order_by("-created_at")
 
+
 class NotificationReadAPIView(generics.UpdateAPIView):
 
     serializer_class = NotificationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 
     def get_queryset(self):
@@ -519,12 +529,11 @@ class TicketDetailAPIView(generics.RetrieveAPIView):
     serializer_class = TicketSerializer
 
     permission_classes = [
-        IsAuthenticated
+        IsAuthenticated,
+        IsOwner,
     ]
 
-
     def get_queryset(self):
-
         return ContactMessage.objects.filter(
             user=self.request.user
         )
