@@ -253,6 +253,8 @@ class Discount(models.Model):
     def __str__(self):
         return self.title
 
+    
+
 class Contact(models.Model):
    name=models.CharField()
    email=models.EmailField()

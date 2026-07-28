@@ -26,6 +26,42 @@ from .serializers import TicketSerializer
 from .serializers import TicketReplySerializer
 from .models import Coupon
 from .serializers import CouponApplySerializer
+from django.db.models import Sum
+from .serializers import AdminDashboardSerializer
+from django.contrib.auth.models import User
+from rest_framework.permissions import IsAdminUser
+from .serializers import ContactMessageSerializer
+from django.db.models.functions import TruncDate
+from datetime import timedelta
+from django.utils import timezone
+from .models import AdminTask
+from .serializers import AdminTaskSerializer
+from .serializers import AdminLatestOrderSerializer
+from .models import Discount
+from .serializers import DiscountSerializer
+from .serializers import CouponSerializer
+from django.contrib.auth.models import User
+from django.db.models import Q
+from rest_framework.generics import CreateAPIView
+from .serializers import UserSerializer
+from rest_framework.generics import (ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveDestroyAPIView)
+from .models import Category
+from .serializers import CategorySerializer
+from .models import Wishlist
+from .serializers import WishlistSerializer
+from .models import ContactMessage
+from .serializers import ContactMessageSerializer
+from .models import Notification
+from .serializers import NotificationSerializer
+from rest_framework.permissions import IsAdminUser
+from rest_framework.generics import RetrieveUpdateAPIView
+from .models import SiteSettings
+from .serializers import SiteSettingsSerializer
+from .models import Banner
+from .serializers import BannerSerializer
+from .serializers import ManagerSerializer
+
+
 
 
 class ProductListAPIView(generics.ListAPIView):
@@ -186,6 +222,8 @@ class WishlistToggleAPIView(generics.GenericAPIView):
             {"message": "از علاقه‌مندی‌ها حذف شد."},
             status=status.HTTP_200_OK
         )
+
+    
 
 class CartAPIView(generics.RetrieveAPIView):
     serializer_class = CartSerializer
@@ -404,6 +442,7 @@ class OrderDetailAPIView(generics.RetrieveAPIView):
             "items"
         )
 
+
 class NotificationListAPIView(generics.ListAPIView):
 
     serializer_class = NotificationSerializer
@@ -411,13 +450,9 @@ class NotificationListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
 
-        print("USER =", self.request.user)
-        print("AUTH =", self.request.auth)
-
         return Notification.objects.filter(
             user=self.request.user
         ).order_by("-created_at")
-
 
 class NotificationReadAPIView(generics.UpdateAPIView):
 
@@ -444,6 +479,7 @@ class NotificationReadAPIView(generics.UpdateAPIView):
         return Response(serializer.data)
 
 
+    
 class TicketListAPIView(generics.ListAPIView):
 
     serializer_class = TicketSerializer
@@ -687,3 +723,332 @@ class CouponApplyAPIView(APIView):
             "final_price": order.final_price
 
         })
+
+class AdminDashboardAPIView(APIView):
+
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+
+        data = {
+            "orders_count": Order.objects.count(),
+            "products_count": Post.objects.count(),
+            "users_count": User.objects.count(),
+            "total_revenue": Order.objects.filter(
+                payment_status="paid"
+            ).aggregate(
+                total=Sum("total_price")
+            )["total"] or 0,
+        }
+
+        return Response(data)
+
+
+class AdminLatestOrdersAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        latest_orders = Order.objects.order_by("-created_at")[:10]
+
+        serializer = OrderSerializer(latest_orders, many=True)
+
+        return Response(serializer.data)
+
+class AdminLatestOrdersAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        latest_orders = Order.objects.order_by("-created_at")[:10]
+
+        serializer = OrderSerializer(latest_orders, many=True)
+
+        return Response(serializer.data)
+
+class AdminRecentMessagesAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        messages = ContactMessage.objects.order_by("-created_at")[:10]
+
+        serializer = ContactMessageSerializer(messages, many=True)
+
+        return Response(serializer.data)
+
+class AdminSalesChartAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        start_date = timezone.now() - timedelta(days=30)
+
+        sales = (
+            Order.objects.filter(
+                payment_status="paid",
+                created_at__gte=start_date
+            )
+            .annotate(day=TruncDate("created_at"))
+            .values("day")
+            .annotate(total=Sum("total_price"))
+            .order_by("day")
+        )
+
+        labels = [
+            item["day"].strftime("%Y-%m-%d")
+            for item in sales
+        ]
+
+        data = [
+            item["total"] or 0
+            for item in sales
+        ]
+
+        return Response({
+            "labels": labels,
+            "data": data
+        })
+
+class AdminOrderStatusAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        return Response({
+            "pending_orders": Order.objects.filter(status="pending").count(),
+            "paid_orders": Order.objects.filter(status="paid").count(),
+            "sent_orders": Order.objects.filter(status="sent").count(),
+            "done_orders": Order.objects.filter(status="done").count(),
+        })
+
+class AdminTaskListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = AdminTaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return AdminTask.objects.order_by("-created_at")
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+
+
+class AdminTaskDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = AdminTask.objects.all()
+    serializer_class = AdminTaskSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class AdminLatestOrdersAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_staff:
+            return Response(
+                {"detail": "دسترسی ندارید."},
+                status=403
+            )
+
+        latest_orders = (
+            Order.objects
+            .select_related("user")
+            .prefetch_related("items")
+            .order_by("-created_at")[:10]
+        )
+
+        serializer = AdminLatestOrderSerializer(
+            latest_orders,
+            many=True
+        )
+
+        return Response(serializer.data)
+
+class AdminDiscountListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = DiscountSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Discount.objects.all().order_by("-created_at")
+
+class AdminDiscountDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Discount.objects.all()
+    serializer_class = DiscountSerializer
+    permission_classes = [IsAuthenticated]
+
+class AdminCouponListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Coupon.objects.all().order_by("-id")
+    serializer_class = CouponSerializer
+    permission_classes = [IsAuthenticated]
+
+class AdminCouponDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Coupon.objects.all()
+    serializer_class = CouponSerializer
+    permission_classes = [IsAuthenticated]
+
+class AdminUserListAPIView(generics.ListAPIView):
+
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+
+        users = User.objects.all().order_by("-date_joined")
+
+        q = self.request.GET.get("q")
+
+        if q:
+            users = users.filter(
+                Q(username__icontains=q) |
+                Q(first_name__icontains=q) |
+                Q(last_name__icontains=q) |
+                Q(email__icontains=q)
+            )
+
+        role = self.request.GET.get("role")
+
+        if role == "admin":
+            users = users.filter(is_staff=True)
+
+        elif role == "user":
+            users = users.filter(is_staff=False)
+
+        status = self.request.GET.get("status")
+
+        if status == "active":
+            users = users.filter(is_active=True)
+
+        elif status == "inactive":
+            users = users.filter(is_active=False)
+
+        return users
+
+class AdminUserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+class AdminUserCreateAPIView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+class CategoryListCreateAPIView(ListCreateAPIView):
+
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+
+class CategoryDetailAPIView(RetrieveUpdateDestroyAPIView):
+
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class AdminWishlistListAPIView(ListAPIView):
+
+    queryset = Wishlist.objects.select_related(
+        "user",
+        "product"
+    ).all()
+
+    serializer_class = WishlistSerializer
+
+    permission_classes = [IsAdminUser]
+
+
+
+class AdminWishlistDetailAPIView(RetrieveDestroyAPIView):
+
+    queryset = Wishlist.objects.select_related(
+        "user",
+        "product"
+    ).all()
+
+    serializer_class = WishlistSerializer
+
+    permission_classes = [IsAdminUser]
+
+
+class ContactMessageListAPIView(ListCreateAPIView):
+
+    queryset = ContactMessage.objects.all().order_by("-created_at")
+
+    serializer_class = ContactMessageSerializer
+
+
+
+class ContactMessageDetailAPIView(RetrieveUpdateDestroyAPIView):
+
+    queryset = ContactMessage.objects.all()
+
+    serializer_class = ContactMessageSerializer
+
+
+# لیست و ساخت اعلان‌ها (ادمین)
+class NotificationListCreateAPIView(generics.ListCreateAPIView):
+
+    queryset = Notification.objects.select_related(
+        "user"
+    ).all().order_by("-created_at")
+
+    serializer_class = NotificationSerializer
+
+    permission_classes = [IsAuthenticated]
+
+
+# مشاهده، ویرایش، حذف یک اعلان
+class NotificationDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = Notification.objects.select_related(
+        "user"
+    ).all()
+
+    serializer_class = NotificationSerializer
+
+    permission_classes = [IsAuthenticated]
+
+
+class AdminSiteSettingsAPIView(RetrieveUpdateAPIView):
+
+    serializer_class = SiteSettingsSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_object(self):
+
+        settings, created = SiteSettings.objects.get_or_create(id=1)
+
+        return settings
+
+class AdminBannerListCreateAPIView(ListCreateAPIView):
+
+    queryset = Banner.objects.all().order_by("order")
+
+    serializer_class = BannerSerializer
+
+    permission_classes = [IsAdminUser]
+
+
+class AdminBannerDetailAPIView(RetrieveUpdateDestroyAPIView):
+
+    queryset = Banner.objects.all()
+
+    serializer_class = BannerSerializer
+
+    permission_classes = [IsAdminUser]
+
+
+class AdminManagerListCreateAPIView(ListCreateAPIView):
+
+    queryset = User.objects.filter(is_staff=True).order_by("id")
+
+    serializer_class = ManagerSerializer
+
+    permission_classes = [IsAdminUser]
+
+
+class AdminManagerDetailAPIView(RetrieveUpdateDestroyAPIView):
+
+    queryset = User.objects.filter(is_staff=True)
+
+    serializer_class = ManagerSerializer
+
+    permission_classes = [IsAdminUser]

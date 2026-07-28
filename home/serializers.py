@@ -9,6 +9,12 @@ from .models import Notification
 from rest_framework import serializers
 from .models import ContactMessage, TicketReply
 from .models import Coupon
+from .models import AdminTask
+from .models import Discount
+from django.contrib.auth.models import User
+from .models import Category
+from .models import SiteSettings
+from .models import Banner
 
 
 
@@ -265,3 +271,243 @@ class TicketSerializer(serializers.ModelSerializer):
 class CouponApplySerializer(serializers.Serializer):
 
     code = serializers.CharField()
+
+
+class AdminDashboardSerializer(serializers.Serializer):
+    orders_count = serializers.IntegerField()
+    products_count = serializers.IntegerField()
+    users_count = serializers.IntegerField()
+    total_revenue = serializers.IntegerField()
+
+    pending_orders = serializers.IntegerField()
+    paid_orders = serializers.IntegerField()
+    sent_orders = serializers.IntegerField()
+    done_orders = serializers.IntegerField()
+
+    shoe_orders = serializers.IntegerField()
+    perfume_orders = serializers.IntegerField()
+
+    sales_labels = serializers.ListField()
+    sales_data = serializers.ListField()
+
+class OrderSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username", read_only=True)
+    items_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Order
+        fields = [
+            "id",
+            "username",
+            "total_price",
+            "payment_status",
+            "status",
+            "created_at",
+            "items_count",
+        ]
+
+    def get_items_count(self, obj):
+        return obj.items.count()
+
+class ContactMessageSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username", read_only=True)
+
+    class Meta:
+        model = ContactMessage
+        fields = [
+            "id",
+            "username",
+            "subject",
+            "message",
+            "status",
+            "created_at",
+        ]
+
+class AdminTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminTask
+        fields = "__all__"
+
+class AdminLatestOrderSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source="user.username", read_only=True)
+    items_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Order
+        fields = [
+            "id",
+            "user",
+            "items_count",
+            "total_price",
+            "payment_status",
+            "status",
+            "created_at",
+        ]
+
+    def get_items_count(self, obj):
+        return obj.items.count()
+
+class DiscountSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Discount
+        fields = "__all__"
+
+class CouponSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Coupon
+        fields = "__all__"
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "password",
+            "is_active",
+            "is_staff",
+        ]
+        extra_kwargs = {
+            "password": {"write_only": True}
+        }
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+        return instance
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+class WishlistSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField(
+        source="user.username",
+        read_only=True
+    )
+
+    product_title = serializers.CharField(
+        source="product.title",
+        read_only=True
+    )
+
+    product_image = serializers.ImageField(
+        source="product.image",
+        read_only=True
+    )
+
+    class Meta:
+        model = Wishlist
+        fields = [
+            "id",
+            "user",
+            "username",
+            "product",
+            "product_title",
+            "product_image",
+            "created_at",
+        ]
+        read_only_fields = [
+            "created_at"
+        ]
+
+class ContactMessageSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField(
+        source="user.username",
+        read_only=True
+    )
+
+    message_type_display = serializers.CharField(
+        source="get_message_type_display",
+        read_only=True
+    )
+
+    class Meta:
+        model = ContactMessage
+        fields = [
+            "id",
+            "user",
+            "username",
+            "subject",
+            "message_type",
+            "message_type_display",
+            "message",
+            "status",
+            "is_read",
+            "created_at",
+        ]
+
+        read_only_fields = [
+            "created_at"
+        ]
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField(
+        source="user.username",
+        read_only=True
+    )
+
+    class Meta:
+        model = Notification
+        fields = [
+            "id",
+            "user",
+            "username",
+            "text",
+            "is_read",
+            "created_at",
+        ]
+
+        read_only_fields = [
+            "created_at"
+        ]
+
+class SiteSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SiteSettings
+        fields = "__all__"
+
+class BannerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Banner
+        fields = "__all__"
+
+
+class ManagerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "is_staff",
+            "is_superuser",
+        ]

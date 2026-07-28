@@ -1464,6 +1464,7 @@ from django.core.paginator import Paginator
 def is_admin(user):
     return user.is_staff
 
+
 @login_required
 @user_passes_test(is_admin)
 def admin_users(request):
@@ -1592,6 +1593,7 @@ def edit_category(request, id):
 
     return redirect("admin_categories")
 
+
 @staff_member_required
 def delete_category(request, id):
 
@@ -1600,6 +1602,7 @@ def delete_category(request, id):
     category.delete()
 
     return redirect("admin_categories")
+
 
 @staff_member_required
 def admin_wishlist(request):
