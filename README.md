@@ -304,6 +304,16 @@ python manage.py runserver
 - GitHub: https://github.com/mahsakhodadadi17
 - Email: mahsakhodadadi17@gmail.com
 
+
+## 🌐 لینک آنلاین پروژه
+
+برای مشاهده نسخه آنلاین سایت:
+
+https://mhs-store.onrender.com
+
+> نکته: به دلیل محدودیت‌های شبکه در بعضی مناطق، اگر سایت برای شما باز نشد، لطفاً با استفاده از فیلترشکن دوباره امتحان کنید.
+
+
 ---
 
 ## 💼 هدف پروژه
