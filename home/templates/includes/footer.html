@@ -84,11 +84,19 @@
     </div>
 
     <!-- Bottom Footer -->
-    <div class="footer-bottom">
-        <p>
-            <span id="currentYear"></span>
-            ©.تمامی حقوق محفوظ است
-        </p>
+<div class="footer-bottom">
+    <div class="footer-content">
+        <span>تمامی حقوق محفوظ است</span>
+        <span id="currentYear"></span>
+        <span>©</span>
+        <span class="separator">|</span>
+        <a href="{% url 'admin_login' %}">
+            <i class="fas fa-user-shield"></i>
+            پنل مدیریت
+        </a>
     </div>
+</div>
+
+
 
 </footer>

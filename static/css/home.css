@@ -870,5 +870,19 @@ button:hover svg,
     transition: .3s;
 }
 
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    direction: rtl;
+    gap: 8px;
+}
 
+.footer-content a {
+    color: #C9A76A;
+    text-decoration: none;
+}
 
+.footer-content .separator {
+    color: #777;
+}
