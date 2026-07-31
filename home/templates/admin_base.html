@@ -187,9 +187,11 @@ body{
 
             <div class="image">
 
-                <img src="{% static 'adminlte/img/user-160x160.jpg' %}"
-
-                     class="img-circle elevation-2">
+                <img 
+                  src="{{ request.user.profile.image.url }}"
+                 class="img-circle elevation-2"
+                  style="width:45px;height:45px;object-fit:cover;"
+                 alt="Admin">
 
             </div>
 
