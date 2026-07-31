@@ -256,9 +256,12 @@ class Discount(models.Model):
     
 
 class Contact(models.Model):
-   name=models.CharField()
-   email=models.EmailField()
-   message=models.TextField()
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 
 
