@@ -1,0 +1,24 @@
+services:
+  web:
+    build: .
+    container_name: mhs-store
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres:17
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: mhs_store
+      POSTGRES_USER: mahsa
+      POSTGRES_PASSWORD: 123456
+    volumes:
+     - postgres_data:/var/lib/postgresql/data
+
+
+volumes:
+  postgres_data:

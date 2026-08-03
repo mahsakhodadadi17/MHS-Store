@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home',
+    'home.apps.HomeConfig',
     'django.contrib.humanize',
     "rest_framework",
     "django_filters",
@@ -85,7 +85,6 @@ WSGI_APPLICATION = 'mhsa.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
@@ -96,14 +95,18 @@ if DATABASE_URL:
             ssl_require=True
         )
     }
+
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "mhs_store",
+            "USER": "mahsa",
+            "PASSWORD": "123456",
+            "HOST": "db",
+            "PORT": "5432",
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
