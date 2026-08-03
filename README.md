@@ -333,7 +333,7 @@ docker compose exec web python manage.py createsuperuser
 # 📌 نکات پروژه
 
 * طراحی کاملاً واکنش‌گرا (Responsive)
-* معماری MVC در Django
+* معماری MVT در Django
 * استفاده از Template Engine
 * استفاده از Function Based View و Class Based View
 * پیاده‌سازی Django REST Framework
