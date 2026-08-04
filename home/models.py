@@ -161,15 +161,18 @@ class Post(models.Model):
 
         if discount.discount_type == "percent":
 
-            return self.price - (
-                self.price * discount.value / 100
-            )
+            return int(
+                self.price - (
+                  self.price * discount.value / 100
+           )    )
 
 
 
         elif discount.discount_type == "fixed":
 
-            return self.price - discount.value
+            return int(
+                self.price - discount.value
+            )
 
 
 
