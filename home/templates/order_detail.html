@@ -52,22 +52,76 @@
 
 <div class="price-box">
 
+    <div class="price-row">
 
-<div class="price-row">
+        <span>جمع سفارش</span>
 
-<span>
-جمع سفارش
-</span>
+        <strong>
+            {{ order.total_price|intcomma }}
+            تومان
+        </strong>
 
+    </div>
 
-<strong>
+    {% if order.discount_amount > 0 %}
 
-{{ order.total_price }}
+    <div class="price-row discount">
 
-تومان
+        <span>
 
-</strong>
+            🎁 تخفیف
 
+            {% if order.coupon %}
+                ({{ order.coupon.code }})
+            {% endif %}
+
+        </span>
+
+        <strong>
+
+            -
+            {{ order.discount_amount|intcomma }}
+            تومان
+
+        </strong>
+
+    </div>
+
+    {% endif %}
+
+    <div class="price-row">
+
+        <span>🚚 هزینه ارسال</span>
+
+        <strong>
+
+            {% if order.is_free_shipping %}
+
+                رایگان 🎉
+
+            {% else %}
+
+                {{ order.shipping_cost|intcomma }}
+                تومان
+
+            {% endif %}
+
+        </strong>
+
+    </div>
+
+    <div class="price-row final">
+
+        <span>مبلغ پرداختی</span>
+
+        <strong>
+
+            {{ order.final_price|intcomma }}
+            تومان
+
+        </strong>
+
+    </div>
 
 </div>
 
@@ -182,17 +236,54 @@
 
 
 <p>
+🏙 استان:
+{{ order.address.province }}
+</p>
+
+<p>
 🏙 شهر:
 {{ order.address.city }}
 </p>
 
-
-
 <p>
-📍 آدرس کامل:
-{{ order.address.address }}
+📍 خیابان:
+{{ order.address.street }}
 </p>
 
+<p>
+🏠 کوچه:
+{{ order.address.alley }}
+</p>
+
+<p>
+🚪 پلاک:
+{{ order.address.plaque }}
+</p>
+
+{% if order.address.unit %}
+
+<p>
+🏢 واحد:
+{{ order.address.unit }}
+</p>
+
+{% endif %}
+
+<p>
+📮 کد پستی:
+{{ order.address.postal_code }}
+</p>
+
+{% if order.address.description %}
+
+<p>
+📝 توضیحات:
+
+{{ order.address.description }}
+
+</p>
+
+{% endif %}
 
 
 </div>

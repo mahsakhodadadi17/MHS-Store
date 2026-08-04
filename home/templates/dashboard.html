@@ -556,21 +556,48 @@ MHS
 
 <div class="address-card">
 
+    <h3>{{ address.full_name }}</h3>
 
-<p>
-{{address.address}}
-</p>
+    <p>
+        📞 {{ address.phone }}
+    </p>
 
+    <p>
+        📍
+        {{ address.province }}
+        -
+        {{ address.city }}
+    </p>
 
-<a href="{% url 'edit_address' address.id %}">
-    <button type="button">ویرایش</button>
-</a>
+    <p>
+        {{ address.street }}
+        ، کوچه {{ address.alley }}
+        ، پلاک {{ address.plaque }}
 
+        {% if address.unit %}
+            ، واحد {{ address.unit }}
+        {% endif %}
+    </p>
 
-<a href="{% url 'delete_address' address.id %}">
-    <button type="button">حذف</button>
-</a>
+    <p>
+        کدپستی:
+        {{ address.postal_code }}
+    </p>
 
+    {% if address.description %}
+    <p>
+        توضیحات:
+        {{ address.description }}
+    </p>
+    {% endif %}
+
+    <a href="{% url 'edit_address' address.id %}">
+        <button type="button">ویرایش</button>
+    </a>
+
+    <a href="{% url 'delete_address' address.id %}">
+        <button type="button">حذف</button>
+    </a>
 
 </div>
 

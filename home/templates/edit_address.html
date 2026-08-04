@@ -9,13 +9,80 @@
 
         <h2>ویرایش آدرس</h2>
 
-        <input type="text" name="full_name" value="{{ address.full_name }}">
-        <input type="text" name="phone" value="{{ address.phone }}">
-        <input type="text" name="city" value="{{ address.city }}">
+        <input
+            type="text"
+            name="full_name"
+            value="{{ address.full_name }}"
+            placeholder="نام و نام خانوادگی"
+            required
+        >
 
-        <textarea name="address">{{ address.address }}</textarea>
+        <input
+            type="text"
+            name="phone"
+            value="{{ address.phone }}"
+            placeholder="شماره موبایل"
+            required
+        >
 
-        <button type="submit">ذخیره</button>
+        <input
+            type="text"
+            name="province"
+            value="{{ address.province }}"
+            placeholder="استان"
+        >
+
+        <input
+            type="text"
+            name="city"
+            value="{{ address.city }}"
+            placeholder="شهر"
+            required
+        >
+
+        <input
+            type="text"
+            name="postal_code"
+            value="{{ address.postal_code }}"
+            placeholder="کد پستی"
+        >
+
+        <input
+            type="text"
+            name="street"
+            value="{{ address.street }}"
+            placeholder="خیابان"
+        >
+
+        <input
+            type="text"
+            name="alley"
+            value="{{ address.alley }}"
+            placeholder="کوچه"
+        >
+
+        <input
+            type="text"
+            name="plaque"
+            value="{{ address.plaque }}"
+            placeholder="پلاک"
+        >
+
+        <input
+            type="text"
+            name="unit"
+            value="{{ address.unit }}"
+            placeholder="واحد (اختیاری)"
+        >
+
+        <textarea
+            name="description"
+            placeholder="توضیحات برای پیک (اختیاری)"
+        >{{ address.description }}</textarea>
+
+        <button type="submit">
+            ذخیره تغییرات
+        </button>
 
     </form>
 

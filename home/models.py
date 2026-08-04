@@ -334,21 +334,57 @@ class Address(models.Model):
         max_length=20
     )
 
+    province = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
     city = models.CharField(
         max_length=100
     )
 
-    address = models.TextField()
+    postal_code = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
+    )
 
+    street = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    alley = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    plaque = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
+    )
+
+    unit = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
+    )
+
+    description = models.TextField(
+        blank=True,
+        null=True
+    )
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
-
     def __str__(self):
         return self.full_name
-
     
 
 class Coupon(models.Model):
@@ -486,6 +522,14 @@ class Order(models.Model):
      default=0
     )
 
+    shipping_cost = models.PositiveIntegerField(
+     default=80000
+    )
+
+    is_free_shipping = models.BooleanField(
+     default=False
+    )
+
     final_price = models.PositiveIntegerField(
      default=0
     )
@@ -523,27 +567,37 @@ class Order(models.Model):
         old_status = None
 
         if self.pk:
-
             old_status = Order.objects.get(
                 pk=self.pk
             ).status
 
         if not self.tracking_code:
-
             self.tracking_code = self.generate_tracking_code()
+
+        # محاسبه هزینه ارسال
+        if self.total_price >= 3000000:
+            self.shipping_cost = 0
+            self.is_free_shipping = True
+        else:
+            self.shipping_cost = 80000
+            self.is_free_shipping = False
+
+        # محاسبه مبلغ نهایی
+        self.final_price = max(
+            self.total_price
+            - self.discount_amount
+            + self.shipping_cost,
+            0
+        )
 
         super().save(*args, **kwargs)
 
         if old_status and old_status != self.status:
 
             Notification.objects.create(
-
                 user=self.user,
-
                 text=f"وضعیت سفارش شماره {self.id} تغییر کرد به {self.get_status_display()}"
-
             )
-
 
     def __str__(self):
 

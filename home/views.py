@@ -405,28 +405,25 @@ def add_address(request):
     if request.method == "POST":
 
         Address.objects.create(
-
             user=request.user,
-
             full_name=request.POST.get("full_name"),
-
             phone=request.POST.get("phone"),
-
+            province=request.POST.get("province"),
             city=request.POST.get("city"),
-
-            address=request.POST.get("address")
-
+            postal_code=request.POST.get("postal_code"),
+            street=request.POST.get("street"),
+            alley=request.POST.get("alley"),
+            plaque=request.POST.get("plaque"),
+            unit=request.POST.get("unit"),
+            description=request.POST.get("description"),
         )
 
-
         return redirect("dashboard")
-
 
     return render(
         request,
         "add_address.html"
     )
-
 from django.shortcuts import get_object_or_404
 
 
@@ -635,7 +632,6 @@ def checkout(request):
         )
 
         coupon_code = request.POST.get("coupon")
-        print("COUPON CODE:", coupon_code)
 
         if coupon_code:
 
@@ -677,11 +673,6 @@ def checkout(request):
         if final_total < 0:
             final_total = 0
 
-
-        print("TOTAL:", total)
-        print("DISCOUNT:", discount_amount)
-        print("FINAL:", final_total)
-
         order = Order.objects.create(
 
             user=request.user,
@@ -691,8 +682,6 @@ def checkout(request):
             total_price=total,
 
             discount_amount=discount_amount,
-
-            final_price=final_total,
 
             coupon=coupon,
 
@@ -706,17 +695,18 @@ def checkout(request):
 
             OrderItem.objects.create(
 
-             order=order,
+                order=order,
 
-              product=item.product,
+                product=item.product,
 
-             quantity=item.quantity,
+                quantity=item.quantity,
 
-             price=item.item_price,
+                price=item.item_price,
 
-              color=item.color,
+                color=item.color,
 
-              size=item.size
+                size=item.size
+
             )
 
         if coupon:
@@ -824,17 +814,36 @@ def delete_address(request, id):
 
 @login_required
 def edit_address(request, id):
-    address = get_object_or_404(Address, id=id, user=request.user)
+    address = get_object_or_404(
+        Address,
+        id=id,
+        user=request.user
+    )
 
     if request.method == "POST":
+
         address.full_name = request.POST.get("full_name")
         address.phone = request.POST.get("phone")
+        address.province = request.POST.get("province")
         address.city = request.POST.get("city")
-        address.address = request.POST.get("address")
+        address.postal_code = request.POST.get("postal_code")
+        address.street = request.POST.get("street")
+        address.alley = request.POST.get("alley")
+        address.plaque = request.POST.get("plaque")
+        address.unit = request.POST.get("unit")
+        address.description = request.POST.get("description")
+
         address.save()
+
         return redirect("dashboard")
 
-    return render(request, "edit_address.html", {"address": address})
+    return render(
+        request,
+        "edit_address.html",
+        {
+            "address": address
+        }
+    )
 
 @login_required
 def notifications(request):
@@ -1001,6 +1010,8 @@ def payment(request, id):
             "coupon": order.coupon,
         }
     )
+
+
 from django.contrib.admin.views.decorators import staff_member_required
 
 

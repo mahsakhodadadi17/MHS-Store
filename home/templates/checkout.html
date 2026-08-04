@@ -161,10 +161,36 @@ required>
 
 
 <p>
+📍
+{{ address.province }}
+،
 {{ address.city }}
--
-{{ address.address }}
 </p>
+
+<p>
+{{ address.street }}
+،
+کوچه {{ address.alley }}
+،
+پلاک {{ address.plaque }}
+
+{% if address.unit %}
+،
+واحد {{ address.unit }}
+{% endif %}
+</p>
+
+<p>
+کدپستی:
+{{ address.postal_code }}
+</p>
+
+{% if address.description %}
+<p>
+📝
+{{ address.description }}
+</p>
+{% endif %}
 
 
 </div>
@@ -271,7 +297,23 @@ id="coupon-hidden">
 </div>
 
 
+<div class="summary-row">
 
+    <span>
+        هزینه ارسال
+    </span>
+
+    <strong id="shipping-price">
+
+        {% if total >= 3000000 %}
+            رایگان 🎉
+        {% else %}
+            80,000 تومان
+        {% endif %}
+
+    </strong>
+
+</div>
 
 
 <div 
@@ -310,11 +352,15 @@ style="display:none;">
 
 <strong id="final-price">
 
+{% if total >= 3000000 %}
 
-{{ total}}
+    {{ total|intcomma }} تومان
 
-تومان
+{% else %}
 
+    {{ total|add:80000|intcomma }} تومان
+
+{% endif %}
 
 </strong>
 

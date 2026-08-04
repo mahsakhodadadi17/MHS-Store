@@ -46,7 +46,7 @@
 
 <hr>
 
-<p><b>مبلغ :</b> {{ order.total_price }} تومان</p>
+<p><b>مبلغ :</b> {{ order.final_price }} تومان</p>
 
 <p><b>پرداخت :</b> {{ order.get_payment_status_display }}</p>
 
@@ -92,7 +92,7 @@
 
 <td>{{ item.price }} تومان</td>
 
-<td>{{ item.total_price }} تومان</td>
+<td>{{ order.final_price }} تومان</td>
 
 </tr>
 
