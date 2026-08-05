@@ -57,7 +57,7 @@
         <span>جمع سفارش</span>
 
         <strong>
-            {{ order.total_price|intcomma }}
+            {{ order.total_price }}
             تومان
         </strong>
 
@@ -80,7 +80,7 @@
         <strong>
 
             -
-            {{ order.discount_amount|intcomma }}
+            {{ order.discount_amount }}
             تومان
 
         </strong>
@@ -101,7 +101,7 @@
 
             {% else %}
 
-                {{ order.shipping_cost|intcomma }}
+                {{ order.shipping_cost| }}
                 تومان
 
             {% endif %}
@@ -116,7 +116,7 @@
 
         <strong>
 
-            {{ order.final_price|intcomma }}
+            {{ order.final_price }}
             تومان
 
         </strong>
