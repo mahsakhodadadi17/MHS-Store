@@ -91,15 +91,40 @@ body{
 .sidebar-collapse .main-footer{
     margin-right:0 !important;
 }
+/* ===========================
+   Mobile Responsive Admin
+=========================== */
 
+@media (max-width: 991.98px){
+
+    .main-sidebar{
+        transform: translateX(100%);
+    }
+
+    .sidebar-open .main-sidebar{
+        transform: translateX(0);
+    }
+
+    .content-wrapper,
+    .main-header,
+    .main-footer{
+        margin-right:0 !important;
+        margin-left:0 !important;
+    }
+
+    .main-sidebar,
+    .main-sidebar::before{
+        width:280px;
+    }
+
+}
 </style>
     
 {% block extra_css %}
 {% endblock %}
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
 <div class="wrapper">
 
 <!-- Navbar -->
@@ -110,7 +135,7 @@ body{
 
         <li class="nav-item">
 
-            <a class="nav-link" data-widget="pushmenu" href="#">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
 
                 <i class="fas fa-bars"></i>
 
@@ -328,13 +353,12 @@ body{
     </a>
 
 </li>
-<li>
-    <a href="{% url 'admin_discounts' %}">
-     <i class="fas fa-tags"></i>
-     <span>تخفیف‌ها</span>
+<li class="nav-item">
+    <a href="{% url 'admin_discounts' %}" class="nav-link">
+        <i class="nav-icon fas fa-tags"></i>
+        <p>تخفیف‌ها</p>
     </a>
 </li>
-
 
 <li class="nav-item">
 
