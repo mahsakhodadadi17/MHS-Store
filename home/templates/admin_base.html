@@ -98,27 +98,15 @@
    Mobile Responsive Admin
 =========================== */
 
-      @media (max-width: 991.98px) {
-        .main-sidebar {
-          transform: translateX(100%);
-        }
+@media (max-width:991.98px){
 
-        .sidebar-open .main-sidebar {
-          transform: translateX(0);
-        }
+    .content-wrapper,
+    .main-header,
+    .main-footer{
+        margin-right:0 !important;
+    }
 
-        .content-wrapper,
-        .main-header,
-        .main-footer {
-          margin-right: 0 !important;
-          margin-left: 0 !important;
-        }
-
-        .main-sidebar,
-        .main-sidebar::before {
-          width: 280px;
-        }
-      }
+}
     </style>
 
     {% block extra_css %} {% endblock %}
@@ -451,5 +439,17 @@
     <script src="{% static 'adminlte/js/adminlte.min.js' %}"></script>
 
     {% block extra_js %} {% endblock %}
+    <script>
+$(function () {
+
+    $('[data-widget="pushmenu"]').on('click', function(e){
+        e.preventDefault();
+
+        $('body').toggleClass('sidebar-open');
+        $('body').toggleClass('sidebar-collapse');
+    });
+
+});
+</script>
   </body>
 </html>
