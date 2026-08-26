@@ -120,7 +120,15 @@ body{
     margin-left:25px;
     margin-right:25px;
 }
+@media (max-width:991.98px){
 
+    .content-wrapper,
+    .main-header,
+    .main-footer{
+        margin-right:0 !important;
+    }
+
+}
 </style>
 
 </head>
@@ -151,6 +159,11 @@ body{
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <div class="d-lg-none text-left p-2">
+          <button class="btn btn-light" data-widget="pushmenu" type="button">
+            <i class="fas fa-times"></i>
+          </button>
+    </div>
     <!-- Brand Logo -->
 <a href="{% url 'admin_dashboard' %}" class="brand-link">
 
@@ -1434,6 +1447,18 @@ document.querySelectorAll(".edit-task-btn").forEach(function(btn){
 
 });
 
+</script>
+<script>
+$(function () {
+
+    $('[data-widget="pushmenu"]').on('click', function(e){
+        e.preventDefault();
+
+        $('body').toggleClass('sidebar-open');
+        $('body').toggleClass('sidebar-collapse');
+    });
+
+});
 </script>
 </body>
 </html>
